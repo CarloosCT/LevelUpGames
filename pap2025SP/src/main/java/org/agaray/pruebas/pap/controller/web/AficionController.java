@@ -26,6 +26,7 @@ public class AficionController {
         m.put("aficiones", aficionService.r() );
         m.put("view","aficion/r" );
         return "_t/frame";
+        //Ejemplo
     }
 
     @GetMapping("c")
