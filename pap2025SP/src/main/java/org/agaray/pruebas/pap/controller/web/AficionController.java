@@ -25,6 +25,7 @@ public class AficionController {
     ) {
         m.put("aficiones", aficionService.r() );
         m.put("view","aficion/r" );
+        /*Carlos feo */
         return "_t/frame";
     }
 
