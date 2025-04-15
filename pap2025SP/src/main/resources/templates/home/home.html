@@ -1,22 +1,104 @@
-<div class="container">
-    <h1>
-        P.A.P. 2025
-    </h1>
-
-    <div class="jumbotron">
-        <form action="/persona/r">
-            <input type="submit" value="Personas" />
-        </form>
-
-
-        <form action="/pais/r">
-            <input type="submit" value="Países" />
-        </form>
-
-
-        <form action="/aficion/r">
-            <input type="submit" value="Aficiones" />
-        </form>
+<section class="search-bar">
+    <input type="text" id="search" placeholder="Buscar ...">
+    
+    <!-- Botón desplegable para géneros -->
+    <div class="dropdown">
+        <button class="dropbtn">Filtro</button>
+        <div class="dropdown-content">
+            <a href="#">Acción</a>
+            <a href="#">Aventura</a>
+            <a href="#">Estrategia</a>
+            <a href="#">RPG</a>
+            <a href="#">Carreras</a>
+            <a href="#">Arcade</a>
+        </div>
     </div>
+</section>
 
-</div>
+<section class="hero">
+    <h2>Bienvenido a LevelUpGames</h2>
+    <p>Compra los mejores videojuegos al mejor precio</p>
+</section>
+
+<section class="games">
+    <div class="game-card" data-category="Acción, Aventura">
+        <img src="game1.jpg" alt="Imagen juego 1">
+        <h3>Título juego 1</h3>
+        <p>$49.99€</p>
+        <div class="categories">
+            <span class="category">Acción</span>
+            <span class="category">Aventura</span>
+        </div>
+    </div>
+    <div class="game-card" data-category="Estrategia, RPG">
+        <img src="game2.jpg" alt="Imagen juego 2">
+        <h3>Título juego 2</h3>
+        <p>$39.99€</p>
+        <div class="categories">
+            <span class="category">Estrategia</span>
+            <span class="category">RPG</span>
+        </div>
+    </div>
+    <div class="game-card" data-category="Carreras, Arcade">
+        <img src="game3.jpg" alt="Imagen juego 3">
+        <h3>Título juego 3</h3>
+        <p>$29.99€</p>
+        <div class="categories">
+            <span class="category">Carreras</span>
+            <span class="category">Arcade</span>
+        </div>
+    </div>
+    <div class="game-card" data-category="Shooter, Acción">
+        <img src="game4.jpg" alt="Imagen juego 4">
+        <h3>Título juego 4</h3>
+        <p>$59.99€</p>
+        <div class="categories">
+            <span class="category">Shooter</span>
+            <span class="category">Acción</span>
+        </div>
+    </div>
+    <div class="game-card" data-category="Deportes">
+        <img src="game5.jpg" alt="Imagen juego 5">
+        <h3>Título juego 5</h3>
+        <p>$44.99€</p>
+        <div class="categories">
+            <span class="category">Deportes</span>
+        </div>
+    </div>
+    <div class="game-card" data-category="Simulación, Estrategia">
+        <img src="game6.jpg" alt="Imagen juego 6">
+        <h3>Título juego 6</h3>
+        <p>$34.99€</p>
+        <div class="categories">
+            <span class="category">Simulación</span>
+            <span class="category">Estrategia</span>
+        </div>
+    </div>
+    <div class="game-card" data-category="Aventura, Puzzle">
+        <img src="game7.jpg" alt="Imagen juego 7">
+        <h3>Título juego 7</h3>
+        <p>$19.99€</p>
+        <div class="categories">
+            <span class="category">Aventura</span>
+            <span class="category">Puzzle</span>
+        </div>
+    </div>
+    <div class="game-card" data-category="Terror, Supervivencia">
+        <img src="game8.jpg" alt="Imagen juego 8">
+        <h3>Título juego 8</h3>
+        <p>$39.99€</p>
+        <div class="categories">
+            <span class="category">Terror</span>
+            <span class="category">Supervivencia</span>
+        </div>
+    </div>
+    <div class="game-card" data-category="RPG, Fantasía">
+        <img src="game9.jpg" alt="Imagen juego 9">
+        <h3>Título juego 9</h3>
+        <p>$54.99€</p>
+        <div class="categories">
+            <span class="category">RPG</span>
+            <span class="category">Fantasía</span>
+        </div>
+    </div>
+</section>
