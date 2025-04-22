@@ -13,7 +13,6 @@ public class AdministradorPanelController
     @GetMapping("r")
 public String r(ModelMap m) 
 {
-    System.out.println("Accediendo al panel del administrador...");
     m.put("view", "panel_administrador/r");
     m.put("estilos", "/css/home/style.css");
     return "_t/frame";
