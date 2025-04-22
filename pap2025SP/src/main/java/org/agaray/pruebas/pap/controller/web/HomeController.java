@@ -16,8 +16,8 @@ public class HomeController {
     public String home(
         ModelMap m
     ) {
-        m.put("estilos", "/home/style");
         m.put("view","/home/home");
+        m.put("estilos", "/css/home/style.css");
         return "_t/frame";
     }
 
