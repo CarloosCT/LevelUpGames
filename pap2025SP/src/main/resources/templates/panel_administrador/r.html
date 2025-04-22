@@ -1,2 +1,12 @@
 <h2>Panel del Administrador</h2>
 <p>Bienvenido al panel.</p>
+
+<a href="/genero/c">Nuevo género</a>
+
+<h3>Lista de Géneros:</h3>
+<ul>
+    <!-- Recorrer la lista de géneros -->
+    <li th:each="genero : ${generos}">
+        <span th:text="${genero.nombre}">Nombre del género</span>
+    </li>
+</ul>
