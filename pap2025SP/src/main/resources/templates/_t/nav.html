@@ -1,4 +1,17 @@
-<nav class="container bg-dark  rounded">
+<nav>
+    <h1>LevelUpGames</h1>
+    <ul class="menu-left">
+        <li><a href="#">Página Principal</a></li>
+        <li><a href="#">Biblioteca</a></li>
+        <li><a href="#">Mis ventas</a></li>
+		<li><a href="/AdministratorPanel/c">Panel de administrador</a></li>
+    </ul>
+    <ul class="menu-right">
+        <li><a href="#">Bienvenido usuario registrado</a></li>
+    </ul>
+</nav>
+
+<!--<nav class="container bg-dark  rounded">
 	<ul class="nav nav-tabs">
 
 		<li class="nav-item navbar-brand">
@@ -15,7 +28,7 @@
 		<div th:if="${session.user!=null}">
 			<span class="text-light" th:text="|Hola ${session.user.nombre} ${session.user.apellido} |"/>
 			<a href="/persona/logout">LOGOUT</a>
-		</div>
+		</div>-->
 
 
 		<!--
