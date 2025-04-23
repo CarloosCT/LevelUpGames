@@ -3,10 +3,10 @@
 
 <a href="/genero/c">Nuevo género</a>
 <a href="/precio/c">Nuevo precio</a>
+<a href="/imagen/c">Nueva imagen</a>
 
 <h3>Lista de Géneros:</h3>
 <ul>
-    <!-- Recorrer la lista de géneros -->
     <li th:each="genero : ${generos}">
         <span th:text="${genero}">Nombre del género</span>
     </li>
@@ -14,8 +14,17 @@
 
 <h3>Lista de Precios:</h3>
 <ul>
-    <!-- Recorrer la lista de precios -->
     <li th:each="precio : ${precios}">
         <span th:text="${precio}">Precio</span>
     </li>
 </ul>
+
+<h3>Lista de Imágenes:</h3>
+<ul>
+    <li th:each="imagen : ${imagenes}">
+        <img th:src="@{'/uploads/' + ${imagen.ruta}}" alt="Imagen" style="max-height: 200px;">
+    </li>
+</ul>
+
+
+

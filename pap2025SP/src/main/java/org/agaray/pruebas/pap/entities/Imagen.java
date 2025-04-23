@@ -4,8 +4,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
 @Entity
@@ -15,17 +13,17 @@ public class Imagen {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String imagen;
+    private String ruta;
 
     /*@ManyToOne
     @JoinColumn(name = "juego_id")
     private Juego juego;*/
 
-    public Imagen(String imagen){
-        this.imagen = imagen;
+    public Imagen(String ruta){
+        this.ruta = ruta;
     }
 
     public Imagen(){
-        this.imagen = "Juego sin imagen";
+        this.ruta = "Juego sin imagen";
     }
 }
