@@ -35,10 +35,10 @@ public class GeneroController
         String nombre
     ) throws DangerException {
         try {
-            this.generoService.c(nombre);
+            this.generoService.save(nombre);
         }
         catch (Exception e) {
-            PRG.error("El género "+nombre+" ya está registrada","/aficion/c");
+            PRG.error("El género "+nombre+" ya está registrada","/genero/c");
         }
         return "redirect:/panel_administrador/r";
     }

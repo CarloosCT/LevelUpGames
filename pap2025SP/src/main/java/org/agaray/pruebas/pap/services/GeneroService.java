@@ -12,13 +12,15 @@ public class GeneroService
     @Autowired
     private GeneroRepository generoRepository;
 
-    public void c(String nombre)  
-    {
+    public void save(String nombre) {
         generoRepository.save( new Genero(nombre));
     }
 
-    public List<Genero> r() 
-    {
+    public List<Genero> findAll() {
         return generoRepository.findAll();
+    }
+
+    public Genero findByNombre(String nombre) {
+        return generoRepository.findByNombre(nombre).orElse(null);
     }
 }

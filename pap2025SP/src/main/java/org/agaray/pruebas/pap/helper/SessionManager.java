@@ -1,6 +1,6 @@
 package org.agaray.pruebas.pap.helper;
 
-import org.agaray.pruebas.pap.entities.Persona;
+import org.agaray.pruebas.pap.entities.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,9 +13,9 @@ public class SessionManager {
     @Autowired
     private HttpServletRequest request;
 
-    public Persona getUsername() {
+    public Usuario getUsername() {
         HttpSession session = request.getSession();
         Object o = session.getAttribute("user");
-        return ( o!=null ? (Persona)o : null );
+        return ( o!=null ? (Usuario)o : null );
     }
 }

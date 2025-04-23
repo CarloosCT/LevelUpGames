@@ -7,22 +7,17 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-
 @Controller
 @RequestMapping("/panel_administrador")
-public class AdministradorPanelController 
-{
+public class AdministradorPanelController {
     @Autowired
     private GeneroService generoService;
 
     @GetMapping("r")
-public String r(ModelMap m) 
-{
-    m.put("generos", generoService.r());
-    m.put("view", "panel_administrador/r");
-    m.put("estilos", "/css/home/style.css");
-    return "_t/frame";
+    public String r(ModelMap m) {
+        m.put("generos", generoService.r());
+        m.put("view", "panel_administrador/r");
+        m.put("estilos", "/css/home/style.css");
+        return "_t/frame";
+    }
 }
-
-}
-

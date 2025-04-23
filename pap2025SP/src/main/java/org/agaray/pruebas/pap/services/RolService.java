@@ -13,16 +13,15 @@ public class RolService {
     @Autowired
     private RolRepository rolRepository;
 
-    public void c(String nombre)  {
+    public void save(String nombre)  {
         rolRepository.save( new Rol(nombre) );
     }
 
-    public List<Rol> r() {
+    public List<Rol> findAll() {
         return rolRepository.findAll();
     }
 
-    public Rol findRolByName(String nombre) {
+    public Rol findByNombre(String nombre) {
         return rolRepository.findRolByNombre(nombre);
     }
-
 }

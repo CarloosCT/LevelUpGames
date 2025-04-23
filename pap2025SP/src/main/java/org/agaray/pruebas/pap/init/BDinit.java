@@ -1,59 +1,71 @@
 package org.agaray.pruebas.pap.init;
 
-import java.util.ArrayList;
-
-import org.agaray.pruebas.pap.services.AficionService;
-import org.agaray.pruebas.pap.services.PaisService;
-import org.agaray.pruebas.pap.services.PersonaService;
-import org.agaray.pruebas.pap.services.RolService;
+import jakarta.annotation.PostConstruct;
+import org.agaray.pruebas.pap.entities.*;
+import org.agaray.pruebas.pap.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import jakarta.annotation.PostConstruct;
+import java.util.List;
 
 @Component
 public class BDinit {
 
-    @Autowired
-    private PaisService paisService;
-
-    @Autowired
-    private AficionService aficionService;
-
-    @Autowired
-    private RolService rolService;
-
-    @Autowired
-    private PersonaService personaService;
+    @Autowired private RolService rolService;
+    @Autowired private UsuarioService usuarioService;
+    @Autowired private GeneroService generoService;
+    @Autowired private DesarrolladorService desarrolladorService;
+    @Autowired private JuegoService juegoService;
+    @Autowired private ImagenService imagenService;
+    @Autowired private ValoracionService valoracionService;
 
     @PostConstruct
     public void init() {
-        if (rolService.r().size() == 0) {
-            crearPaises();
-            crearAficiones();
+        if (rolService.findAll().isEmpty()) {
             crearRoles();
-            crearPersonas();
+            crearUsuarios();
+            crearGenerosYDesarrolladores();
+            crearJuegos();
         }
     }
 
-    private void crearPaises() {
-        paisService.c("España");
-        paisService.c("Alemania");
-        paisService.c("Francia");
-    }
-
     private void crearRoles() {
-        rolService.c("admin");
-        rolService.c("user");
+        rolService.save("admin");
+        rolService.save("user");
     }
 
-    private void crearPersonas() {
-       personaService.c("Admin", "Ape-admin", "admin", "admin", "admin", null, null, new ArrayList<Long>(), new ArrayList<Long>());
+    private void crearUsuarios() {
+        Rol userRol = rolService.findByNombre("user");
+        usuarioService.save(new Usuario("user@example.com", "1234", "Pepe", "Gómez", userRol));
     }
 
-    private void crearAficiones() {
-        aficionService.c("Deportes");
-        aficionService.c("Cine");
-        aficionService.c("TV");
+    private void crearGenerosYDesarrolladores() {
+        generoService.save(new Genero("Aventura"));
+        generoService.save(new Genero("Deportes"));
+
+        desarrolladorService.save(new Desarrollador("Ubisoft"));
+        desarrolladorService.save(new Desarrollador("EA Sports"));
+    }
+
+    private void crearJuegos() {
+        Genero genero = generoService.findByNombre("Aventura");
+        Desarrollador desarrollador = desarrolladorService.findByNombre("Ubisoft");
+
+        Juego juego = new Juego();
+        juego.setNombre("Assassin's Creed");
+        juego.setDescripcion("Un juego de aventuras históricas.");
+        juego.setGenero(genero);
+        juego.setDesarrollador(desarrollador);
+
+        juegoService.save(juego);
+
+        // Imágenes
+        imagenService.save(new Imagen("acreed1.jpg", juego));
+        imagenService.save(new Imagen("acreed2.jpg", juego));
+
+        // Valoraciones
+        Usuario usuario = usuarioService.findByCorreo("user@example.com");
+        valoracionService.save(new Valoracion("Muy bueno", 4.5f, usuario, juego));
+        valoracionService.save(new Valoracion("Me encantó", 5f, usuario, juego));
     }
 }
