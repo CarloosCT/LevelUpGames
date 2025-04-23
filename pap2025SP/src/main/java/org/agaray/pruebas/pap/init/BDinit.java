@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
+/*@Component
 public class BDinit {
 
     @Autowired private RolService rolService;
@@ -68,4 +68,4 @@ public class BDinit {
         valoracionService.save(new Valoracion("Muy bueno", 4.5f, usuario, juego));
         valoracionService.save(new Valoracion("Me encantó", 5f, usuario, juego));
     }
-}
+}*/

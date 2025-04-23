@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DesarrolladorRepository extends JpaRepository<Desarrollador, Long> {
-    Optional<Desarrollador> findByNombre(String nombre);
+    /*Optional<Desarrollador> findByNombre(String nombre);*/
 }

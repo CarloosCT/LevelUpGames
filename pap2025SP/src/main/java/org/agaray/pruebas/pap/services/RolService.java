@@ -7,7 +7,7 @@ import org.agaray.pruebas.pap.repositories.RolRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
+/*@Service
 public class RolService {
     
     @Autowired
@@ -24,4 +24,4 @@ public class RolService {
     public Rol findByNombre(String nombre) {
         return rolRepository.findRolByNombre(nombre);
     }
-}
+}*/

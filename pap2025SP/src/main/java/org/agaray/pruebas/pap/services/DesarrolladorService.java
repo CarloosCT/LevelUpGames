@@ -5,7 +5,7 @@ import org.agaray.pruebas.pap.repositories.DesarrolladorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
+/*@Service
 public class DesarrolladorService {
     @Autowired
     private DesarrolladorRepository desarrolladorRepository;
@@ -17,4 +17,4 @@ public class DesarrolladorService {
     public Desarrollador findByNombre(String nombre) {
         return desarrolladorRepository.findByNombre(nombre).orElse(null);
     }
-}
+}*/

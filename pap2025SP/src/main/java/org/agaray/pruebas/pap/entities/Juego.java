@@ -15,7 +15,7 @@ public class Juego {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    /*@Column(nullable = false)
     private String nombre;
 
     @Column(length = 1000)
@@ -27,16 +27,16 @@ public class Juego {
 
     // RELACIONES
 
-    @OneToMany(mappedBy = "juego", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "juego")
     private List<Imagen> imagenes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "juego", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "juego")
     private List<Valoracion> valoraciones = new ArrayList<>();
 
-    @OneToMany(mappedBy = "juego", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "juego")
     private List<Precio> precios = new ArrayList<>();
 
-    @OneToMany(mappedBy = "juego", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "juego")
     private List<Compra> compras = new ArrayList<>();
 
     @ManyToOne
@@ -56,5 +56,5 @@ public class Juego {
             suma += v.getNota();
         }
         return suma / valoraciones.size();
-    }
+    }*/
 }

@@ -8,9 +8,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor
 public class Usuario {
     @Id
     private String correo;
@@ -19,7 +21,7 @@ public class Usuario {
     private String nombre;
     private String apellidos;
 
-    @OneToMany(mappedBy = "usuario")
+    /*@OneToMany(mappedBy = "usuario")
     private List<Compra> compras;
 
     @OneToMany(mappedBy = "usuario")
@@ -31,5 +33,5 @@ public class Usuario {
 
     public Rol getRol() {
         return rol;
-    }
+    }*/
 }

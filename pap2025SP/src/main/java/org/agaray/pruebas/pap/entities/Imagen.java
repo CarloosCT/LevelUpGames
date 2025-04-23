@@ -17,9 +17,9 @@ public class Imagen {
 
     private String imagen;
 
-    @ManyToOne
+    /*@ManyToOne
     @JoinColumn(name = "juego_id")
-    private Juego juego;
+    private Juego juego;*/
 
     public Imagen(String imagen){
         this.imagen = imagen;

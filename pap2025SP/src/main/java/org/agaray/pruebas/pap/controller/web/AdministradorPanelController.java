@@ -15,7 +15,7 @@ public class AdministradorPanelController {
 
     @GetMapping("r")
     public String r(ModelMap m) {
-        m.put("generos", generoService.r());
+        m.put("generos", generoService.findAll());
         m.put("view", "panel_administrador/r");
         m.put("estilos", "/css/home/style.css");
         return "_t/frame";
