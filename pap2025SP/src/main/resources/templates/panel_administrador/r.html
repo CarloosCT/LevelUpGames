@@ -2,11 +2,20 @@
 <p>Bienvenido al panel.</p>
 
 <a href="/genero/c">Nuevo género</a>
+<a href="/precio/c">Nuevo precio</a>
 
 <h3>Lista de Géneros:</h3>
 <ul>
     <!-- Recorrer la lista de géneros -->
     <li th:each="genero : ${generos}">
-        <span th:text="${genero.nombre}">Nombre del género</span>
+        <span th:text="${genero}">Nombre del género</span>
+    </li>
+</ul>
+
+<h3>Lista de Precios:</h3>
+<ul>
+    <!-- Recorrer la lista de precios -->
+    <li th:each="precio : ${precios}">
+        <span th:text="${precio}">Precio</span>
     </li>
 </ul>
