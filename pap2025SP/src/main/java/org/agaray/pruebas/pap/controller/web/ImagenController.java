@@ -5,7 +5,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
-import org.agaray.pruebas.pap.entities.Imagen;
 import org.agaray.pruebas.pap.exception.DangerException;
 import org.agaray.pruebas.pap.helper.PRG;
 import org.agaray.pruebas.pap.services.ImagenService;
