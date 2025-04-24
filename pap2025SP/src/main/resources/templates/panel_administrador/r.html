@@ -4,6 +4,7 @@
 <a href="/genero/c">Nuevo género</a>
 <a href="/precio/c">Nuevo precio</a>
 <a href="/imagen/c">Nueva imagen</a>
+<a href="/juego/c">Nuevo juego</a>
 
 <h3>Lista de Géneros:</h3>
 <ul>
@@ -15,7 +16,8 @@
 <h3>Lista de Precios:</h3>
 <ul>
     <li th:each="precio : ${precios}">
-        <span th:text="${precio}">Precio</span>
+        <span>Id: <span th:text="${precio.id}">ID del Precio</span></span><br>
+        <span>Cantidad: <span th:text="${precio.cantidad}">Cantidad</span></span><br>
     </li>
 </ul>
 
@@ -25,6 +27,3 @@
         <img th:src="@{'/uploads/' + ${imagen.ruta}}" alt="Imagen" style="max-height: 200px;">
     </li>
 </ul>
-
-
-

@@ -33,15 +33,15 @@ public class PrecioController
 
     @PostMapping("c")
     public String cPost(
-    @RequestParam("precio") Double precio
+    @RequestParam("precio") Double cantidad
     )   throws DangerException {
     try{
-        BigDecimal precioDecimal = new BigDecimal(precio).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal precioDecimal = new BigDecimal(cantidad).setScale(2, RoundingMode.HALF_UP);
         Double precioNormalizado = precioDecimal.doubleValue();
 
         this.precioService.save(precioNormalizado);
     } catch (Exception e) {
-        PRG.error("El precio " + precio + " ya está registrado", "/precio/c");
+        PRG.error("El precio " + cantidad + " ya está registrado", "/precio/c");
     }
     return "redirect:/panel_administrador/r";
 }

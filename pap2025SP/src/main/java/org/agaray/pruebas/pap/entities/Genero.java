@@ -25,8 +25,9 @@ public class Genero {
 
     //Relaciones
 
-    @ManyToMany(mappedBy = "genero")
+    @ManyToMany(mappedBy = "generos")
     private List<Juego> juegos = new ArrayList<>();
+
 
     //==========================================================================
 

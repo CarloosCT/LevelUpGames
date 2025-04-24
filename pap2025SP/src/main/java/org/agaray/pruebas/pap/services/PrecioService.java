@@ -12,15 +12,20 @@ public class PrecioService
     @Autowired
     private PrecioRepository precioRepository;
 
-    public void save(Double precio) {
-        precioRepository.save( new Precio(precio));
+    public void save(Double cantidad) {
+        precioRepository.save( new Precio(cantidad));
     }
 
     public List<Precio> findAll() {
         return precioRepository.findAll();
     }
 
-    public Precio findByNombre(Double precio) {
-        return precioRepository.findByPrecio(precio).orElse(null);
+    public Precio findByCantidad(Double cantidad) {
+        return precioRepository.findByCantidad(cantidad).orElse(null);
+    }
+
+    public Precio findById(Long precioId) 
+    {
+        return precioRepository.findById(precioId).orElse(null);
     }
 }

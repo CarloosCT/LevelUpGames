@@ -8,5 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PrecioRepository extends JpaRepository<Precio, Long> {
-    Optional<Precio> findByPrecio(Double precio);
+    Optional<Precio> findByCantidad(Double cantidad);
+    Optional<Precio> findById(int id);
 }

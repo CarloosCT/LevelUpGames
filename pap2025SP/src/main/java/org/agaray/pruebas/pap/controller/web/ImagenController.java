@@ -20,40 +20,50 @@ import java.nio.file.Path;
 
 @Controller
 @RequestMapping("/imagen")
-public class ImagenController 
-{
+public class ImagenController {
 
     @Autowired
     private ImagenService imagenService;
 
     @GetMapping("c")
-    public String c(
-        ModelMap m
-    ) {
-        m.put("view","imagen/c");
+    public String c(ModelMap m) {
+        m.put("view", "imagen/c");
         m.put("estilos", "/css/home/style.css");
         return "_t/frame";
     }
 
     @PostMapping("c")
-    public String cPost(@RequestParam("imagen") MultipartFile imagen) throws DangerException 
-    {
+    public String cPost(@RequestParam("imagenes") MultipartFile[] imagenes) throws DangerException {
         try {
-            String nombreArchivo = imagen.getOriginalFilename();
-    
-            Path rutaAbsoluta = Paths.get("C:/Users/Usuario/Desktop/LevelUpGames/LevelUpGames/pap2025SP/src/main/resources/static/uploads/" + nombreArchivo);
-    
-            Files.createDirectories(rutaAbsoluta.getParent());
-    
-            Files.copy(imagen.getInputStream(), rutaAbsoluta, StandardCopyOption.REPLACE_EXISTING);
-    
-            this.imagenService.save(nombreArchivo);
+            // Verificar si se seleccionaron imágenes
+            if (imagenes.length == 0) {
+                PRG.error("No se han seleccionado imágenes.", "/imagen/c");
+                return "redirect:/imagen/c";
+            }
+
+            // Asegurarse de no subir más de 5 imágenes
+            if (imagenes.length > 5) {
+                PRG.error("Puedes subir un máximo de 5 imágenes.", "/imagen/c");
+                return "redirect:/imagen/c";
+            }
+
+            // Iterar sobre las imágenes y guardarlas
+            for (MultipartFile imagen : imagenes) {
+                String nombreArchivo = imagen.getOriginalFilename();
+                Path rutaAbsoluta = Paths.get("C:/Users/Usuario/Desktop/LevelUpGames/LevelUpGames/pap2025SP/src/main/resources/static/uploads/" + nombreArchivo);
+                Files.createDirectories(rutaAbsoluta.getParent());
+                Files.copy(imagen.getInputStream(), rutaAbsoluta, StandardCopyOption.REPLACE_EXISTING);
+
+                // Guardar el nombre del archivo en la base de datos
+                this.imagenService.save(nombreArchivo);
+            }
         } catch (IOException e) {
-            PRG.error("Error al intentar guardar la imagen: " + e.getMessage(), "/imagen/c");
+            PRG.error("Error al intentar guardar las imágenes: " + e.getMessage(), "/imagen/c");
         } catch (Exception e) {
             PRG.error("Ha ocurrido un error inesperado: " + e.getMessage(), "/imagen/c");
         }
+
         return "redirect:/panel_administrador/r";
     }
-
 }
+

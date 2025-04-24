@@ -22,7 +22,7 @@ public class Precio {
     private Long id;
 
     @Column(unique = true)
-    private Double precio;
+    private Double cantidad;
 
     //Relaciones
 
@@ -31,13 +31,13 @@ public class Precio {
 
     //==========================================================================
 
-    public Precio(Double precio) 
+    public Precio(Double cantidad) 
     {
-        this.precio = precio;
+        this.cantidad = cantidad;
     }
 
     public Precio() 
     {
-        this.precio = 0.0;
+        this.cantidad = 0.0;
     }
 }
