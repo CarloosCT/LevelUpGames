@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
 @Entity
@@ -15,9 +16,10 @@ public class Imagen {
 
     private String ruta;
 
-    /*@ManyToOne
-    @JoinColumn(name = "juego_id")
-    private Juego juego;*/
+    //Relaciones
+
+    @ManyToOne
+    private Juego juego;
 
     public Imagen(String ruta){
         this.ruta = ruta;

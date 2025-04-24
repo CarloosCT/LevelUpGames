@@ -15,39 +15,38 @@ public class Juego {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /*@Column(nullable = false)
+    @Column(nullable = false)
     private String nombre;
 
-    @Column(length = 1000)
+    @Column
     private String descripcion;
 
-    // No se guarda en la base de datos, se calcula a partir de las valoraciones
+    /*// No se guarda en la base de datos, se calcula a partir de las valoraciones
     @Transient
-    private Float valoracionMedia;
+    private Float valoracionMedia;*/
 
-    // RELACIONES
+    //Relaciones
+
+    @ManyToMany
+    private List<Genero> generos = new ArrayList<>();
+
+    @ManyToOne
+    private Precio precio;
 
     @OneToMany(mappedBy = "juego")
     private List<Imagen> imagenes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "juego")
-    private List<Valoracion> valoraciones = new ArrayList<>();
+    /*@OneToMany(mappedBy = "juego")
+    private List<Valoracion> valoraciones = new ArrayList<>();*/
 
-    @OneToMany(mappedBy = "juego")
-    private List<Precio> precios = new ArrayList<>();
+    /*@OneToMany(mappedBy = "juego")
+    private List<Compra> compras = new ArrayList<>();*/
 
-    @OneToMany(mappedBy = "juego")
-    private List<Compra> compras = new ArrayList<>();
-
-    @ManyToOne
-    @JoinColumn(name = "genero_id", nullable = false)
-    private Genero genero;
-
-    @ManyToOne
+    /*@ManyToOne
     @JoinColumn(name = "desarrollador_id", nullable = false)
-    private Desarrollador desarrollador;
+    private Desarrollador desarrollador;*/
 
-    // MÉTODO PARA CALCULAR LA MEDIA
+    /*// MÉTODO PARA CALCULAR LA MEDIA
     public Float getValoracionMedia() {
         if (valoraciones == null || valoraciones.isEmpty()) return 0f;
 
