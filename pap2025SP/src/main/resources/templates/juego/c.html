@@ -1,17 +1,18 @@
 <div class="container">
     <h1>Nuevo juego</h1>
 
-    <form action="/juego/c" method="post">
+    <form action="/juego/c" method="post" enctype="multipart/form-data">
         <label for="idNombre">Nombre</label>
-        <input id="idNombre" type="text" name="nombre" value="${nombreJuego}" autofocus="autofocus"/>
+        <input id="idNombre" type="text" name="nombre" th:value="${nombreJuego}" autofocus="autofocus"/>
         <br/><br/>
 
         <label>Géneros:</label>
         <div class="checkbox-inline-group">
             <th:block th:each="genero : ${generos}">
                 <label>
-                    <input type="checkbox" name="generosIds" th:value="${genero.id}" 
-                        th:checked="${generosSeleccionados != null && generosSeleccionados.contains(genero.id)}" />
+                    <input type="checkbox" name="generosIds"
+                           th:value="${genero.id}"
+                           th:checked="${generosSeleccionados != null && generosSeleccionados.contains(genero.id)}" />
                     <span th:text="${genero.nombre}"></span>
                 </label>
             </th:block>
@@ -22,15 +23,19 @@
         <select id="idPrecio" name="precioId">
             <option value="" disabled selected>Selecciona un precio</option>
             <th:block th:each="precio : ${precios}">
-                <option th:value="${precio.id}" 
+                <option th:value="${precio.id}"
                         th:text="${precio.cantidad + ' €'}"
                         th:selected="${precio.cantidad == precioSeleccionado}"></option>
             </th:block>
         </select>
-
         <a href="/precio/c">(Nuevo precio)</a>
 
         <br/><br/>
-        <input type="submit" value="Crear juego"/>
+
+        <label for="imagenes">Selecciona hasta 5 imágenes:</label>
+        <input id="imagenes" type="file" name="imagenes" multiple="multiple" accept="image/*" />
+        <br/><br/>
+
+        <input type="submit" value="Crear juego con imágenes"/>
     </form>
 </div>

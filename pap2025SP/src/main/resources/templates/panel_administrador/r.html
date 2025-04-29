@@ -9,7 +9,7 @@
 <h3>Lista de Géneros:</h3>
 <ul>
     <li th:each="genero : ${generos}">
-        <span th:text="${genero}">Nombre del género</span>
+        <span th:text="${genero.nombre}">Nombre del género</span>
     </li>
 </ul>
 
@@ -25,5 +25,28 @@
 <ul>
     <li th:each="imagen : ${imagenes}">
         <img th:src="@{'/uploads/' + ${imagen.ruta}}" alt="Imagen" style="max-height: 200px;">
+    </li>
+</ul>
+
+<h3>Lista de Juegos:</h3>
+<ul>
+    <li th:each="juego : ${juegos}">
+        <p><strong>ID:</strong> <span th:text="${juego.id}">ID</span></p>
+        <p><strong>Nombre:</strong> <span th:text="${juego.nombre}">Nombre del juego</span></p>
+        
+        <p><strong>Géneros:</strong>
+            <ul>
+                <li th:each="genero : ${juego.generos}" th:text="${genero.nombre}">Nombre del género</li>
+            </ul>
+        </p>
+        
+        <p><strong>Precio:</strong> <span th:text="${juego.precio.cantidad} + ' €'">Precio</span></p>
+        
+        <p><strong>Imágenes:</strong></p>
+        <div style="display: flex; gap: 10px;">
+            <img th:each="imagen : ${juego.imagenes}" th:src="@{'/uploads/' + ${imagen.ruta}}" alt="Imagen del juego" style="max-height: 150px;">
+        </div>
+
+        <hr/>
     </li>
 </ul>

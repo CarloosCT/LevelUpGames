@@ -12,9 +12,9 @@ public class ImagenService
     @Autowired
     private ImagenRepository imagenRepository;
 
-    public void save(String ruta) 
+    public void save(Imagen imagen) 
     {
-        imagenRepository.save( new Imagen(ruta));
+        imagenRepository.save(imagen);
     }
 
     public List<Imagen> findAll() {

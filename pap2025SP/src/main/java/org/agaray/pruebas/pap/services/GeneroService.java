@@ -13,7 +13,7 @@ public class GeneroService
     private GeneroRepository generoRepository;
 
     public void save(String nombre) {
-        generoRepository.save( new Genero(nombre));
+        generoRepository.save(new Genero(nombre));
     }
 
     public List<Genero> findAll() {
@@ -22,5 +22,9 @@ public class GeneroService
 
     public Genero findByNombre(String nombre) {
         return generoRepository.findByNombre(nombre).orElse(null);
+    }
+
+    public List<Genero> findByIds(List<Long> ids) {
+        return generoRepository.findAllById(ids);
     }
 }
