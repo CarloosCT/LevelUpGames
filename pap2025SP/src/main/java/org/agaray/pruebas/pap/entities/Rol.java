@@ -8,13 +8,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@NoArgsConstructor
 public class Rol {
 
     @Id
@@ -24,7 +23,7 @@ public class Rol {
     @Column(unique = true)
     private String nombre;
 
-    /*@ManyToMany(mappedBy = "roles")
+    @OneToMany(mappedBy = "rol")
     private Collection<Usuario> usuarios;
 
     public Rol(String nombre) {
@@ -45,5 +44,10 @@ public class Rol {
         }
         Rol rol = (Rol) obj;
         return nombre.equals(rol.nombre);
-    }*/
+    }
+
+    @Override
+    public int hashCode() {
+        return nombre.hashCode();
+    }
 }

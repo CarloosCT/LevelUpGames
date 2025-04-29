@@ -22,16 +22,17 @@ public class Usuario {
     private String apellidos;
 
     /*@OneToMany(mappedBy = "usuario")
-    private List<Compra> compras;
+    private List<Compra> compras;*/
 
     @OneToMany(mappedBy = "usuario")
     private List<Valoracion> valoraciones;
 
+    
     @ManyToOne
     @JoinColumn(name = "rol_nombre")
     private Rol rol;
 
     public Rol getRol() {
         return rol;
-    }*/
+    }
 }
