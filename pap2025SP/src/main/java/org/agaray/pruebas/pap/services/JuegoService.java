@@ -35,39 +35,47 @@ public class JuegoService {
     public void saveJuegoConRelaciones(String nombre, List<Long> generosIds, Long precioId, MultipartFile[] imagenes) {
 
         List<Genero> generos = generoService.findByIds(generosIds);
-
         Precio precio = precioService.findById(precioId);
-
+    
         Juego juego = new Juego(nombre, generos, precio, new ArrayList<>());
-
         juego = juegoRepository.save(juego);
-
+    
         List<Imagen> imagenesGuardadas = new ArrayList<>();
-
+    
         try {
+            // Ruta relativa dentro del proyecto
+            Path uploadPath = Paths.get("uploads/");
+            
+            // Crear carpeta si no existe
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+    
             for (MultipartFile imagen : imagenes) {
-                String nombreArchivo = imagen.getOriginalFilename();
-                System.out.println("Subiendo archivo: " + nombreArchivo);  // Log para verificar
-            
-                Path uploadPath = Paths.get("uploads/");
+                String nombreArchivoOriginal = imagen.getOriginalFilename();
+    
+                if (nombreArchivoOriginal == null || nombreArchivoOriginal.isEmpty()) {
+                    throw new RuntimeException("El nombre del archivo es inválido.");
+                }
+    
+                // Limpiar el nombre del archivo
+                String nombreArchivo = Paths.get(nombreArchivoOriginal).getFileName().toString();
                 Path rutaAbsoluta = uploadPath.resolve(nombreArchivo);
-                System.out.println("Guardando en: " + rutaAbsoluta.toString());  // Log para verificar
-            
+    
                 Files.copy(imagen.getInputStream(), rutaAbsoluta, StandardCopyOption.REPLACE_EXISTING);
-            
+    
                 Imagen imagenGuardada = new Imagen(nombreArchivo);
                 imagenGuardada.setJuego(juego);
-            
                 imagenService.save(imagenGuardada);
-            
+    
                 imagenesGuardadas.add(imagenGuardada);
             }
+    
         } catch (IOException e) {
             throw new RuntimeException("Error al guardar las imágenes: " + e.getMessage(), e);
         }
-
+    
         juego.setImagenes(imagenesGuardadas);
-
         juegoRepository.save(juego);
     }
 
