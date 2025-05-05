@@ -47,20 +47,19 @@ public class JuegoService {
         try {
             for (MultipartFile imagen : imagenes) {
                 String nombreArchivo = imagen.getOriginalFilename();
-
-                if (nombreArchivo == null || nombreArchivo.isEmpty()) {
-                    throw new RuntimeException("El nombre del archivo es inválido.");
-                }
-
-                Path uploadPath = Paths.get("src/main/resources/static/uploads/");
+                System.out.println("Subiendo archivo: " + nombreArchivo);  // Log para verificar
+            
+                Path uploadPath = Paths.get("uploads/");
                 Path rutaAbsoluta = uploadPath.resolve(nombreArchivo);
+                System.out.println("Guardando en: " + rutaAbsoluta.toString());  // Log para verificar
+            
                 Files.copy(imagen.getInputStream(), rutaAbsoluta, StandardCopyOption.REPLACE_EXISTING);
-
+            
                 Imagen imagenGuardada = new Imagen(nombreArchivo);
                 imagenGuardada.setJuego(juego);
-
+            
                 imagenService.save(imagenGuardada);
-
+            
                 imagenesGuardadas.add(imagenGuardada);
             }
         } catch (IOException e) {

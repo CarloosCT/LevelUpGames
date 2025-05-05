@@ -2,7 +2,6 @@ package org.agaray.pruebas.pap.services;
 
 import java.util.List;
 
-import org.agaray.pruebas.pap.entities.Genero;
 import org.agaray.pruebas.pap.entities.Precio;
 import org.agaray.pruebas.pap.repositories.PrecioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
