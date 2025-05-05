@@ -1,0 +1,37 @@
+<div class="container">
+    <h1>Lista de Géneros</h1>
+    
+    <form action="/precio/c">
+        <input type="submit" value="Nuevo" autofocus="autofocus" />
+    </form>
+    
+    <table class="table table-striped">
+        <thead>
+            <th>Cantidad</th>
+        </thead>
+    
+        <tbody>
+            <tr th:each=" precio : ${precios}">
+                <td th:text="${precio.cantidad}"/>
+                <td>
+                    <form action="/precio/u" method="get">
+                        <input type="hidden" name="id" th:value="${precio.id}" />
+                        <button type="submit" >
+                            <img alt="lapiz" src="/img/icons/edit.png" width="20" height="20"/>
+                        </button>
+                    </form>
+                </td>
+
+                <td>
+                    <form action="/precio/d" method="post">
+                        <input type="hidden" name="id" th:value="${precio.id}" />
+                        <button type="submit" >
+                            <img alt="papelera" src="/img/icons/trash.png" width="20" height="20"/>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    
+</div>

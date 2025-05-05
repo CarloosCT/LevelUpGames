@@ -1,6 +1,8 @@
 package org.agaray.pruebas.pap.services;
 
 import java.util.List;
+
+import org.agaray.pruebas.pap.entities.Genero;
 import org.agaray.pruebas.pap.entities.Precio;
 import org.agaray.pruebas.pap.repositories.PrecioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,4 +30,20 @@ public class PrecioService
     {
         return precioRepository.findById(precioId).orElse(null);
     }
+
+     public void d(Long id) throws Exception {
+        Precio PrecioABorrar = precioRepository.findById(id).get();
+        if (PrecioABorrar.getJuegos().size() == 0) {
+            precioRepository.deleteById(id);
+        }
+        else {
+            throw new Exception("El precio "+PrecioABorrar.getCantidad()+" tiene juegos asociados");
+        }
+    }
+
+    public Precio u(Long id, Double cantidad) {
+        Precio PrecioAModificar =  precioRepository.findById(id).get();
+        PrecioAModificar.setCantidad(cantidad);
+        return precioRepository.save(PrecioAModificar);
+     }
 }

@@ -28,7 +28,7 @@ public class GeneroService
         return generoRepository.findAllById(ids);
     }
 
-    public Genero rById(Long id) {
+    public Genero findById(Long id) {
         return generoRepository.findById(id).get();
     }
 

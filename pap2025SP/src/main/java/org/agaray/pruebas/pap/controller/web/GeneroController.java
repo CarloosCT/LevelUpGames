@@ -61,7 +61,7 @@ public class GeneroController {
     public String u(
             @RequestParam Long id,
             ModelMap m) {
-        m.put("genero", generoService.rById(id));
+        m.put("genero", generoService.findById(id));
         m.put("estilos", "/css/genero/style.css");
         m.put("view", "genero/u");
         return "_t/frame";
