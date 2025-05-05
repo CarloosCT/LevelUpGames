@@ -38,9 +38,9 @@ public class JuegoController
     @GetMapping("c")
     public String c(
         ModelMap m,
-        @SessionAttribute(value = "nombreJuego", required = false) String nombreJuego,
-        @SessionAttribute(value = "generosSeleccionados", required = false) List<Long> generosSeleccionados,
-        @SessionAttribute(value = "precioSeleccionado", required = false) Double precioSeleccionado
+        @SessionAttribute(required = false) String nombreJuego,
+        @SessionAttribute(required = false) List<Long> generosSeleccionados,
+        @SessionAttribute(required = false) Double precioSeleccionado
     ) {
         m.put("view", "juego/c");
         m.put("generos", generoService.findAll());
@@ -54,10 +54,10 @@ public class JuegoController
 
     @PostMapping("c")
     public String cPost(
-        @RequestParam("nombre") String nombre,
-        @RequestParam(value = "generosIds", required = false) List<Long> generosIds,
-        @RequestParam("precioId") Long precioId,
-        @RequestParam("imagenes") MultipartFile[] imagenes,  // Parámetro de imágenes
+        @RequestParam String nombre,
+        @RequestParam(required = false) List<Long> generosIds,
+        @RequestParam Long precioId,
+        @RequestParam MultipartFile[] imagenes,
         HttpSession session
     ) throws DangerException {
         try {

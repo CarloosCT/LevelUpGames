@@ -56,8 +56,8 @@ public class JuegoService {
                     throw new RuntimeException("El nombre del archivo es inválido.");
                 }
 
-                Path rutaAbsoluta = Paths.get("C:/Users/Usuario/Desktop/LevelUpGames/LevelUpGames/pap2025SP/src/main/resources/static/uploads/" + nombreArchivo);
-                Files.createDirectories(rutaAbsoluta.getParent());
+                Path uploadPath = Paths.get("src/main/resources/static/uploads/");
+                Path rutaAbsoluta = uploadPath.resolve(nombreArchivo);
                 Files.copy(imagen.getInputStream(), rutaAbsoluta, StandardCopyOption.REPLACE_EXISTING);
 
                 // Crear imagen con la ruta y el juego

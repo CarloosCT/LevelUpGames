@@ -1,0 +1,43 @@
+<div class="container">
+    <h1>Lista de Imágenes</h1>
+
+    <form action="/imagen/c">
+        <input type="submit" value="Nueva" autofocus="autofocus" />
+    </form>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Imagen</th>
+                <th>Editar</th>
+                <th>Eliminar</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr th:each="imagen : ${imagenes}">
+                <td>
+                    <img th:src="@{'/uploads/' + ${imagen.ruta}}" alt="Imagen" width="100" height="auto" />
+                </td>
+
+                <td>
+                    <form action="/imagen/u" method="get">
+                        <input type="hidden" name="id" th:value="${imagen.id}" />
+                        <button type="submit" >
+                            <img alt="lapiz" src="/img/icons/edit.png" width="20" height="20"/>
+                        </button>
+                    </form>
+                </td>
+
+                <td>
+                    <form action="/imagen/d" method="post">
+                        <input type="hidden" name="id" th:value="${imagen.id}" />
+                        <button type="submit" >
+                            <img alt="papelera" src="/img/icons/trash.png" width="20" height="20"/>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
