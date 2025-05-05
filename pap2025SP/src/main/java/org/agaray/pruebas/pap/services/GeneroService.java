@@ -27,4 +27,24 @@ public class GeneroService
     public List<Genero> findByIds(List<Long> ids) {
         return generoRepository.findAllById(ids);
     }
+
+    public Genero rById(Long id) {
+        return generoRepository.findById(id).get();
+    }
+
+    public void d(Long id) throws Exception {
+        Genero generoABorrar = generoRepository.findById(id).get();
+        if (generoABorrar.getJuegos().size() == 0) {
+            generoRepository.deleteById(id);
+        }
+        else {
+            throw new Exception("El genero "+generoABorrar.getNombre()+" tiene juegos asociados");
+        }
+    }
+
+    public Genero u(Long id, String nombre) {
+        Genero GeneroAModificar =  generoRepository.findById(id).get();
+        GeneroAModificar.setNombre(nombre);
+        return generoRepository.save(GeneroAModificar);
+     }
 }
