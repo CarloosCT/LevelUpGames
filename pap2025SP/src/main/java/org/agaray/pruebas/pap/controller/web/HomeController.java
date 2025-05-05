@@ -1,6 +1,8 @@
 package org.agaray.pruebas.pap.controller.web;
 
 import org.agaray.pruebas.pap.exception.DangerException;
+import org.agaray.pruebas.pap.services.JuegoService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,11 +14,15 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 public class HomeController {
 
+    @Autowired
+    private JuegoService juegoService;
+
     @GetMapping("/")
     public String home(
         ModelMap m
     ) {
         m.put("view","/home/home");
+        m.put("juegos", juegoService.findAll());
         m.put("estilos", "/css/home/style.css");
         return "_t/frame";
     }
@@ -40,5 +46,4 @@ public class HomeController {
         s.setAttribute("nVisitas", ((Integer)s.getAttribute("nVisitas"))+1);
         return "home/contador";
     }
-
 }

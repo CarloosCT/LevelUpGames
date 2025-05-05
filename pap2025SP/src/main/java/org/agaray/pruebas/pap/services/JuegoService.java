@@ -33,19 +33,15 @@ public class JuegoService {
     private ImagenService imagenService;
 
     public void saveJuegoConRelaciones(String nombre, List<Long> generosIds, Long precioId, MultipartFile[] imagenes) {
-        // Obtener géneros seleccionados desde el servicio
+
         List<Genero> generos = generoService.findByIds(generosIds);
 
-        // Obtener el precio seleccionado
         Precio precio = precioService.findById(precioId);
 
-        // Crear el juego primero (sin las imágenes asociadas)
         Juego juego = new Juego(nombre, generos, precio, new ArrayList<>());
 
-        // Guardar el juego para obtener el id
         juego = juegoRepository.save(juego);
 
-        // Lista de imágenes asociadas al juego
         List<Imagen> imagenesGuardadas = new ArrayList<>();
 
         try {
@@ -60,24 +56,19 @@ public class JuegoService {
                 Path rutaAbsoluta = uploadPath.resolve(nombreArchivo);
                 Files.copy(imagen.getInputStream(), rutaAbsoluta, StandardCopyOption.REPLACE_EXISTING);
 
-                // Crear imagen con la ruta y el juego
                 Imagen imagenGuardada = new Imagen(nombreArchivo);
                 imagenGuardada.setJuego(juego);
 
-                // Guardar imagen con relación ya establecida
                 imagenService.save(imagenGuardada);
 
-                // Agregar a la lista
                 imagenesGuardadas.add(imagenGuardada);
             }
         } catch (IOException e) {
             throw new RuntimeException("Error al guardar las imágenes: " + e.getMessage(), e);
         }
 
-        // Asociar imágenes al juego
         juego.setImagenes(imagenesGuardadas);
 
-        // Guardar nuevamente el juego con imágenes asociadas
         juegoRepository.save(juego);
     }
 
