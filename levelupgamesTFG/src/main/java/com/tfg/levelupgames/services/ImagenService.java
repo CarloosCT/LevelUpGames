@@ -40,7 +40,7 @@ public class ImagenService
     public void d(Long id) throws DangerException {
         Imagen imagen = this.findById(id);
 
-        Path ruta = Paths.get("src/main/resources/static/uploads/" + imagen.getRuta());
+        Path ruta = Paths.get("uploads/" + imagen.getRuta());
         try {
             Files.deleteIfExists(ruta);
         } catch (IOException e) {

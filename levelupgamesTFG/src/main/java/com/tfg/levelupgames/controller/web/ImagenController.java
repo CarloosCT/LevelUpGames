@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.tfg.levelupgames.entities.Imagen;
 import com.tfg.levelupgames.exception.DangerException;
 import com.tfg.levelupgames.helper.PRG;
 import com.tfg.levelupgames.services.ImagenService;
