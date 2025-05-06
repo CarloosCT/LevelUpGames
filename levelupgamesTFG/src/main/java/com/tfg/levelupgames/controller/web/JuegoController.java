@@ -56,28 +56,25 @@ public class JuegoController
     @PostMapping("c")
     public String cPost(
         @RequestParam String nombre,
-        @RequestParam(required = false) List<Long> generosIds,
+        @RequestParam List<Long> generosIds,
         @RequestParam Long precioId,
         @RequestParam MultipartFile[] imagenes,
         HttpSession session
     ) throws DangerException {
         try {
-            // Verificar si se seleccionaron imágenes
+
             if (imagenes.length == 0) {
                 PRG.error("No se han seleccionado imágenes.", "/juego/c");
                 return "redirect:/juego/c";
             }
     
-            // Asegurarse de no subir más de 5 imágenes
             if (imagenes.length > 5) {
                 PRG.error("Puedes subir un máximo de 5 imágenes.", "/juego/c");
                 return "redirect:/juego/c";
             }
     
-            // Llamamos al servicio para guardar el juego
             juegoService.saveJuegoConRelaciones(nombre, generosIds, precioId, imagenes);
     
-            // Guardar los datos del juego en la sesión (si es necesario)
             session.setAttribute("nombreJuego", nombre);
             session.setAttribute("generosSeleccionados", generosIds);
             session.setAttribute("precioSeleccionado", precioId);
@@ -86,6 +83,6 @@ public class JuegoController
             PRG.error("Ha ocurrido un error inesperado: " + e.getMessage(), "/juego/c");
         }
     
-        return "redirect:/panel_administrador/r";  // Redirigir al panel de administrador
+        return "redirect:/panel_administrador/r";
     }
 }
