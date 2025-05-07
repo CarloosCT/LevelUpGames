@@ -46,7 +46,6 @@ public class JuegoService {
         try {
             Path uploadPath = Paths.get("uploads/");
             
-            // Crear la carpeta uploads si no existe
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
             }
@@ -58,14 +57,11 @@ public class JuegoService {
                     throw new RuntimeException("El nombre del archivo es inválido.");
                 }
     
-                // Limpiar el nombre del archivo para evitar problemas con rutas
                 String nombreArchivo = Paths.get(nombreArchivoOriginal).getFileName().toString();
                 Path rutaAbsoluta = uploadPath.resolve(nombreArchivo);
     
-                // Guardar la imagen en la carpeta uploads
                 Files.copy(imagen.getInputStream(), rutaAbsoluta, StandardCopyOption.REPLACE_EXISTING);
     
-                // Guardar la imagen
                 Imagen imagenGuardada = new Imagen(nombreArchivo);
                 imagenGuardada.setJuego(juego);
                 imagenService.save(imagenGuardada);
