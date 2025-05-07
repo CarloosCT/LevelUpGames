@@ -57,10 +57,11 @@ public class Juego {
         return suma / valoraciones.size();
     }*/
 
-    public Juego(String nombre, List<Genero> generos, Precio precio, List<Imagen> imagenes) {
+    public Juego(String nombre, String descripcion, List<Genero> generos, Precio precio, List<Imagen> imagenes) {
         this.nombre = nombre;
         this.generos = generos;
         this.precio = precio;
         this.imagenes = imagenes;
+        this.descripcion = descripcion;
     }
 }

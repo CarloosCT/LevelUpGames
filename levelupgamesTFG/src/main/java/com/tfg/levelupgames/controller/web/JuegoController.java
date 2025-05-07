@@ -65,6 +65,7 @@ public class JuegoController
     @PostMapping("c")
     public String cPost(
         @RequestParam String nombre,
+        @RequestParam String descripcion,
         @RequestParam List<Long> generosIds,
         @RequestParam Long precioId,
         @RequestParam MultipartFile[] imagenes,
@@ -82,7 +83,7 @@ public class JuegoController
                 return "redirect:/juego/c";
             }
     
-            juegoService.saveJuegoConRelaciones(nombre, generosIds, precioId, imagenes);
+            juegoService.saveJuegoConRelaciones(nombre, descripcion, generosIds, precioId, imagenes);
     
             session.setAttribute("nombreJuego", nombre);
             session.setAttribute("generosSeleccionados", generosIds);

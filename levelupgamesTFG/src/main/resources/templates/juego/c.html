@@ -4,6 +4,12 @@
     <form action="/juego/c" method="post" enctype="multipart/form-data">
         <label for="idNombre">Nombre</label>
         <input id="idNombre" type="text" name="nombre" th:value="${nombreJuego}" autofocus="autofocus"/>
+        <br><br>
+
+    <label for="idDesc">Descripción</label>
+    <br>
+    <textarea id="idDesc" name="descripcion" rows="6" cols="50"></textarea>
+
         <br/><br/>
 
         <label>Géneros:</label>

@@ -33,12 +33,12 @@ public class JuegoService {
     @Autowired
     private ImagenService imagenService;
 
-    public void saveJuegoConRelaciones(String nombre, List<Long> generosIds, Long precioId, MultipartFile[] imagenes) {
+    public void saveJuegoConRelaciones(String nombre, String descripcion, List<Long> generosIds, Long precioId, MultipartFile[] imagenes) {
 
         List<Genero> generos = generoService.findByIds(generosIds);
         Precio precio = precioService.findById(precioId);
 
-        Juego juego = new Juego(nombre, generos, precio, new ArrayList<>());
+        Juego juego = new Juego(nombre, descripcion, generos, precio, new ArrayList<>());
         juego = juegoRepository.save(juego);
 
         List<Imagen> imagenesGuardadas = new ArrayList<>();
