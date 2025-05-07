@@ -85,4 +85,37 @@ public class JuegoController
     
         return "redirect:/panel_administrador/r";
     }
+
+    @PostMapping("d")
+    public String d(
+            @RequestParam Long id) throws DangerException {
+        try {
+            juegoService.d(id);
+        } catch (Exception e) {
+            PRG.error(e.getMessage(), "/juego/r");
+        }
+        return "redirect:/juego/r";
+    }
+
+    @GetMapping("u")
+    public String u(
+            @RequestParam Long id,
+            ModelMap m) {
+        m.put("genero", generoService.findById(id));
+        m.put("estilos", "/css/genero/style.css");
+        m.put("view", "genero/u");
+        return "_t/frame";
+    }
+
+    @PostMapping("u")
+    public String uPost(
+            @RequestParam Long id,
+            @RequestParam String nombre) throws DangerException {
+        try {
+            this.generoService.u(id, nombre);
+        } catch (Exception e) {
+            PRG.error("El género " + nombre + " ya existe", "/genero/r");
+        }
+        return "redirect:/genero/r";
+    }
 }
