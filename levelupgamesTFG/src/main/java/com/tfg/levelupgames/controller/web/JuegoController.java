@@ -53,6 +53,15 @@ public class JuegoController
         return "_t/frame";
     }
 
+    @GetMapping("r")
+    public String r(
+            ModelMap m) {
+        m.put("juegos", juegoService.findAll());
+        m.put("view", "juego/r");
+        m.put("estilos", "/css/juego/style.css");
+        return "_t/frame";
+    }
+
     @PostMapping("c")
     public String cPost(
         @RequestParam String nombre,
