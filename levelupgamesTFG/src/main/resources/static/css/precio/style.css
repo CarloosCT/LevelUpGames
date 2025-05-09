@@ -318,10 +318,6 @@ textarea {
     margin-bottom: 10px;
 }
 
-td{
-    color: white;
-}
-
-th{
+td, th{
     color: white;
 }
