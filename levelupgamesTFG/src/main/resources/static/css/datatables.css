@@ -3309,3 +3309,7 @@ div.dtsr-creation button:hover {
 }
 
 
+option{
+  color: white;
+  background-color: black;
+}
