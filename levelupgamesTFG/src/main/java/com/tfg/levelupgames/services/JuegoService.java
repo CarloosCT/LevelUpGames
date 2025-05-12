@@ -33,49 +33,68 @@ public class JuegoService {
     @Autowired
     private ImagenService imagenService;
 
-    public void saveJuegoConRelaciones(String nombre, String descripcion, List<Long> generosIds, Long precioId, MultipartFile[] imagenes) {
+    public void saveJuegoConRelaciones(String nombre, String descripcion, List<Long> generosIds, Long precioId, MultipartFile portada, MultipartFile[] imagenes) {
 
-        List<Genero> generos = generoService.findByIds(generosIds);
-        Precio precio = precioService.findById(precioId);
+    List<Genero> generos = generoService.findByIds(generosIds);
+    Precio precio = precioService.findById(precioId);
 
-        Juego juego = new Juego(nombre, descripcion, generos, precio, new ArrayList<>());
-        juego = juegoRepository.save(juego);
+    Juego juego = new Juego(nombre, descripcion, generos, precio, new ArrayList<>());
+    juego = juegoRepository.save(juego);
 
-        List<Imagen> imagenesGuardadas = new ArrayList<>();
+    List<Imagen> imagenesGuardadas = new ArrayList<>();
 
-        try {
-            Path uploadPath = Paths.get("uploads/");
-            
-            if (!Files.exists(uploadPath)) {
-                Files.createDirectories(uploadPath);
-            }
+    try {
+        Path uploadPath = Paths.get("uploads/");
 
-            for (MultipartFile imagen : imagenes) {
-                String nombreArchivoOriginal = imagen.getOriginalFilename();
-
-                if (nombreArchivoOriginal == null || nombreArchivoOriginal.isEmpty()) {
-                    throw new RuntimeException("El nombre del archivo es inválido.");
-                }
-    
-                String nombreArchivo = Paths.get(nombreArchivoOriginal).getFileName().toString();
-                Path rutaAbsoluta = uploadPath.resolve(nombreArchivo);
-    
-                Files.copy(imagen.getInputStream(), rutaAbsoluta, StandardCopyOption.REPLACE_EXISTING);
-    
-                Imagen imagenGuardada = new Imagen(nombreArchivo);
-                imagenGuardada.setJuego(juego);
-                imagenService.save(imagenGuardada);
-
-                imagenesGuardadas.add(imagenGuardada);
-            }
-
-        } catch (IOException e) {
-            throw new RuntimeException("Error al guardar las imágenes: " + e.getMessage(), e);
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
         }
 
-        juego.setImagenes(imagenesGuardadas);
-        juegoRepository.save(juego);
+        // Guardar portada
+        String nombrePortada = portada.getOriginalFilename();
+
+        if (nombrePortada == null || nombrePortada.isEmpty()) {
+            throw new RuntimeException("El nombre del archivo de portada es inválido.");
+        }
+
+        String nombreArchivoPortada = Paths.get(nombrePortada).getFileName().toString();
+        Path rutaPortada = uploadPath.resolve(nombreArchivoPortada);
+
+        Files.copy(portada.getInputStream(), rutaPortada, StandardCopyOption.REPLACE_EXISTING);
+
+        Imagen portadaGuardada = new Imagen(nombreArchivoPortada);
+        portadaGuardada.setJuego(juego);
+        imagenService.save(portadaGuardada);
+
+        juego.setPortada(portadaGuardada); // Asegúrate de tener este campo en tu entidad Juego
+
+        // Guardar imágenes adicionales
+        for (MultipartFile imagen : imagenes) {
+            String nombreArchivoOriginal = imagen.getOriginalFilename();
+
+            if (nombreArchivoOriginal == null || nombreArchivoOriginal.isEmpty()) {
+                throw new RuntimeException("El nombre del archivo es inválido.");
+            }
+
+            String nombreArchivo = Paths.get(nombreArchivoOriginal).getFileName().toString();
+            Path rutaAbsoluta = uploadPath.resolve(nombreArchivo);
+
+            Files.copy(imagen.getInputStream(), rutaAbsoluta, StandardCopyOption.REPLACE_EXISTING);
+
+            Imagen imagenGuardada = new Imagen(nombreArchivo);
+            imagenGuardada.setJuego(juego);
+            imagenService.save(imagenGuardada);
+
+            imagenesGuardadas.add(imagenGuardada);
+        }
+
+    } catch (IOException e) {
+        throw new RuntimeException("Error al guardar las imágenes: " + e.getMessage(), e);
     }
+
+    juego.setImagenes(imagenesGuardadas);
+    juegoRepository.save(juego);
+}
 
     public List<Juego> findAll() {
         return juegoRepository.findAll();

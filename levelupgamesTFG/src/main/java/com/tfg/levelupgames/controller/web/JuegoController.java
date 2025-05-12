@@ -63,38 +63,38 @@ public class JuegoController
     }
 
     @PostMapping("c")
-    public String cPost(
-        @RequestParam String nombre,
-        @RequestParam String descripcion,
-        @RequestParam List<Long> generosIds,
-        @RequestParam Long precioId,
-        @RequestParam MultipartFile[] imagenes,
-        HttpSession session
-    ) throws DangerException {
-        try {
-
-            if (imagenes.length == 0) {
-                PRG.error("No se han seleccionado imágenes.", "/juego/c");
-                return "redirect:/juego/c";
-            }
-    
-            if (imagenes.length > 5) {
-                PRG.error("Puedes subir un máximo de 5 imágenes.", "/juego/c");
-                return "redirect:/juego/c";
-            }
-    
-            juegoService.saveJuegoConRelaciones(nombre, descripcion, generosIds, precioId, imagenes);
-    
-            session.setAttribute("nombreJuego", nombre);
-            session.setAttribute("generosSeleccionados", generosIds);
-            session.setAttribute("precioSeleccionado", precioId);
-    
-        } catch (Exception e) {
-            PRG.error("Ha ocurrido un error inesperado: " + e.getMessage(), "/juego/c");
+public String cPost(
+    @RequestParam String nombre,
+    @RequestParam String descripcion,
+    @RequestParam List<Long> generosIds,
+    @RequestParam Long precioId,
+    @RequestParam("imagenes") MultipartFile[] imagenes,
+    @RequestParam("portadaFile") MultipartFile portadaFile,
+    HttpSession session
+) throws DangerException {
+    try {
+        if (imagenes.length == 0) {
+            PRG.error("No se han seleccionado imágenes.", "/juego/c");
+            return "redirect:/juego/c";
         }
-    
-        return "redirect:/panel_administrador/r";
+
+        if (imagenes.length > 5) {
+            PRG.error("Puedes subir un máximo de 5 imágenes.", "/juego/c");
+            return "redirect:/juego/c";
+        }
+
+    juegoService.saveJuegoConRelaciones(nombre, descripcion, generosIds, precioId, portadaFile, imagenes);
+
+        session.setAttribute("nombreJuego", nombre);
+        session.setAttribute("generosSeleccionados", generosIds);
+        session.setAttribute("precioSeleccionado", precioId);
+
+    } catch (Exception e) {
+        PRG.error("Ha ocurrido un error inesperado: " + e.getMessage(), "/juego/c");
     }
+
+    return "redirect:/panel_administrador/r";
+}
 
     @PostMapping("d")
     public String d(

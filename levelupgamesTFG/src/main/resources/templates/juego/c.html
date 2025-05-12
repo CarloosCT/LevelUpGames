@@ -6,10 +6,9 @@
         <input id="idNombre" type="text" name="nombre" th:value="${nombreJuego}" autofocus="autofocus"/>
         <br><br>
 
-    <label for="idDesc">Descripción</label>
-    <br>
-    <textarea id="idDesc" name="descripcion" rows="6" cols="50"></textarea>
-
+        <label for="idDesc">Descripción</label>
+        <br>
+        <textarea id="idDesc" name="descripcion" rows="6" cols="50"></textarea>
         <br/><br/>
 
         <label>Géneros:</label>
@@ -35,7 +34,10 @@
             </th:block>
         </select>
         <a href="/precio/c">(Nuevo precio)</a>
+        <br/><br/>
 
+        <label for="portada">Selecciona una imagen de portada:</label>
+        <input type="file" name="portadaFile" accept="image/*" required />
         <br/><br/>
 
         <label for="imagenes">Selecciona hasta 5 imágenes:</label>

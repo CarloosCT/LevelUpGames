@@ -36,6 +36,10 @@ public class Juego {
     @OneToMany(mappedBy = "juego")
     private List<Imagen> imagenes = new ArrayList<>();
 
+    @OneToOne
+    @JoinColumn(name = "portada_id")
+    private Imagen portada;
+
     /*@OneToMany(mappedBy = "juego")
     private List<Valoracion> valoraciones = new ArrayList<>();*/
 
@@ -63,5 +67,10 @@ public class Juego {
         this.precio = precio;
         this.imagenes = imagenes;
         this.descripcion = descripcion;
+    }
+
+    public void setPortada(Imagen portada) 
+    {
+        this.portada = portada;
     }
 }
