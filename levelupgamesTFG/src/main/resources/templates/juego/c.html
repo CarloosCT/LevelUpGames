@@ -24,16 +24,9 @@
         </div>
         <br/><br/>
 
-        <label for="idPrecio">Precio:</label>
-        <select id="idPrecio" name="precioId">
-            <option value="" disabled selected>Selecciona un precio</option>
-            <th:block th:each="precio : ${precios}">
-                <option th:value="${precio.id}"
-                        th:text="${precio.cantidad + ' €'}"
-                        th:selected="${precio.cantidad == precioSeleccionado}"></option>
-            </th:block>
-        </select>
-        <a href="/precio/c">(Nuevo precio)</a>
+        <!-- Campo de texto para ingresar el precio directamente -->
+        <label for="precio">Precio (€):</label>
+        <input type="number" step="0.01" min="0" id="precio" name="precio" placeholder="Introduce el precio">
         <br/><br/>
 
         <label for="portada">Selecciona una imagen de portada:</label>

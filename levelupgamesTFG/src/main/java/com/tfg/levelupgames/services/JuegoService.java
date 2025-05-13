@@ -33,12 +33,16 @@ public class JuegoService {
     @Autowired
     private ImagenService imagenService;
 
-    public void saveJuegoConRelaciones(String nombre, String descripcion, List<Long> generosIds, Long precioId, MultipartFile portada, MultipartFile[] imagenes) {
+    public void saveJuegoConRelaciones(String nombre, String descripcion, List<Long> generosIds, Double precio, MultipartFile portada, MultipartFile[] imagenes) {
 
     List<Genero> generos = generoService.findByIds(generosIds);
-    Precio precio = precioService.findById(precioId);
 
-    Juego juego = new Juego(nombre, descripcion, generos, precio, new ArrayList<>());
+    // Guardar el precio
+    precioService.save(precio);
+    Precio precioGuardado = precioService.findByCantidad(precio);
+
+    // Crear y guardar el juego
+    Juego juego = new Juego(nombre, descripcion, generos, precioGuardado, new ArrayList<>());
     juego = juegoRepository.save(juego);
 
     List<Imagen> imagenesGuardadas = new ArrayList<>();
@@ -66,7 +70,7 @@ public class JuegoService {
         portadaGuardada.setJuego(juego);
         imagenService.save(portadaGuardada);
 
-        juego.setPortada(portadaGuardada); // Asegúrate de tener este campo en tu entidad Juego
+        juego.setPortada(portadaGuardada);
 
         // Guardar imágenes adicionales
         for (MultipartFile imagen : imagenes) {

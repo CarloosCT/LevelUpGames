@@ -31,9 +31,6 @@ public class JuegoController
     private GeneroService generoService;
 
     @Autowired
-    private PrecioService precioService;
-
-    @Autowired
     private JuegoService juegoService;
 
     @GetMapping("c")
@@ -45,7 +42,6 @@ public class JuegoController
     ) {
         m.put("view", "juego/c");
         m.put("generos", generoService.findAll());
-        m.put("precios", precioService.findAll());
         m.put("nombreJuego", nombreJuego != null ? nombreJuego : "");  // Mantener el nombre del juego
         m.put("generosSeleccionados", generosSeleccionados != null ? generosSeleccionados : new ArrayList<>());
         m.put("precioSeleccionado", precioSeleccionado != null ? precioSeleccionado : null);
@@ -67,7 +63,7 @@ public String cPost(
     @RequestParam String nombre,
     @RequestParam String descripcion,
     @RequestParam List<Long> generosIds,
-    @RequestParam Long precioId,
+    @RequestParam Double precio,
     @RequestParam("imagenes") MultipartFile[] imagenes,
     @RequestParam("portadaFile") MultipartFile portadaFile,
     HttpSession session
@@ -83,11 +79,12 @@ public String cPost(
             return "redirect:/juego/c";
         }
 
-    juegoService.saveJuegoConRelaciones(nombre, descripcion, generosIds, precioId, portadaFile, imagenes);
+        // Ahora pasa el precio directamente como Double
+        juegoService.saveJuegoConRelaciones(nombre, descripcion, generosIds, precio, portadaFile, imagenes);
 
         session.setAttribute("nombreJuego", nombre);
         session.setAttribute("generosSeleccionados", generosIds);
-        session.setAttribute("precioSeleccionado", precioId);
+        session.setAttribute("precioSeleccionado", precio);
 
     } catch (Exception e) {
         PRG.error("Ha ocurrido un error inesperado: " + e.getMessage(), "/juego/c");
