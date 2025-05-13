@@ -22,9 +22,9 @@
 <section class="games">
     <th:block th:each="juego : ${juegos}">
         <div class="game-card">
-            <!-- Mostrar la primera imagen (solo si hay al menos una) -->
-            <div th:if="${juego.imagenes != null and !juego.imagenes.isEmpty()}">
-                <img th:src="@{'/uploads/' + ${juego.imagenes[0].ruta}}" th:alt="${juego.nombre}" />
+            <!-- Mostrar la portada del juego (si existe) -->
+            <div th:if="${juego.portada != null}">
+                <img th:src="@{'/uploads/' + ${juego.portada.ruta}}" th:alt="${juego.nombre}" />
             </div>
 
             <h3 th:text="${juego.nombre}"></h3>
@@ -32,13 +32,6 @@
 
             <div class="categories">
                 <span class="category" th:each="genero : ${juego.generos}" th:text="${genero.nombre}"></span>
-            </div>
-
-            <!-- Mostrar todas las imágenes del juego -->
-            <div class="game-images" th:if="${juego.imagenes != null and !juego.imagenes.isEmpty()}">
-                <th:block th:each="imagen : ${juego.imagenes}">
-                    <img th:src="@{'/uploads/' + ${imagen.ruta}}" alt="Imagen del juego" style="max-height: 150px;" />
-                </th:block>
             </div>
         </div>
     </th:block>
