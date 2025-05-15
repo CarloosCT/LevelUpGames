@@ -9,8 +9,10 @@
 	</ul>
 
 	<ul class="menu-right">
-		<li><a href="/usuario/login">Log in</a></li>
-		<li><a href="/usuario/c">Registrarse</a></li>
+		<div th:if="${session.user==null}">
+			<li><a href="/usuario/login">Log in</a></li>
+			<li><a href="/usuario/c">Registrarse</a></li>
+		</div>
 
 
 		<div th:if="${session.user != null}">
