@@ -1,54 +1,16 @@
-<h2>Panel del Administrador</h2>
-<p>Bienvenido al panel.</p>
+<nav class="admin-links">
+    <a href="/genero/c">Nuevo género</a>
+    <a href="/genero/r">Listado géneros</a>
+    <a href="/precio/c">Nuevo precio</a>
+    <a href="/precio/r">Listado precios</a>
+    <a href="/imagen/r">Listado imágenes</a>
+    <a href="/juego/c">Nuevo juego</a>
+</nav>
 
-<a href="/genero/c">Nuevo género</a>
-<a href="/genero/r">Listado géneros</a>
-<a href="/precio/c">Nuevo precio</a>
-<a href="/precio/r">Listado precios</a>
-<a href="/imagen/r">Listado imagenes</a>
-<a href="/juego/c">Nuevo juego</a>
-
-<h3>Lista de Géneros:</h3>
-<ul>
-    <li th:each="genero : ${generos}">
-        <span th:text="${genero.nombre}">Nombre del género</span>
-    </li>
-</ul>
-
-<h3>Lista de Precios:</h3>
-<ul>
-    <li th:each="precio : ${precios}">
-        <span>Id: <span th:text="${precio.id}">ID del Precio</span></span><br>
-        <span>Cantidad: <span th:text="${precio.cantidad}">Cantidad</span></span><br>
-    </li>
-</ul>
-
-<h3>Lista de Imágenes:</h3>
-<ul>
-    <li th:each="imagen : ${imagenes}">
-        <img th:src="@{'/uploads/' + ${imagen.ruta}}" alt="Imagen" style="max-height: 200px;">
-    </li>
-</ul>
-
-<h3>Lista de Juegos:</h3>
-<ul>
-    <li th:each="juego : ${juegos}">
-        <p><strong>ID:</strong> <span th:text="${juego.id}">ID</span></p>
-        <p><strong>Nombre:</strong> <span th:text="${juego.nombre}">Nombre del juego</span></p>
-        
-        <p><strong>Géneros:</strong>
-            <ul>
-                <li th:each="genero : ${juego.generos}" th:text="${genero.nombre}">Nombre del género</li>
-            </ul>
-        </p>
-        
-        <p><strong>Precio:</strong> <span th:text="${juego.precio.cantidad} + ' €'">Precio</span></p>
-        
-        <p><strong>Imágenes:</strong></p>
-        <div style="display: flex; gap: 10px;">
-            <img th:each="imagen : ${juego.imagenes}" th:src="@{'/uploads/' + ${imagen.ruta}}" alt="Imagen del juego" style="max-height: 150px;">
-        </div>
-
-        <hr/>
-    </li>
-</ul>
+<h3 class="game-list-title">Lista de Juegos</h3>
+<div class="game-list">
+    <div class="game-card" th:each="juego : ${juegos}">
+        <a th:href="@{'/juego/' + ${juego.id}}" target="_blank" rel="noopener noreferrer"
+            th:text="${juego.nombre}">Nombre del juego</a>
+    </div>
+</div>

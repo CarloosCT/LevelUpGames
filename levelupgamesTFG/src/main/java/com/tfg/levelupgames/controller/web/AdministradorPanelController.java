@@ -33,7 +33,7 @@ public class AdministradorPanelController {
         m.put("imagenes", imagenService.findAll());
         m.put("juegos", juegoService.findAll());
         m.put("view", "panel_administrador/r");
-        m.put("estilos", "/css/home/style.css");
+        m.put("estilos", "/css/panelAdministrador/panel.css");
         return "_t/frame";
     }
 }
