@@ -24,7 +24,7 @@ public class HomeController {
     ) {
         m.put("view","/home/home");
         m.put("juegos", juegoService.findAll());
-        m.put("estilos", "/css/home/style.css");
+        m.put("estilos", "/css/home/home.css");
         return "_t/frame";
     }
 }
