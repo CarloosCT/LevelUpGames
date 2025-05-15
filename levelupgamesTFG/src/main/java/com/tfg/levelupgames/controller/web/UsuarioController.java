@@ -26,7 +26,7 @@ public class UsuarioController {
     public String c(
             ModelMap m) {
         m.put("view", "usuario/c");
-        m.put("estilos", "/css/home/style.css");
+        m.put("estilos", "/css/usuario/c.css");
         return "_t/frame";
     }
 
@@ -47,6 +47,7 @@ public class UsuarioController {
     @GetMapping("login")
     public String login(
             ModelMap m) {
+        m.put("estilos", "/css/usuario/login.css");
         m.put("view", "usuario/login");
         return "_t/frame";
     }

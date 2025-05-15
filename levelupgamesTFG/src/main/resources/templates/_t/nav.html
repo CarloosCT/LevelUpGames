@@ -1,24 +1,23 @@
 <nav>
-	<h1>LevelUpGames</h1>
+	<div class="nav-left">
+		<h1>LevelUpGames</h1>
+		<ul class="menu-left">
+			<li><a href="/">Página Principal</a></li>
+			<li><a href="#">Biblioteca</a></li>
+			<li><a href="#">Mis ventas</a></li>
+			<li><a href="/panel_administrador/r">Panel de administrador</a></li>
+		</ul>
+	</div>
 
-	<ul class="menu-left">
-		<li><a href="/">Página Principal</a></li>
-		<li><a href="#">Biblioteca</a></li>
-		<li><a href="#">Mis ventas</a></li>
-		<li><a href="/panel_administrador/r">Panel de administrador</a></li>
-	</ul>
-
-	<ul class="menu-right">
-		<div th:if="${session.user==null}">
-			<li><a href="/usuario/login">Log in</a></li>
-			<li><a href="/usuario/c">Registrarse</a></li>
+	<div class="menu-right">
+		<div th:if="${session.user == null}">
+			<a href="/usuario/login">Log in</a>
+			<a href="/usuario/c">Registrarse</a>
 		</div>
-
 
 		<div th:if="${session.user != null}">
-			<span class="text-light" th:text="|Hola ${session.user.nombre} ${session.user.apellido} |"></span>
+			<span th:text="|Hola ${session.user.nombre} ${session.user.apellido}|"></span>
 			<a href="/usuario/logout">LOGOUT</a>
 		</div>
-
-	</ul>
+	</div>
 </nav>
