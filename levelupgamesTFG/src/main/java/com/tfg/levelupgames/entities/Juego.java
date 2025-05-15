@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Data
@@ -72,5 +73,11 @@ public class Juego {
     public void setPortada(Imagen portada) 
     {
         this.portada = portada;
+    }
+
+    public String getNombresGeneros() {
+        return generos.stream()
+                      .map(Genero::getNombre)
+                      .collect(Collectors.joining(","));
     }
 }

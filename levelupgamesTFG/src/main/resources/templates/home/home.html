@@ -4,12 +4,10 @@
     <div class="dropdown">
         <button class="dropbtn">Filtro</button>
         <div class="dropdown-content">
-            <a href="#">Acción</a>
-            <a href="#">Aventura</a>
-            <a href="#">Estrategia</a>
-            <a href="#">RPG</a>
-            <a href="#">Carreras</a>
-            <a href="#">Arcade</a>
+            <a href="#"
+               th:each="genero : ${generos}"
+               th:attr="data-genero=${genero.nombre}"
+               th:text="${genero.nombre}"></a>
         </div>
     </div>
 </section>
@@ -21,7 +19,10 @@
 
 <section class="games">
     <th:block th:each="juego : ${juegos}">
-        <div class="game-card" th:attr="data-name=${juego.nombre.toLowerCase()}">
+        <div class="game-card"
+             th:attr="data-name=${juego.nombre.toLowerCase()}"
+             th:attrappend=" data-generos=${juego.nombresGeneros}">
+             
             <!-- Mostrar la portada del juego (si existe) -->
             <div th:if="${juego.portada != null}">
                 <img th:src="@{'/uploads/' + ${juego.portada.ruta}}" th:alt="${juego.nombre}" />
@@ -36,20 +37,38 @@
         </div>
     </th:block>
 </section>
+
 <script>
   const searchInput = document.getElementById('search');
   const gameCards = document.querySelectorAll('.game-card');
+  const generoLinks = document.querySelectorAll('.dropdown-content a');
 
-  searchInput.addEventListener('input', function() {
-    const filter = this.value.toLowerCase();
+  // Al escribir en la barra de búsqueda
+  searchInput.addEventListener('input', function () {
+    filtrarJuegos();
+  });
 
-    gameCards.forEach(card => {
-      const name = card.getAttribute('data-name');
-      if (name.includes(filter)) {
-        card.style.display = '';
-      } else {
-        card.style.display = 'none';
-      }
+  // Al hacer clic en un género
+  generoLinks.forEach(link => {
+    link.addEventListener('click', function (e) {
+      e.preventDefault();
+      const generoSeleccionado = this.dataset.genero;
+      filtrarJuegos(generoSeleccionado);
     });
   });
+
+  // Función para filtrar juegos por texto y género
+  function filtrarJuegos(generoSeleccionado = null) {
+    const filtroTexto = searchInput.value.toLowerCase();
+
+    gameCards.forEach(card => {
+      const nombre = card.getAttribute('data-name');
+      const generos = card.getAttribute('data-generos').split(',');
+
+      const coincideTexto = nombre.includes(filtroTexto);
+      const coincideGenero = !generoSeleccionado || generos.includes(generoSeleccionado);
+
+      card.style.display = (coincideTexto && coincideGenero) ? '' : 'none';
+    });
+  }
 </script>

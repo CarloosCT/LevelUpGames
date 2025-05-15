@@ -123,6 +123,10 @@ public class JuegoService {
         }
     }
 
+    public List<Juego> findByGeneroNombre(String nombre) {
+        return juegoRepository.findByGenerosNombre(nombre);
+    }
+
     /*
      * public Juego u(Long id, String nombre) {
      * Juego JuegoAModificar = juegoRepository.findById(id).get();
