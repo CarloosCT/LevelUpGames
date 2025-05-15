@@ -1,7 +1,6 @@
 package com.tfg.levelupgames.controller.web;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -41,12 +40,10 @@ public class PrecioController {
 
     @PostMapping("c")
     public String cPost(
-            @RequestParam Double cantidad) throws DangerException {
+            @RequestParam BigDecimal  cantidad) throws DangerException {
         try {
-            BigDecimal precioDecimal = new BigDecimal(cantidad).setScale(2, RoundingMode.HALF_UP);
-            Double precioNormalizado = precioDecimal.doubleValue();
 
-            this.precioService.save(precioNormalizado);
+            this.precioService.save(cantidad);
         } catch (Exception e) {
             PRG.error("El precio " + cantidad + " ya está registrado", "/precio/r");
         }
@@ -77,11 +74,9 @@ public class PrecioController {
     @PostMapping("u")
     public String uPost(
             @RequestParam Long id,
-            @RequestParam Double cantidad) throws DangerException {
+            @RequestParam BigDecimal cantidad) throws DangerException {
         try {
-            BigDecimal precioDecimal = new BigDecimal(cantidad).setScale(2, RoundingMode.HALF_UP);
-            Double precioNormalizado = precioDecimal.doubleValue();
-            this.precioService.u(id, precioNormalizado);
+            this.precioService.u(id, cantidad);
         } catch (Exception e) {
             PRG.error("El precio " + cantidad + " ya existe", "/precio/r");
         }

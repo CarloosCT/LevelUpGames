@@ -1,5 +1,6 @@
 package com.tfg.levelupgames.services;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,7 +20,7 @@ public class PrecioService {
      * Guarda un nuevo precio solo si no existe uno igual.
      * Si ya existe, retorna el existente.
      */
-    public Precio save(Double cantidad) {
+    public Precio save(BigDecimal  cantidad) {
         Optional<Precio> precioExistente = precioRepository.findByCantidad(cantidad);
         return precioExistente.orElseGet(() -> precioRepository.save(new Precio(cantidad)));
     }
@@ -28,7 +29,7 @@ public class PrecioService {
         return precioRepository.findAll();
     }
 
-    public Precio findByCantidad(Double cantidad) {
+    public Precio findByCantidad(BigDecimal  cantidad) {
         return precioRepository.findByCantidad(cantidad).orElse(null);
     }
 
@@ -45,7 +46,7 @@ public class PrecioService {
         }
     }
 
-    public Precio u(Long id, Double cantidad) {
+    public Precio u(Long id, BigDecimal  cantidad) {
         Precio precioAModificar = precioRepository.findById(id).get();
         precioAModificar.setCantidad(cantidad);
         return precioRepository.save(precioAModificar);

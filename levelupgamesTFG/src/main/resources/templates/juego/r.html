@@ -1,39 +1,55 @@
-<div class="container">
-    <h1>Lista de Juegos</h1>
-    
-    <form action="/juego/c">
-        <input type="submit" value="Nuevo" autofocus="autofocus" />
-    </form>
-    
-    <table class="table table-striped">
-        <thead>
-            <th>Nombre</th>
-            <th>Genero</th>
-            <th>Precio</th>
-        </thead>
-    
-        <tbody>
-            <tr th:each=" juego : ${juegos}">
-                <td th:text="${juego.nombre}"/>
-                <td>
-                    <form action="/juego/u" method="get">
-                        <input type="hidden" name="id" th:value="${juego.id}" />
-                        <button type="submit" >
-                            <img alt="lapiz" src="/img/icons/edit.png" width="20" height="20"/>
-                        </button>
-                    </form>
-                </td>
+<div class="juego-container">
 
-                <td>
-                    <form action="/juego/d" method="post">
-                        <input type="hidden" name="id" th:value="${juego.id}" />
-                        <button type="submit" >
-                            <img alt="papelera" src="/img/icons/trash.png" width="20" height="20"/>
-                        </button>
-                    </form>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    
+    <div class="imagenes-columna">
+        <!-- Imagen principal -->
+        <img id="portada" th:src="@{'/uploads/' + ${juego.portada.ruta}}"
+            th:attr="data-ruta-imagen=${juego.portada.ruta}" class="portada-img" />
+
+        <!-- Miniaturas -->
+        <div id="miniaturas" class="miniaturas-container">
+            <img th:each="imagen : ${juego.imagenes}" th:if="${!imagen.portada}"
+                th:src="@{'/uploads/' + ${imagen.ruta}}" th:attr="data-ruta-imagen=${imagen.ruta}" class="miniatura-img"
+                onclick="cambiarPortada(this)" />
+        </div>
+
+        <!-- Descripción debajo de las imágenes -->
+        <h2 th:text="${juego.descripcion}" class="juego-descripcion"></h2>
+    </div>
+
+    <div class="detalles-columna">
+        <!-- Aquí podrías poner más info si quieres -->
+    </div>
+
+    <div class="precio-columna">
+        <!-- Nombre encima del precio -->
+        <h1 th:text="${juego.nombre}" class="juego-titulo" style="margin-bottom: 10px;"></h1>
+
+        <h3 th:text="${juego.precio.cantidad + ' €'}" class="juego-precio"></h3>
+
+        <button onclick="comprarJuego()" class="boton-comprar">Comprar</button>
+    </div>
+
 </div>
+
+
+<script>
+    function cambiarPortada(img) {
+        const portada = document.getElementById("portada");
+
+        // Guardamos la ruta actual de la portada
+        const rutaPortadaActual = portada.getAttribute("data-ruta-imagen");
+        // Ruta de la miniatura clicada
+        const rutaMiniatura = img.getAttribute("data-ruta-imagen");
+
+        // Intercambiamos las rutas (src y data-ruta-imagen)
+        portada.src = `/uploads/${rutaMiniatura}`;
+        portada.setAttribute("data-ruta-imagen", rutaMiniatura);
+
+        img.src = `/uploads/${rutaPortadaActual}`;
+        img.setAttribute("data-ruta-imagen", rutaPortadaActual);
+    }
+
+    function comprarJuego() {
+        alert('¡Gracias por tu interés! Esta función aún no está implementada 😊');
+    }
+</script>
