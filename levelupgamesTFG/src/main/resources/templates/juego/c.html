@@ -1,18 +1,18 @@
 <div class="container">
     <h1>Nuevo juego</h1>
 
-    <form action="/juego/c" method="post" enctype="multipart/form-data">
+    <form action="/juego/c" method="post" enctype="multipart/form-data" onsubmit="return validarFormulario()">
         <label for="idNombre">Nombre</label>
-        <input id="idNombre" type="text" name="nombre" th:value="${nombreJuego}" autofocus="autofocus"/>
+        <input id="idNombre" type="text" name="nombre" th:value="${nombreJuego}" required autofocus />
         <br><br>
 
         <label for="idDesc">Descripción</label>
         <br>
-        <textarea id="idDesc" name="descripcion" rows="6" cols="50"></textarea>
+        <textarea id="idDesc" name="descripcion" rows="6" cols="50" required></textarea>
         <br/><br/>
 
         <label>Géneros:</label>
-        <div class="checkbox-inline-group">
+        <div class="checkbox-inline-group" id="generos-container">
             <th:block th:each="genero : ${generos}">
                 <label>
                     <input type="checkbox" name="generosIds"
@@ -22,11 +22,11 @@
                 </label>
             </th:block>
         </div>
+        <div id="error-generos" style="color:red; display:none;">Selecciona al menos un género.</div>
         <br/><br/>
 
-        <!-- Campo de texto para ingresar el precio directamente -->
         <label for="precio">Precio (€):</label>
-        <input type="number" step="0.01" min="0" id="precio" name="precio" placeholder="Introduce el precio">
+        <input type="number" step="0.01" min="0" id="precio" name="precio" placeholder="Introduce el precio" required />
         <br/><br/>
 
         <label for="portada">Selecciona una imagen de portada:</label>
@@ -34,9 +34,24 @@
         <br/><br/>
 
         <label for="imagenes">Selecciona hasta 5 imágenes:</label>
-        <input id="imagenes" type="file" name="imagenes" multiple="multiple" accept="image/*" />
+        <input id="imagenes" type="file" name="imagenes" multiple accept="image/*" />
         <br/><br/>
 
-        <input type="submit" value="Crear juego con imágenes"/>
+        <input type="submit" value="Crear nuevo juego" />
     </form>
 </div>
+
+<script>
+function validarFormulario() {
+    const checkboxes = document.querySelectorAll('input[name="generosIds"]:checked');
+    const error = document.getElementById('error-generos');
+
+    if (checkboxes.length === 0) {
+        error.style.display = 'block';
+        return false;
+    }
+
+    error.style.display = 'none';
+    return true;
+}
+</script>

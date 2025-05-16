@@ -10,4 +10,5 @@ import com.tfg.levelupgames.entities.Juego;
 @Repository
 public interface JuegoRepository extends JpaRepository<Juego,Long>{
     List<Juego> findByGenerosNombre(String nombre);
+    boolean existsByNombre(String nombre);
 }
