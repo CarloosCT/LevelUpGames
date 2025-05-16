@@ -1,34 +1,30 @@
 <section class="search-bar">
-    <input type="text" id="search" placeholder="Buscar ...">
+  <input type="text" id="search" placeholder="Buscar ...">
 
-    <div class="dropdown">
-        <button class="dropbtn">Filtro</button>
-        <div class="dropdown-content">
-            <a href="#"
-               th:each="genero : ${generos}"
-               th:attr="data-genero=${genero.nombre}"
-               th:text="${genero.nombre}"></a>
-        </div>
+  <div class="dropdown">
+    <button class="dropbtn">Filtro</button>
+    <div class="dropdown-content">
+      <a href="#" th:each="genero : ${generos}" th:attr="data-genero=${genero.nombre}" th:text="${genero.nombre}"></a>
     </div>
+  </div>
 </section>
 
 <section class="games">
-    <th:block th:each="juego : ${juegos}">
-        <div class="game-card"
-             th:attr="data-name=${juego.nombre.toLowerCase()}"
-             th:attrappend=" data-generos=${juego.nombresGeneros}">
+  <th:block th:each="juego : ${juegos}">
+    <div class="game-card" th:attr="data-name=${juego.nombre.toLowerCase()}"
+      th:attrappend=" data-generos=${juego.nombresGeneros}">
 
-            <a th:href="@{/juego/r/{id}(id=${juego.id})}" target="_self" style="text-decoration: none; color: inherit;">
-                <!-- Imagen portada -->
-                <div th:if="${juego.portada != null}">
-                    <img th:src="@{'/uploads/' + ${juego.portada.ruta}}" th:alt="${juego.nombre}" />
-                </div>
-
-                <!-- Nombre del juego -->
-                <h3 th:text="${juego.nombre}"></h3>
-            </a>
+      <a th:href="@{/juego/r/{id}(id=${juego.id})}" target="_self" style="text-decoration: none; color: inherit;">
+        <!-- Imagen portada -->
+        <div th:if="${juego.portada != null}">
+          <img th:src="@{'/uploads/' + ${juego.portada.ruta}}" th:alt="${juego.nombre}" />
         </div>
-    </th:block>
+
+        <!-- Nombre del juego -->
+        <h3 th:text="${juego.nombre}"></h3>
+      </a>
+    </div>
+  </th:block>
 </section>
 
 <script>
@@ -63,4 +59,29 @@
       card.style.display = (coincideTexto && coincideGenero) ? '' : 'none';
     });
   }
+
+
+</script>
+
+<script th:inline="javascript">
+  document.addEventListener('DOMContentLoaded', function () {
+    let successMsg = /*[[${success}]]*/ null;
+    let cancelMsg = /*[[${cancel}]]*/ null;
+
+    setTimeout(() => {
+      if (successMsg) {
+        alert(successMsg);
+        removeQueryParam('success');
+      } else if (cancelMsg) {
+        alert(cancelMsg);
+        removeQueryParam('cancel');
+      }
+    }, 500); // medio segundo para que cargue visualmente
+
+    function removeQueryParam(param) {
+      const url = new URL(window.location);
+      url.searchParams.delete(param);
+      window.history.replaceState({}, document.title, url.toString());
+    }
+  });
 </script>

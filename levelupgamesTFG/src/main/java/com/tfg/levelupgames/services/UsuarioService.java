@@ -3,6 +3,7 @@ package com.tfg.levelupgames.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +11,8 @@ import com.tfg.levelupgames.entities.Rol;
 import com.tfg.levelupgames.entities.Usuario;
 import com.tfg.levelupgames.repositories.RolRepository;
 import com.tfg.levelupgames.repositories.UsuarioRepository;
+
+import jakarta.servlet.http.HttpSession;
 
 @Service
 public class UsuarioService {
@@ -53,5 +56,9 @@ public class UsuarioService {
 
     public void updateBean(Usuario admin) {
         usuarioRepository.save(admin);
+    }
+
+    public Usuario obtenerUsuarioActual(HttpSession session) {
+        return (Usuario) session.getAttribute("user");
     }
 }

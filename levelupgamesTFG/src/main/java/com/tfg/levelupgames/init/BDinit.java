@@ -53,6 +53,7 @@ public class BDinit {
     private void crearRoles() {
         rolService.save("admin");
         rolService.save("user");
+        rolService.save("developer");
     }
 
     private void crearUsuarioAdmin() {

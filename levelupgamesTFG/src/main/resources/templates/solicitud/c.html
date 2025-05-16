@@ -1,0 +1,24 @@
+<body>
+    <div class="container">
+        <h1>Formulario de Solicitud para Desarrollador</h1>
+        <form action="/solicitud/c" method="post">
+            <label for="biografia">Biografía:</label>
+            <textarea id="biografia" name="biografia" rows="6" placeholder="Cuéntanos sobre ti..." required></textarea>
+
+            <label for="portfolioUrl">URL del Portfolio:</label>
+            <input type="url" id="portfolioUrl" name="portfolioUrl" placeholder="https://tuportfolio.com" required />
+
+            <button type="submit">Enviar Solicitud</button>
+
+            <button type="button" onclick="cancelarSolicitud()">Cancelar</button>
+
+        </form>
+    </div>
+
+    <script>
+        function cancelarSolicitud() {
+            // Redirige a home con mensaje de cancelación
+            window.location.href = '/?cancel=Operación cancelada';
+        }
+    </script>
+</body>

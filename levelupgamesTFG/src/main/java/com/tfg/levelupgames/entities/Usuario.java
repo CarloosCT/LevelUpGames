@@ -38,7 +38,7 @@ public class Usuario {
     private Rol rol;
 
     public Usuario(String loginemail, String nombre, String apellido, String password) {
-       this.loginemail = loginemail;
+        this.loginemail = loginemail;
         this.nombre = nombre;
         this.apellido = apellido;
         this.password = password;
@@ -46,5 +46,9 @@ public class Usuario {
 
     public Rol getRol() {
         return rol;
+    }
+
+    public boolean isAdmin() {
+        return rol != null && "admin".equalsIgnoreCase(rol.getNombre());
     }
 }

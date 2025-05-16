@@ -262,3 +262,14 @@ nav h1 {
 .game-card:hover {
   transform: scale(1.05);
 }
+
+.success-message {
+  background-color: #28a745;
+  color: white;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: bold;
+  animation: fadeIn 0.5s ease-in-out;
+}
