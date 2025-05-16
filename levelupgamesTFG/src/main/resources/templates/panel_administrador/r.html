@@ -10,7 +10,7 @@
 <h3 class="game-list-title">Lista de Juegos</h3>
 <div class="game-list">
     <div class="game-card" th:each="juego : ${juegos}">
-        <a th:href="@{/juego/{id}(id=${juego.id})}" target="_blank">
+        <a th:href="@{/juego/{id}(id=${juego.id})}" target="_self">
             <h3 th:text="${juego.nombre}">Nombre del juego</h3>
         </a>
     </div>

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.tfg.levelupgames.entities.Juego;
 import com.tfg.levelupgames.exception.DangerException;
 import com.tfg.levelupgames.helper.PRG;
 import com.tfg.levelupgames.services.GeneroService;
@@ -43,6 +44,25 @@ public class JuegoController {
         m.put("estilos", "/css/juego/style.css");
         return "_t/frame";
     }
+
+    @GetMapping("r/{id}")
+    public String r(
+        @PathVariable Long id,
+        ModelMap m) {
+
+    Juego juego = juegoService.findById(id);
+
+    if (juego == null) {
+        // No existe el juego, redirige o maneja error
+        return "redirect:/juego";
+    }
+
+    m.put("juego", juego);
+    m.put("view", "juego/r");
+    m.put("estilos", "/css/juego/r.css");
+
+    return "_t/frame";
+}
 
     @PostMapping("c")
     public String cPost(

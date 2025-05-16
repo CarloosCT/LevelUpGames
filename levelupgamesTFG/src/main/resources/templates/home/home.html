@@ -12,28 +12,21 @@
     </div>
 </section>
 
-<section class="hero">
-    <h2>Bienvenido a LevelUpGames</h2>
-    <p>Compra los mejores videojuegos al mejor precio</p>
-</section>
-
 <section class="games">
     <th:block th:each="juego : ${juegos}">
         <div class="game-card"
              th:attr="data-name=${juego.nombre.toLowerCase()}"
              th:attrappend=" data-generos=${juego.nombresGeneros}">
-             
-            <!-- Mostrar la portada del juego (si existe) -->
-            <div th:if="${juego.portada != null}">
-                <img th:src="@{'/uploads/' + ${juego.portada.ruta}}" th:alt="${juego.nombre}" />
-            </div>
 
-            <h3 th:text="${juego.nombre}"></h3>
-            <p th:text="${juego.precio.cantidad + ' €'}"></p>
+            <a th:href="@{/juego/r/{id}(id=${juego.id})}" target="_self" style="text-decoration: none; color: inherit;">
+                <!-- Imagen portada -->
+                <div th:if="${juego.portada != null}">
+                    <img th:src="@{'/uploads/' + ${juego.portada.ruta}}" th:alt="${juego.nombre}" />
+                </div>
 
-            <div class="categories">
-                <span class="category" th:each="genero : ${juego.generos}" th:text="${genero.nombre}"></span>
-            </div>
+                <!-- Nombre del juego -->
+                <h3 th:text="${juego.nombre}"></h3>
+            </a>
         </div>
     </th:block>
 </section>
@@ -43,12 +36,12 @@
   const gameCards = document.querySelectorAll('.game-card');
   const generoLinks = document.querySelectorAll('.dropdown-content a');
 
-  // Al escribir en la barra de búsqueda
+  // Filtrar por texto mientras escribes
   searchInput.addEventListener('input', function () {
     filtrarJuegos();
   });
 
-  // Al hacer clic en un género
+  // Filtrar por género al clicar
   generoLinks.forEach(link => {
     link.addEventListener('click', function (e) {
       e.preventDefault();
@@ -57,7 +50,6 @@
     });
   });
 
-  // Función para filtrar juegos por texto y género
   function filtrarJuegos(generoSeleccionado = null) {
     const filtroTexto = searchInput.value.toLowerCase();
 

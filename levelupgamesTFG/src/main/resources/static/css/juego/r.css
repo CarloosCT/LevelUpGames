@@ -178,3 +178,20 @@ nav h1 {
 .boton-comprar:hover {
     background-color: #e0a800;
 }
+
+.portada-img {
+    width: 200px;
+    height: 200px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.miniatura-img {
+    width: 70px;
+    height: 70px;
+    border-radius: 5px;
+    object-fit: cover;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color 0.3s ease;
+}
