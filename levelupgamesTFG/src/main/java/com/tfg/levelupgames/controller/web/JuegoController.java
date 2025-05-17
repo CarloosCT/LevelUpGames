@@ -65,17 +65,22 @@ public class JuegoController {
 }
 
     @PostMapping("c")
-    public String cPost(
-        @RequestParam String nombre,
-        @RequestParam String descripcion,
-        @RequestParam List<Long> generosIds,
-        @RequestParam BigDecimal precio,
-        @RequestParam("imagenes") MultipartFile[] imagenes,
-        @RequestParam("portadaFile") MultipartFile portadaFile) throws DangerException {
+public String cPost(
+    @RequestParam String nombre,
+    @RequestParam String descripcion,
+    @RequestParam List<Long> generosIds,
+    @RequestParam BigDecimal precio,
+    @RequestParam("imagenes") MultipartFile[] imagenes,
+    @RequestParam("portadaFile") MultipartFile portadaFile) throws DangerException {
 
     // Validar que no exista un juego con el mismo nombre
     if (juegoService.existsByNombre(nombre)) {
         PRG.error("Ya existe un juego con el nombre '" + nombre + "'.", "/juego/c");
+    }
+
+    // Validar que el precio no sea negativo
+    if (precio.compareTo(BigDecimal.ZERO) < 0) {
+        PRG.error("El precio no puede ser negativo.", "/juego/c");
     }
 
     // Validar que se suba una portada válida
