@@ -43,7 +43,7 @@ public class HomeController {
 
         Usuario usuario = usuarioService.obtenerUsuarioActual(session);
         if (usuario != null && usuario.isMostrarAlertaRechazo()) {
-            m.put("alertaRechazo", true);
+            m.put("alertaRechazo", "Tu solicitud como desarrollador ha sido rechazada.");
             usuario.setMostrarAlertaRechazo(false);
             usuarioService.save(usuario);
         }

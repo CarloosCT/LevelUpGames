@@ -72,8 +72,8 @@
 
 <script th:inline="javascript">
   document.addEventListener('DOMContentLoaded', function () {
-    let successMsg = null;
-    let cancelMsg = null;
+    let successMsg = /*[[${success}]]*/ null;
+    let cancelMsg = /*[[${cancel}]]*/ null;
 
     setTimeout(() => {
       if (successMsg) {

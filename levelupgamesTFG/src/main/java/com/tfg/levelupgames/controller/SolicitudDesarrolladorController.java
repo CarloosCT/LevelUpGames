@@ -16,6 +16,8 @@ import com.tfg.levelupgames.entities.Usuario;
 import com.tfg.levelupgames.exception.DangerException;
 import com.tfg.levelupgames.helper.PRG;
 import com.tfg.levelupgames.repositories.SolicitudDesarrolladorRepository;
+import com.tfg.levelupgames.repositories.UsuarioRepository;
+import com.tfg.levelupgames.services.RolService;
 import com.tfg.levelupgames.services.UsuarioService;
 
 import jakarta.servlet.http.HttpSession;
@@ -29,6 +31,13 @@ public class SolicitudDesarrolladorController {
 
     @Autowired
     private UsuarioService usuarioService;
+   
+    @Autowired
+    private UsuarioRepository usuarioRepo;
+   
+    @Autowired
+    private RolService rolService;
+    
 
     @GetMapping("c")
     public String mostrarFormulario(ModelMap m) {
@@ -71,5 +80,59 @@ public class SolicitudDesarrolladorController {
         solicitudRepo.save(nuevaSolicitud);
 
         return "redirect:/?success=Solicitud enviada correctamente";
+    }
+
+    @GetMapping("r")
+    public String r(HttpSession session, ModelMap m, @RequestParam(required = false) String success,
+            @RequestParam(required = false) String cancel) {
+        Usuario u = (Usuario) session.getAttribute("user");
+
+        if (u == null || !u.isAdmin()) {
+            return "redirect:/";
+        }
+
+        List<SolicitudDesarrollador> solicitudes = solicitudRepo.findByRevisadaFalse();
+        m.put("solicitudes", solicitudes);
+
+        if (success != null) {
+            m.put("success", success);
+        }
+        if (cancel != null) {
+            m.put("cancel", cancel);
+        }
+
+        m.put("view", "solicitud/r");
+        m.put("estilos", "/css/solicitud/r.css");
+        return "_t/frame";
+    }
+
+    @PostMapping("aprobar")
+    public String aprobarSolicitud(@RequestParam Long id) {
+        SolicitudDesarrollador solicitud = solicitudRepo.findById(id).orElseThrow();
+        solicitud.setAprobada(true);
+        solicitud.setRevisada(true);
+        solicitudRepo.save(solicitud);
+
+        Usuario usuario = solicitud.getUsuario();
+        usuario.setRol(rolService.findByNombre("developer"));
+        usuarioRepo.save(usuario);
+
+        return "redirect:/solicitud/r?success=Solicitud aprobada";
+    }
+
+    @PostMapping("rechazar")
+    public String rechazarSolicitud(@RequestParam Long id) {
+        SolicitudDesarrollador sol = solicitudRepo.findById(id).orElse(null);
+        if (sol != null) {
+            sol.setAprobada(false);
+            sol.setRevisada(true);
+
+            Usuario usuario = sol.getUsuario();
+            usuario.setMostrarAlertaRechazo(true);
+
+            usuarioRepo.save(usuario);
+            solicitudRepo.save(sol);
+        }
+        return "redirect:/solicitud/r?success=Solicitud rechazada";
     }
 }

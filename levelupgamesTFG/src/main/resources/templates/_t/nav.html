@@ -8,6 +8,7 @@
 			<li th:if="${session.user != null and session.user.rol.nombre == 'user'}"><a href="/solicitud/c">Empieza a crear</a></li>
 			<li th:if="${session.user != null and session.user.rol.nombre == 'developer'}"><a href="/solicitud/c">Eres developer</a></li>
 			<li th:if="${session.user != null and session.user.rol.nombre == 'admin'}"><a href="/panel_administrador/r">Panel de administrador</a></li>
+			<li th:if="${session.user != null and session.user.rol.nombre == 'admin'}"><a href="/solicitud/r">Solicitudes de Desarrollador</a></li>
 		</ul>
 	</div>
 

@@ -1,0 +1,181 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #121212;
+    color: white;
+    animation: fadeIn 1s ease-in-out;
+    min-height: 100vh;
+    padding: 0 15px;
+}
+
+/* Animación de entrada */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+nav {
+    background-color: #1f1f1f;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+nav h1 {
+    color: #ff5733;
+    font-size: 24px;
+    margin-right: 30px;
+}
+
+.menu-left {
+    display: flex;
+    list-style: none;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.menu-left li a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.menu-left li a:hover {
+    color: #ff5733;
+}
+
+.menu-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    list-style: none;
+    flex-wrap: wrap;
+}
+
+.menu-right a {
+    color: #ff5733;
+    text-decoration: none;
+    font-weight: bold;
+    background-color: transparent;
+    border: 1px solid #ff5733;
+    padding: 6px 12px;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.menu-right a:hover {
+    background-color: #ff5733;
+    color: white;
+}
+
+.menu-right span {
+    color: white;
+    font-size: 16px;
+}
+
+/* Contenedor de solicitudes */
+.solicitudes-container {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Tarjeta individual de solicitud */
+.solicitud-card {
+    background-color: #1f1f1f;
+    border: 1px solid #ff5733;
+    border-radius: 12px;
+    padding: 20px 25px;
+    box-shadow: 0 0 15px rgba(255, 87, 51, 0.25);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: box-shadow 0.3s ease;
+}
+
+.solicitud-card:hover {
+    box-shadow: 0 8px 20px rgba(255, 87, 51, 0.6);
+}
+
+/* Datos de la solicitud */
+.solicitud-usuario {
+    font-weight: 700;
+    font-size: 18px;
+    color: #ff5733;
+}
+
+.solicitud-info {
+    font-size: 16px;
+    color: #ddd;
+    word-wrap: break-word;
+}
+
+.solicitud-url a {
+    color: #ff8a50;
+    text-decoration: underline;
+}
+
+.solicitud-url a:hover {
+    color: #ff2e00;
+}
+
+/* Botones de aprobar/rechazar */
+.solicitud-buttons {
+    margin-top: 10px;
+    display: flex;
+    gap: 15px;
+}
+
+.solicitud-buttons button {
+    cursor: pointer;
+    font-weight: 700;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: none;
+    color: white;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 0 8px rgba(255, 87, 51, 0.6);
+}
+
+.solicitud-buttons .btn-aceptar {
+    background-color: #28a745;
+}
+
+.solicitud-buttons .btn-aceptar:hover {
+    background-color: #1e7e34;
+    box-shadow: 0 0 12px rgba(40, 167, 69, 0.9);
+}
+
+.solicitud-buttons .btn-rechazar {
+    background-color: #dc3545;
+}
+
+.solicitud-buttons .btn-rechazar:hover {
+    background-color: #a71d2a;
+    box-shadow: 0 0 12px rgba(220, 53, 69, 0.9);
+}

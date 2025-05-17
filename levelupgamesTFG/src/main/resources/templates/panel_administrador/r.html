@@ -15,26 +15,3 @@
         </a>
     </div>
 </div>
-
-<!-- Sección para mostrar solicitudes -->
-<h3 class="solicitudes-title">Solicitudes de Desarrollador Pendientes</h3>
-<div class="solicitudes-list">
-    <div class="solicitud-card" th:each="sol : ${solicitudes}">
-        <p><strong>Usuario:</strong> <span th:text="${sol.usuario.nombre}">Nombre Usuario</span></p>
-        <p><strong>Portfolio URL:</strong> <a th:href="${sol.portfolioUrl}" th:text="${sol.portfolioUrl}" target="_blank">Portfolio</a></p>
-        <p><strong>Biografía:</strong></p>
-        <p th:text="${sol.biografia}">Descripción biográfica...</p>
-
-        <form th:action="@{/panel_administrador/aprobar}" method="post" >
-            <input type="hidden" name="id" th:value="${sol.id}" />
-            <button type="submit">Aprobar</button>
-        </form>
-
-        <form th:action="@{/panel_administrador/rechazar}" method="post">
-            <input type="hidden" name="id" th:value="${sol.id}" />
-            <button type="submit">Rechazar</button>
-        </form>
-
-        <hr/>
-    </div>
-</div>
