@@ -31,6 +31,10 @@ public class UsuarioService {
         usuarioRepository.save(u);
     }
 
+    public void save(Usuario usuario) {
+        usuarioRepository.save(usuario);
+    }
+
     public Usuario findByCorreo(String email) {
         return usuarioRepository.findByLoginemail(email);
     }

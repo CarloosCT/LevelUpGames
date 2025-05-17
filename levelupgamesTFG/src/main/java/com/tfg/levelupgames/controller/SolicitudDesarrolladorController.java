@@ -1,6 +1,7 @@
 package com.tfg.levelupgames.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -44,16 +45,30 @@ public class SolicitudDesarrolladorController {
 
         Usuario usuario = usuarioService.obtenerUsuarioActual(session);
 
-        List<SolicitudDesarrollador> solicitudesPendientes = solicitudRepo.findByUsuarioAndRevisadaFalse(usuario);
-        if (!solicitudesPendientes.isEmpty()) {
-            PRG.error("Ya tienes una solicitud pendiente.", "/");
+        // Buscar la última solicitud del usuario (asumiendo solo una a la vez)
+        Optional<SolicitudDesarrollador> solicitudExistenteOpt = solicitudRepo.findByUsuario(usuario);
+
+        if (solicitudExistenteOpt.isPresent()) {
+            SolicitudDesarrollador solicitudExistente = solicitudExistenteOpt.get();
+
+            if (!solicitudExistente.isRevisada()) {
+                PRG.error("Ya tienes una solicitud pendiente.", "/");
+            }
+
+            if (solicitudExistente.isAprobada()) {
+                PRG.error("Ya has sido aprobado como desarrollador.", "/");
+            }
+
+            // Si está revisada y rechazada, eliminamos la anterior
+            solicitudRepo.delete(solicitudExistente);
         }
 
-        SolicitudDesarrollador solicitud = new SolicitudDesarrollador();
-        solicitud.setUsuario(usuario);
-        solicitud.setBiografia(biografia);
-        solicitud.setPortfolioUrl(portfolioUrl);
-        solicitudRepo.save(solicitud);
+        // Crear nueva solicitud
+        SolicitudDesarrollador nuevaSolicitud = new SolicitudDesarrollador();
+        nuevaSolicitud.setUsuario(usuario);
+        nuevaSolicitud.setBiografia(biografia);
+        nuevaSolicitud.setPortfolioUrl(portfolioUrl);
+        solicitudRepo.save(nuevaSolicitud);
 
         return "redirect:/?success=Solicitud enviada correctamente";
     }

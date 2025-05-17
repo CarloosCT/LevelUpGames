@@ -95,6 +95,11 @@ public class AdministradorPanelController {
         if (sol != null) {
             sol.setAprobada(false);
             sol.setRevisada(true);
+
+            Usuario usuario = sol.getUsuario();
+            usuario.setMostrarAlertaRechazo(true);
+
+            usuarioRepo.save(usuario);
             solicitudRepo.save(sol);
         }
         return "redirect:/panel_administrador/r?success=Solicitud rechazada";

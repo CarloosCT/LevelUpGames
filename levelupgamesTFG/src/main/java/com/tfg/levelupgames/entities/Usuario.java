@@ -25,6 +25,8 @@ public class Usuario {
     private String apellido;
     private String password;
 
+    private boolean mostrarAlertaRechazo;
+
     /*
      * @OneToMany(mappedBy = "usuario")
      * private List<Compra> compras;
