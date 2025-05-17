@@ -12,7 +12,7 @@
 <section class="games">
   <th:block th:each="juego : ${juegos}">
     <div class="game-card" th:attr="data-name=${juego.nombre.toLowerCase()}"
-      th:attrappend=" data-generos=${juego.nombresGeneros}">
+         th:attrappend=" data-generos=${juego.nombresGeneros}">
 
       <a th:href="@{/juego/r/{id}(id=${juego.id})}" target="_self" style="text-decoration: none; color: inherit;">
         <!-- Imagen portada -->
@@ -22,6 +22,13 @@
 
         <!-- Nombre del juego -->
         <h3 th:text="${juego.nombre}"></h3>
+
+        <!-- Lista de géneros -->
+        <p>
+          <span th:each="genero, iterStat : ${juego.generos}">
+          <span class="category" th:text="${genero.nombre}"></span>
+          </span>
+        </p>
       </a>
     </div>
   </th:block>
