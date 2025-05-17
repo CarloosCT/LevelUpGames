@@ -1,5 +1,6 @@
 package com.tfg.levelupgames.services;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,5 +65,15 @@ public class UsuarioService {
 
     public Usuario obtenerUsuarioActual(HttpSession session) {
         return (Usuario) session.getAttribute("user");
+    }
+
+    public void sumarSaldo(Long usuarioId, BigDecimal cantidad) {
+        Usuario usuario = usuarioRepository.findById(usuarioId).get();
+
+        if (usuario.getSaldo() == null) {
+            usuario.setSaldo(BigDecimal.ZERO);
+        }
+        usuario.setSaldo(usuario.getSaldo().add(cantidad));
+        usuarioRepository.save(usuario);
     }
 }

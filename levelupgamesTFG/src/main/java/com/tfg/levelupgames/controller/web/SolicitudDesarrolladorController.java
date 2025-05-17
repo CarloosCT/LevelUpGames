@@ -1,4 +1,4 @@
-package com.tfg.levelupgames.controller;
+package com.tfg.levelupgames.controller.web;
 
 import java.util.List;
 import java.util.Optional;

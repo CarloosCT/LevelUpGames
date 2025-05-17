@@ -1,5 +1,6 @@
 package com.tfg.levelupgames.entities;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import jakarta.persistence.Entity;
@@ -24,8 +25,8 @@ public class Usuario {
     private String nombre;
     private String apellido;
     private String password;
-
     private boolean mostrarAlertaRechazo;
+    private BigDecimal saldo;
 
     /*
      * @OneToMany(mappedBy = "usuario")
@@ -44,6 +45,7 @@ public class Usuario {
         this.nombre = nombre;
         this.apellido = apellido;
         this.password = password;
+        this.saldo = BigDecimal.ZERO;
     }
 
     public Rol getRol() {

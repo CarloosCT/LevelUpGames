@@ -5,10 +5,14 @@
 			<li><a href="/">Página Principal</a></li>
 			<li th:if="${session.user != null and session.user.rol.nombre == 'user'}"><a href="#">Biblioteca</a></li>
 			<li th:if="${session.user != null and session.user.rol.nombre == 'user'}"><a href="#">Mis ventas</a></li>
-			<li th:if="${session.user != null and session.user.rol.nombre == 'user'}"><a href="/solicitud/c">Empieza a crear</a></li>
-			<li th:if="${session.user != null and session.user.rol.nombre == 'developer'}"><a href="/solicitud/c">Eres developer</a></li>
-			<li th:if="${session.user != null and session.user.rol.nombre == 'admin'}"><a href="/panel_administrador/r">Panel de administrador</a></li>
-			<li th:if="${session.user != null and session.user.rol.nombre == 'admin'}"><a href="/solicitud/r">Solicitudes de Desarrollador</a></li>
+			<li th:if="${session.user != null and session.user.rol.nombre == 'user'}"><a href="/solicitud/c">Empieza a
+					crear</a></li>
+			<li th:if="${session.user != null and session.user.rol.nombre == 'developer'}"><a href="/solicitud/c">Eres
+					developer</a></li>
+			<li th:if="${session.user != null and session.user.rol.nombre == 'admin'}"><a
+					href="/panel_administrador/r">Panel de administrador</a></li>
+			<li th:if="${session.user != null and session.user.rol.nombre == 'admin'}"><a
+					href="/solicitud/r">Solicitudes de Desarrollador</a></li>
 		</ul>
 	</div>
 
@@ -19,7 +23,8 @@
 		</div>
 
 		<div th:if="${session.user != null}">
-			<span th:text="|Hola ${session.user.nombre} ${session.user.apellido}|"></span>
+			<a th:if="${session.user != null and session.user.rol.nombre == 'user'}" href="/saldo/r" th:text="'Saldo: ' + ${session.user.saldo} + ' €'">
+			</a> <span th:text="|Hola ${session.user.nombre} ${session.user.apellido}|"></span>
 			<a href="/usuario/logout">LOGOUT</a>
 		</div>
 	</div>
