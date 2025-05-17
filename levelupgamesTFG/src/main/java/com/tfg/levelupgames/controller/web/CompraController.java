@@ -1,38 +1,42 @@
 package com.tfg.levelupgames.controller.web;
 
-import java.security.Principal;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.tfg.levelupgames.entities.Usuario;
+import com.tfg.levelupgames.exception.DangerException;
+import com.tfg.levelupgames.helper.PRG;
 import com.tfg.levelupgames.entities.Juego;
+import com.tfg.levelupgames.services.CompraService;
 import com.tfg.levelupgames.services.JuegoService;
-import com.tfg.levelupgames.services.UsuarioService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/compra")
 public class CompraController {
 
     @Autowired
-    private UsuarioService usuarioService; // Para buscar usuario por email
+    private JuegoService juegoService;
 
     @Autowired
-    private JuegoService juegoService; // Por si necesitas info del juego
+    private CompraService compraService;
 
-    @GetMapping("c")
-    public String c(@RequestParam Long id, ModelMap m, Principal principal) {
-        // Obtener email o username del usuario logeado
-        String emailUsuario = principal.getName();
+    @GetMapping("c/{id}")
+    public String c(@PathVariable Long id, ModelMap m, HttpSession session)
+            throws DangerException {
 
-        // Buscar usuario en BD con ese email
-        Usuario usuario = usuarioService.findByCorreo(emailUsuario);
+        Usuario usuario = (Usuario) session.getAttribute("user");
+        if (usuario == null) {
+            PRG.error("Debes iniciar sesión para comprar", "/usuario/login");
+        }
 
-        // Si quieres, puedes pasar usuario y juego a la vista
         Juego juego = juegoService.findById(id);
 
         m.put("view", "compra/c");
@@ -44,4 +48,25 @@ public class CompraController {
 
         return "_t/frame";
     }
+
+    @PostMapping("cpost")
+    public String cPost(
+        @RequestParam("juegoId") Long juegoId,
+        HttpSession session) throws DangerException {
+
+    Usuario usuario = (Usuario) session.getAttribute("user");
+    
+    if (usuario == null) {
+        PRG.error("Debes iniciar sesión para realizar la compra", "/usuario/login");
+    }
+
+    try {
+        Juego juego = juegoService.findById(juegoId);
+        compraService.save(juego, usuario);
+    } catch (Exception e) {
+        PRG.error("No se pudo realizar la compra: " + e.getMessage(), "/");
+    }
+
+    return "redirect:/";
+}
 }

@@ -1,13 +1,17 @@
 <div class="compra-container">
-  <h1>Compra del juego <span th:text="${juego.nombre}">Nombre del juego</span></h1>
 
-  <p>Precio: <strong th:text="${juego.precio.cantidad + ' €'}">0 €</strong></p>
+    <!-- Título del juego -->
+    <h1>Compra del juego <span th:text="${juego.nombre}">Nombre del juego</span></h1>
 
-  <form th:action="@{/compra/cpost}" method="post">
-    <!-- Campos ocultos para enviar los IDs de juego y usuario -->
-    <input type="hidden" name="juegoId" th:value="${juegoId}" />
-    <input type="hidden" name="usuarioId" th:value="${usuarioId}" />
+    <!-- Descripción -->
+    <p th:text="${juego.descripcion}" class="juego-descripcion"></p>
 
-    <button type="submit" class="boton-comprar">Comprar</button>
-  </form>
+    <!-- Precio -->
+    <p>Precio: <strong th:text="${juego.precio.cantidad + ' €'}">0 €</strong></p>
+
+    <!-- Formulario de compra -->
+    <form th:action="@{/compra/cpost}" method="post">
+        <input type="hidden" name="juegoId" th:value="${juego.id}" />
+        <button type="submit" class="boton-comprar">Comprar</button>
+    </form>
 </div>
