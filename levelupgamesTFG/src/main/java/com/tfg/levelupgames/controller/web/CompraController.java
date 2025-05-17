@@ -40,7 +40,7 @@ public class CompraController {
         Juego juego = juegoService.findById(id);
 
         m.put("view", "compra/c");
-        m.put("estilos", "/css/juego/c.css");
+        m.put("estilos", "/css/compra/c.css");
 
         m.put("juego", juego);
         m.put("usuarioId", usuario.getId());
