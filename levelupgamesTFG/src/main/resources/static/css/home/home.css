@@ -94,6 +94,22 @@ nav h1 {
   font-size: 16px;
 }
 
+input[type="submit"]{
+  color: #ff5733;
+  text-decoration: none;
+  font-weight: bold;
+  background-color: transparent;
+  border: 1px solid #ff5733;
+  padding: 6px 12px;
+  border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+input[type="submit"]:hover {
+  background-color: #ff5733;
+  color: white;
+}
+
 /* SEARCH BAR */
 .search-bar {
   padding: 20px 30px;
