@@ -283,3 +283,9 @@ nav h1 {
   margin: 2px;
   display: inline-block;
 }
+
+.precio {
+  font-weight: bold;
+  color: #333;
+  margin: 5px 0;
+}
