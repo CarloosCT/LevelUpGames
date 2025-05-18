@@ -1,5 +1,7 @@
 package com.tfg.levelupgames.controller.web;
 
+import java.math.BigDecimal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -15,6 +17,7 @@ import com.tfg.levelupgames.helper.PRG;
 import com.tfg.levelupgames.entities.Juego;
 import com.tfg.levelupgames.services.CompraService;
 import com.tfg.levelupgames.services.JuegoService;
+import com.tfg.levelupgames.services.UsuarioService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -27,6 +30,9 @@ public class CompraController {
 
     @Autowired
     private CompraService compraService;
+
+    @Autowired
+    private UsuarioService usuarioService;
 
     @GetMapping("c/{id}")
     public String c(@PathVariable Long id, ModelMap m, HttpSession session)
@@ -50,23 +56,43 @@ public class CompraController {
     }
 
     @PostMapping("cpost")
-    public String cPost(
-        @RequestParam("juegoId") Long juegoId,
-        HttpSession session) throws DangerException {
+public String cPost(
+    @RequestParam("juegoId") Long juegoId,
+    HttpSession session) throws DangerException {
 
     Usuario usuario = (Usuario) session.getAttribute("user");
-    
+
     if (usuario == null) {
         PRG.error("Debes iniciar sesión para realizar la compra", "/usuario/login");
     }
 
     try {
         Juego juego = juegoService.findById(juegoId);
+        BigDecimal saldoActual = usuario.getSaldo();
+        BigDecimal precioJuego = juego.getPrecio().getCantidad();
+
+        // Verificar si ya tiene el juego
+        if (compraService.existeCompra(usuario, juego)) {
+            PRG.error("Ya has comprado este juego", "/");
+        }
+
+        // Verificar saldo suficiente
+        if (saldoActual.compareTo(precioJuego) < 0) {
+            PRG.error("No tienes saldo suficiente para comprar este juego", "/");
+        }
+
+        // Restar saldo
+        usuario.setSaldo(saldoActual.subtract(precioJuego));
+        usuarioService.save(usuario);
+
+        // Guardar la compra
         compraService.save(juego, usuario);
+
     } catch (Exception e) {
         PRG.error("No se pudo realizar la compra: " + e.getMessage(), "/");
     }
 
     return "redirect:/";
 }
+
 }
