@@ -55,4 +55,14 @@ public class Usuario {
     public boolean isAdmin() {
         return rol != null && "admin".equalsIgnoreCase(rol.getNombre());
     }
+
+    public BigDecimal getSaldo() 
+    {
+        return this.saldo;
+    }
+
+    public void setSaldo(BigDecimal saldo) 
+    {
+        this.saldo = saldo;
+    }
 }

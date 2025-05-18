@@ -23,4 +23,8 @@ public class CompraService {
     public List<Compra> findAll() {
         return compraRepository.findAll();
     }
+
+    public boolean existeCompra(Usuario usuario, Juego juego) {
+    return compraRepository.existsByUsuarioAndJuego(usuario, juego);
+    }
 }
