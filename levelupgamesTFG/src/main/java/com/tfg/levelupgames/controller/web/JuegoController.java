@@ -73,17 +73,14 @@ public String cPost(
     @RequestParam("imagenes") MultipartFile[] imagenes,
     @RequestParam("portadaFile") MultipartFile portadaFile) throws DangerException {
 
-    // Validar que no exista un juego con el mismo nombre
     if (juegoService.existsByNombre(nombre)) {
         PRG.error("Ya existe un juego con el nombre '" + nombre + "'.", "/juego/c");
     }
 
-    // Validar que el precio no sea negativo
     if (precio.compareTo(BigDecimal.ZERO) < 0) {
         PRG.error("El precio no puede ser negativo.", "/juego/c");
     }
 
-    // Validar que se suba una portada válida
     if (portadaFile == null || portadaFile.isEmpty()) {
         PRG.error("Debes subir una imagen de portada.", "/juego/c");
     }
@@ -92,7 +89,6 @@ public String cPost(
         PRG.error("La portada debe ser un archivo de imagen válido.", "/juego/c");
     }
 
-    // Validar imágenes adicionales
     int imagenesValidas = 0;
     for (MultipartFile imagen : imagenes) {
         if (imagen != null && !imagen.isEmpty()) {
@@ -111,7 +107,6 @@ public String cPost(
         PRG.error("Puedes subir un máximo de 5 imágenes adicionales.", "/juego/c");
     }
 
-    // Guardar el juego
     juegoService.saveJuegoConRelaciones(nombre, descripcion, generosIds, precio, portadaFile, imagenes);
 
     return "redirect:/panel_administrador/r";
