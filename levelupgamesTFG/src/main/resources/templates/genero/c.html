@@ -1,13 +1,31 @@
 <div class="container">
-    <h1>Nuevo género</h1>
+  <h1>Nuevo género</h1>
 
-    <form action="/genero/c" method="post">
+  <form action="/genero/c" method="post" enctype="multipart/form-data" onsubmit="return validarGenero()">
+    <label for="idGenero">Nombre</label>
+    <input id="idGenero" type="text" name="nombre" required autofocus />
+    <br><br>
 
-        <label for="idGenero">Nombre</label>
-        <input id="idGenero" type="text" name="nombre" autofocus="autofocus" />
-        <br />
-
-        <input type="submit" />
-        <br />
-    </form>
+    
+    <input type="submit" value="Crear nuevo género" />
+  </form>
 </div>
+
+<script>
+
+  function validarGenero(){
+            var expresion = /^[a-zA-ZáéíóúüÁÉÍÓÚÜñÑçÇ ]{0,}$/;
+            var nombre = document.getElementsByTagName("form")[0].nombre.value.trim();
+            var nombreCorrecto = false;
+            if(expresion.test(nombre))
+            {
+                nombreCorrecto = true;
+            }
+            else
+            {
+                nombreCorrecto = false;
+            }
+
+            return nombreCorrecto;
+        }
+</script>

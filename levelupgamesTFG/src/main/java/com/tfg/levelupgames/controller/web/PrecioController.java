@@ -26,7 +26,7 @@ public class PrecioController {
             ModelMap m) {
         m.put("precios", precioService.findAll());
         m.put("view", "precio/r");
-        m.put("estilos", "/css/precio/style.css");
+        m.put("estilos", "/css/precio/c.css");
         return "_t/frame";
     }
 
@@ -34,7 +34,7 @@ public class PrecioController {
     public String c(
             ModelMap m) {
         m.put("view", "precio/c");
-        m.put("estilos", "/css/home/style.css");
+        m.put("estilos", "/css/precio/c.css");
         return "_t/frame";
     }
 
@@ -66,7 +66,7 @@ public class PrecioController {
             @RequestParam Long id,
             ModelMap m) {
         m.put("precio", precioService.findById(id));
-        m.put("estilos", "/css/precio/style.css");
+        m.put("estilos", "/css/precio/c.css");
         m.put("view", "precio/u");
         return "_t/frame";
     }

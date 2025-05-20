@@ -32,7 +32,7 @@ public class GeneroController {
     public String c(
             ModelMap m) {
         m.put("view", "genero/c");
-        m.put("estilos", "/css/home/style.css");
+        m.put("estilos", "/css/genero/c.css");
         return "_t/frame";
     }
 

@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-LevelupgamesTFGApplication<levelupgames>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.tfg.levelupgames.LevelupgamesTFGApplication",
+            "projectName": "levelupgames",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
