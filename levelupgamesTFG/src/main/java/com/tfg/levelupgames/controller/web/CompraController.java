@@ -56,7 +56,7 @@ public class CompraController {
     }
 
     @PostMapping("cpost")
-public String cPost(
+    public String cPost(
     @RequestParam("juegoId") Long juegoId,
     HttpSession session) throws DangerException {
 
@@ -71,21 +71,17 @@ public String cPost(
         BigDecimal saldoActual = usuario.getSaldo();
         BigDecimal precioJuego = juego.getPrecio().getCantidad();
 
-        // Verificar si ya tiene el juego
         if (compraService.existeCompra(usuario, juego)) {
             PRG.error("Ya has comprado este juego", "/");
         }
 
-        // Verificar saldo suficiente
         if (saldoActual.compareTo(precioJuego) < 0) {
             PRG.error("No tienes saldo suficiente para comprar este juego", "/");
         }
 
-        // Restar saldo
         usuario.setSaldo(saldoActual.subtract(precioJuego));
         usuarioService.save(usuario);
 
-        // Guardar la compra
         compraService.save(juego, usuario);
 
     } catch (Exception e) {
