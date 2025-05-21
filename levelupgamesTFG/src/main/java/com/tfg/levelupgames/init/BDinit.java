@@ -20,8 +20,6 @@ public class BDinit {
     @Autowired
     private RolService rolService;
     @Autowired
-    private UsuarioService usuarioService;
-    @Autowired
     private GeneroService generoService;
     @Autowired
     private JuegoService juegoService;

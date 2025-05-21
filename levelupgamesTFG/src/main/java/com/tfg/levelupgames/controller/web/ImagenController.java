@@ -30,7 +30,7 @@ public class ImagenController {
     public String r(ModelMap m) {
         m.put("imagenes", imagenService.findAll());
         m.put("view", "imagen/r");
-        m.put("estilos", "/css/home/style.css");
+        m.put("estilos", "/css/imagen/r.css");
         return "_t/frame";
     }
 

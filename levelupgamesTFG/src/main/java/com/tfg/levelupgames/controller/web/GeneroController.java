@@ -24,7 +24,7 @@ public class GeneroController {
             ModelMap m) {
         m.put("generos", generoService.findAll());
         m.put("view", "genero/r");
-        m.put("estilos", "/css/genero/style.css");
+        m.put("estilos", "/css/genero/r.css");
         return "_t/frame";
     }
 
