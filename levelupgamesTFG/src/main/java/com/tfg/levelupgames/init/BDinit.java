@@ -23,16 +23,14 @@ public class BDinit {
     private UsuarioService usuarioService;
     @Autowired
     private GeneroService generoService;
-    /*
-     * @Autowired
-     * private DesarrolladorService desarrolladorService;
-     */
     @Autowired
     private JuegoService juegoService;
     @Autowired
     private ImagenService imagenService;
     @Autowired
     private ValoracionService valoracionService;
+    @Autowired
+    private PrecioService precioService;
 
     BDinit(UsuarioRepository usuarioRepository) {
         this.usuarioRepository = usuarioRepository;
@@ -47,6 +45,18 @@ public class BDinit {
         String adminEmail = "admin1@gmail.com";
         if (usuarioRepository.findByLoginemail(adminEmail) == null) {
             crearUsuarioAdmin();
+        }
+
+        if (generoService.findAll().isEmpty()) {
+            crearGenerosYDesarrolladores();
+        }
+
+        if (precioService.findByCantidad(new java.math.BigDecimal("59.99")) == null) {
+            precioService.save(new java.math.BigDecimal("59.99"));
+        }
+
+        if (juegoService.findAll().isEmpty()) {
+            crearJuegos();
         }
     }
 
@@ -63,37 +73,82 @@ public class BDinit {
         usuarioRepository.save(admin);
     }
 
-    /*
-     * private void crearGenerosYDesarrolladores() {
-     * generoService.save(new Genero("Aventura"));
-     * generoService.save(new Genero("Deportes"));
-     * 
-     * desarrolladorService.save(new Desarrollador("Ubisoft"));
-     * desarrolladorService.save(new Desarrollador("EA Sports"));
-     * }
-     */
+    private void crearGenerosYDesarrolladores() {
+        generoService.save("Aventura");
+        generoService.save("Deportes");
+    }
 
-    /*
-     * private void crearJuegos() {
-     * Genero genero = generoService.findByNombre("Aventura");
-     * Desarrollador desarrollador = desarrolladorService.findByNombre("Ubisoft");
-     * 
-     * Juego juego = new Juego();
-     * juego.setNombre("Assassin's Creed");
-     * juego.setDescripcion("Un juego de aventuras históricas.");
-     * juego.setGenero(genero);
-     * juego.setDesarrollador(desarrollador);
-     * 
-     * juegoService.save(juego);
-     * 
-     * // Imágenes
-     * imagenService.save(new Imagen("acreed1.jpg", juego));
-     * imagenService.save(new Imagen("acreed2.jpg", juego));
-     * 
-     * // Valoraciones
-     * Usuario usuario = usuarioService.findByCorreo("user@example.com");
-     * valoracionService.save(new Valoracion("Muy bueno", 4.5f, usuario, juego));
-     * valoracionService.save(new Valoracion("Me encantó", 5f, usuario, juego));
-     * }
-     */
+    private void crearJuegos() {
+        Genero aventura = generoService.findByNombre("Aventura");
+        Precio precioBase = precioService.findByCantidad(new java.math.BigDecimal("59.99")); // Asegúrate de que exista
+
+        // --- Juego 1 ---
+        Juego juego1 = new Juego();
+        juego1.setNombre("Assassin's Creed");
+        juego1.setDescripcion("Un juego de aventuras históricas.");
+        juego1.setGeneros(List.of(aventura));
+        juego1.setPrecio(precioBase);
+        juegoService.save(juego1);
+
+        Imagen portada1 = new Imagen("acreed1.jpg", true);
+        portada1.setJuego(juego1);
+        Imagen imgExtra1 = new Imagen("acreed2.jpg");
+        imgExtra1.setJuego(juego1);
+        imagenService.save(portada1);
+        imagenService.save(imgExtra1);
+        juego1.setPortada(portada1);
+        juegoService.save(juego1);
+
+        // --- Juego 2 ---
+        Juego juego2 = new Juego();
+        juego2.setNombre("Far Cry");
+        juego2.setDescripcion("Acción en mundo abierto en escenarios exóticos.");
+        juego2.setGeneros(List.of(aventura));
+        juego2.setPrecio(precioBase);
+        juegoService.save(juego2);
+
+        Imagen portada2 = new Imagen("farcry1.jpg", true);
+        portada2.setJuego(juego2);
+        Imagen imgExtra2 = new Imagen("farcry2.jpg");
+        imgExtra2.setJuego(juego2);
+        imagenService.save(portada2);
+        imagenService.save(imgExtra2);
+        juego2.setPortada(portada2);
+        juegoService.save(juego2);
+
+        // --- Juego 3 ---
+        Juego juego3 = new Juego();
+        juego3.setNombre("Watch Dogs");
+        juego3.setDescripcion("Hackea el sistema en esta aventura urbana.");
+        juego3.setGeneros(List.of(aventura));
+        juego3.setPrecio(precioBase);
+        juegoService.save(juego3);
+
+        Imagen portada3 = new Imagen("watchdogs1.jpg", true);
+        portada3.setJuego(juego3);
+        Imagen imgExtra3 = new Imagen("watchdogs2.jpg");
+        imgExtra3.setJuego(juego3);
+        imagenService.save(portada3);
+        imagenService.save(imgExtra3);
+        juego3.setPortada(portada3);
+        juegoService.save(juego3);
+
+        // --- Juego 4 ---
+        Juego juego4 = new Juego();
+        juego4.setNombre("Prince of Persia");
+        juego4.setDescripcion("Aventura mítica con combates y acertijos.");
+        juego4.setGeneros(List.of(aventura));
+        juego4.setPrecio(precioBase);
+        juegoService.save(juego4);
+
+        Imagen portada4 = new Imagen("pop1.jpg", true);
+        portada4.setJuego(juego4);
+        Imagen imgExtra4 = new Imagen("pop2.jpg");
+        imgExtra4.setJuego(juego4);
+        imagenService.save(portada4);
+        imagenService.save(imgExtra4);
+        juego4.setPortada(portada4);
+        juegoService.save(juego4);
+    }
+
 }

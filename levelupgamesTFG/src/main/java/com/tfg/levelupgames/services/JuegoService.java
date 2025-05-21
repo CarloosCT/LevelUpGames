@@ -30,23 +30,28 @@ public class JuegoService {
     @Autowired
     private ImagenService imagenService;
 
-    public void saveJuegoConRelaciones(String nombre, String descripcion, List<Long> generosIds, BigDecimal precio, MultipartFile portada, MultipartFile[] imagenes) {
+    public void save(Juego juego) {
+        juegoRepository.save(juego);
+    }
 
-    List<Genero> generos = generoService.findByIds(generosIds);
+    public void saveJuegoConRelaciones(String nombre, String descripcion, List<Long> generosIds, BigDecimal precio,
+            MultipartFile portada, MultipartFile[] imagenes) {
 
-    // Guardar el precio
-    precioService.save(precio);
-    Precio precioGuardado = precioService.findByCantidad(precio);
+        List<Genero> generos = generoService.findByIds(generosIds);
 
-    // Crear y guardar el juego sin imágenes
-    Juego juego = new Juego(nombre, descripcion, generos, precioGuardado, new ArrayList<>());
-    juego = juegoRepository.save(juego);
+        // Guardar el precio
+        precioService.save(precio);
+        Precio precioGuardado = precioService.findByCantidad(precio);
 
-    // Lógica de imágenes
-    imagenService.procesarImagenesDeJuego(juego, portada, imagenes);
+        // Crear y guardar el juego sin imágenes
+        Juego juego = new Juego(nombre, descripcion, generos, precioGuardado, new ArrayList<>());
+        juego = juegoRepository.save(juego);
 
-    juegoRepository.save(juego);
-}
+        // Lógica de imágenes
+        imagenService.procesarImagenesDeJuego(juego, portada, imagenes);
+
+        juegoRepository.save(juego);
+    }
 
     public List<Juego> findAll() {
         return juegoRepository.findAll();
@@ -80,7 +85,7 @@ public class JuegoService {
     }
 
     public boolean existsByNombre(String nombre) {
-    return juegoRepository.existsByNombre(nombre);
+        return juegoRepository.existsByNombre(nombre);
     }
 
     /*
