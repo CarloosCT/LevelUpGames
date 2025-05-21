@@ -1,7 +1,11 @@
 package com.tfg.levelupgames.repositories;
 
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.tfg.levelupgames.entities.Compra;
@@ -12,4 +16,7 @@ import com.tfg.levelupgames.entities.Usuario;
 public interface CompraRepository extends JpaRepository<Compra, Long> {
     /*Optional<Desarrollador> findByNombre(String nombre);*/
     boolean existsByUsuarioAndJuego(Usuario usuario, Juego juego);
+
+    @Query("SELECT c.juego FROM Compra c WHERE c.usuario = :usuario")
+    List<Juego> findJuegosByUsuario(@Param("usuario") Usuario usuario);
 }
