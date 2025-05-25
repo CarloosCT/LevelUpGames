@@ -14,9 +14,9 @@
     <label>Géneros:</label>
     <div class="checkbox-inline-group" id="generos-container">
       <!-- Simulación estática de géneros, reemplaza por tu código con Thymeleaf -->
-      <label><input type="checkbox" name="generosIds" value="1"> Acción</label>
-      <label><input type="checkbox" name="generosIds" value="2"> Aventura</label>
-      <label><input type="checkbox" name="generosIds" value="3"> RPG</label>
+      <span th:each="genero : ${generos}">
+        <label><input type="checkbox" name="generosIds" th:value="${genero.id}" th:text="${genero.nombre}"> </label>
+      </span>
     </div>
     <div id="error-generos" style="color:red; display:none;">Selecciona al menos un género.</div>
     <br/><br/>

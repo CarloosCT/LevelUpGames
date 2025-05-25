@@ -2,7 +2,7 @@
   <input type="text" id="search" placeholder="Buscar ...">
 
   <div class="dropdown">
-    <button class="dropbtn">Filtro</button>
+    <button class="dropbtn">Filtrar por:</button>
     <div class="dropdown-content">
       <a href="#" th:each="genero : ${generos}" th:attr="data-genero=${genero.nombre}" th:text="${genero.nombre}"></a>
     </div>
