@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: levelupgames
+    env: java
+    buildCommand: ./mvnw package -DskipTests
+    startCommand: java -jar target/*.jar
+    plan: free
+    branch: develop
+    autoDeploy: true
