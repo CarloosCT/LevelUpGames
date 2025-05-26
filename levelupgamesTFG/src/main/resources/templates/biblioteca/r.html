@@ -20,11 +20,21 @@
     </ul>
   </aside>
 
-  <!-- Panel de detalles -->
-  <section class="detalle-juego" id="detalle-juego">
+<!-- Panel de detalles -->
+<section class="detalle-juego" id="detalle-juego">
+  <div class="mensaje-inicial" id="mensaje-inicial" th:if="${juegos.size() == 0}">
+    <p>Cuando compres un juego, aparecerá en la lista de la izquierda.</p>
+  </div>
+  <div class="mensaje-inicial" id="mensaje-inicial" th:if="${juegos.size() == 1}">
     <p>Selecciona un juego para ver los detalles.</p>
-  </section>
-</div>
+  </div>
+  <div class="mensaje-inicial" id="mensaje-inicial" th:if="${juegos.size() > 1}">
+    <p>Selecciona un juego para ver los detalles.</p>
+  </div>
+  <div class="contenido-detalle" id="contenido-detalle" style="display:none;">
+    <!-- Aquí se cargan los detalles con JS -->
+  </div>
+</section>
 
 <script>
 function mostrarDetalles(id) {
@@ -35,7 +45,8 @@ function mostrarDetalles(id) {
   const precio = detalle.getAttribute('data-precio');
   const imagenes = detalle.getAttribute('data-imagenes').split(',');
 
-  const panel = document.getElementById('detalle-juego');
+  const mensaje = document.getElementById('mensaje-inicial');
+  const contenido = document.getElementById('contenido-detalle');
 
   let imagenesHtml = '<div class="imagenes-juego">';
   imagenes.forEach(src => {
@@ -43,11 +54,14 @@ function mostrarDetalles(id) {
   });
   imagenesHtml += '</div>';
 
-  panel.innerHTML = `
+  contenido.innerHTML = `
     <h2>${nombre}</h2>
     <p><strong>Precio:</strong> ${precio} €</p>
     <p><strong>Descripción:</strong><br>${descripcion}</p>
     ${imagenesHtml}
   `;
+
+  mensaje.style.display = 'none';
+  contenido.style.display = 'block';
 }
 </script>
