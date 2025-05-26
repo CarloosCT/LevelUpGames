@@ -1,23 +1,19 @@
 <div class="juego-container">
 
     <div class="imagenes-columna">
-        <!-- Imagen principal -->
         <img id="portada" 
              th:src="@{'/uploads/' + ${juego.portada.ruta}}"
              th:attr="data-ruta-imagen=${juego.portada.ruta}" 
              class="portada-img" 
              alt="Portada de [[${juego.nombre}]]" />
 
-        <!-- Miniaturas: orden fijo, portada siempre primero -->
         <div id="miniaturas" class="miniaturas-container">
-            <!-- Miniatura portada fija la primera -->
             <img th:src="@{'/uploads/' + ${juego.portada.ruta}}" 
                  th:attr="data-ruta-imagen=${juego.portada.ruta}" 
                  class="miniatura-img portada-fija"
                  alt="Miniatura portada de [[${juego.nombre}]]"
                  onclick="cambiarPortada(this)" />
 
-            <!-- Otras miniaturas excluyendo la portada -->
             <img th:each="imagen : ${juego.imagenes}" 
                  th:if="${imagen.ruta != juego.portada.ruta}" 
                  th:src="@{'/uploads/' + ${imagen.ruta}}" 
@@ -27,21 +23,17 @@
                  onclick="cambiarPortada(this)" />
         </div>
 
-        <!-- Descripción debajo de las imágenes -->
         <p th:text="${juego.descripcion}" class="juego-descripcion"></p>
     </div>
 
     <div class="detalles-columna">
-        <!-- Aquí puedes añadir más detalles del juego -->
     </div>
 
     <div class="precio-columna">
-        <!-- Nombre encima del precio -->
         <h1 th:text="${juego.nombre}" class="juego-titulo" style="margin-bottom: 10px;"></h1>
 
-        <h3 th:text="${juego.precio.cantidad + ' €'}" class="juego-precio"></h3>
+        <h3 th:text="${juego.precio.cantidad == 0.00 ? 'Gratis' : juego.precio.cantidad + ' €'}" class="juego-precio"></h3>
 
-        <!-- Botón como enlace, mantiene estilo -->
         <a th:href="@{'/compra/c/' + ${juego.id}}" class="boton-comprar">Comprar</a>
     </div>
 
@@ -51,8 +43,6 @@
     function cambiarPortada(img) {
         const portada = document.getElementById("portada");
         const nuevaRuta = img.getAttribute("data-ruta-imagen");
-
-        // Solo cambiamos la imagen principal, no tocamos las miniaturas
         portada.src = `/uploads/${nuevaRuta}`;
         portada.setAttribute("data-ruta-imagen", nuevaRuta);
     }
