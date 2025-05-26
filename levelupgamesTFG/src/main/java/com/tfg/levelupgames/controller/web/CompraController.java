@@ -58,7 +58,7 @@ public class CompraController {
     @PostMapping("cpost")
     public String cPost(
     @RequestParam("juegoId") Long juegoId,
-    HttpSession session) throws DangerException {
+    HttpSession session, ModelMap m) throws DangerException {
 
     Usuario usuario = (Usuario) session.getAttribute("user");
 
@@ -76,8 +76,13 @@ public class CompraController {
         }
 
         if (saldoActual.compareTo(precioJuego) < 0) {
-            PRG.error("No tienes saldo suficiente para comprar este juego", "/");
-        }
+        m.put("mensaje", "No tienes saldo suficiente para comprar este juego.");
+        m.put("homeUrl", "/");
+        m.put("saldoUrl", "/saldo/r");
+        m.put("view", "compra/errorSaldo");
+        m.put("estilos", "/css/compra/errorSaldo.css");
+        return "_t/frame";
+    }
 
         usuario.setSaldo(saldoActual.subtract(precioJuego));
         usuarioService.save(usuario);
