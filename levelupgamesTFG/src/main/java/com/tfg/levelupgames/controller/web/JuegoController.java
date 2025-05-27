@@ -141,4 +141,15 @@ public String cPost(
         m.put("estilos", "/css/juego/r.css");
         return "_t/frame";
     }
+
+    @PostMapping("d")
+    public String d(
+            @RequestParam Long id) throws DangerException {
+        try {
+            juegoService.d(id);
+        } catch (Exception e) {
+            PRG.error(e.getMessage(), "/juego/r");
+        }
+        return "redirect:/panel_administrador/r";
+    }
 }

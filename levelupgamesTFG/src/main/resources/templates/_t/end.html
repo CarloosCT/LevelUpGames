@@ -2,9 +2,28 @@
 <script src="/js/datatables.js"></script>
 <script src="/js/bootstrap.bundle.min.js"></script>
 <script src="/js/datatables.min.js"></script>
+<script src="/js/jquery-ui.js"></script>
 <script>
     $(document).ready(function(){
         $('#table').DataTable();
+        $('div.game-card').draggable({
+            revert: true,
+            cursor: 'move',
+            zIndex: 1000
+        });
+
+        $('div.game-card').droppable({
+            accept: '.game-card',
+            drop: function(event, ui) {
+                const draggedCard = ui.draggable;
+                const droppedCard = $(this);
+                
+                // Intercambiar el contenido de los dos elementos
+                const draggedContent = draggedCard.html();
+                draggedCard.html(droppedCard.html());
+                droppedCard.html(draggedContent);
+            }
+        });
     });
 </script>
 
