@@ -3,7 +3,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,15 +33,15 @@ public class Juego {
     @ManyToMany
     private List<Genero> generos = new ArrayList<>();
 
-    @ManyToOne
-    private Precio precio;
-
     @OneToMany(mappedBy = "juego")
     private List<Imagen> imagenes = new ArrayList<>();
 
     @OneToOne
     @JoinColumn(name = "portada_id")
     private Imagen portada;
+
+    @OneToMany(mappedBy = "juego")
+    private List<Precio> precios = new ArrayList<>();
 
     /*@OneToMany(mappedBy = "juego")
     private List<Valoracion> valoraciones = new ArrayList<>();*/
@@ -62,12 +64,12 @@ public class Juego {
         return suma / valoraciones.size();
     }*/
 
-    public Juego(String nombre, String descripcion, List<Genero> generos, Precio precio, List<Imagen> imagenes) {
-        this.nombre = nombre;
-        this.generos = generos;
-        this.precio = precio;
-        this.imagenes = imagenes;
-        this.descripcion = descripcion;
+    public Juego(String nombre, String descripcion, List<Genero> generos, List<Precio> precios, List<Imagen> imagenes) {
+    this.nombre = nombre;
+    this.descripcion = descripcion;
+    this.generos = generos;
+    this.precios = precios;
+    this.imagenes = imagenes;
     }
 
     public void setPortada(Imagen portada) 
@@ -80,4 +82,28 @@ public class Juego {
                       .map(Genero::getNombre)
                       .collect(Collectors.joining(","));
     }
+
+    public Precio getPrecioActual() {
+    LocalDate hoy = LocalDate.now();
+    return precios.stream()
+        .filter(p -> !p.getFechaInicio().isAfter(hoy) &&
+                     (p.getFechaFin() == null || !p.getFechaFin().isBefore(hoy)))
+        .max(Comparator.comparing(Precio::getFechaInicio))
+        .orElse(null);
+}
+
+public void setPrecio(Precio nuevoPrecio) {
+    Precio precioActual = getPrecioActual(); // devuelve Precio o null
+    if (precioActual != null && precioActual != nuevoPrecio) {
+        precioActual.setFechaFin(LocalDate.now());
+    }
+
+    nuevoPrecio.setFechaFin(null);
+    nuevoPrecio.setJuego(this);
+
+    if (!precios.contains(nuevoPrecio)) {
+        precios.add(nuevoPrecio);
+    }
+    }
+
 }

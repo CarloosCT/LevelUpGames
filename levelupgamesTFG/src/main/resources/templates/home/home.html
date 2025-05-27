@@ -23,9 +23,13 @@
         </div>
         <!-- Nombre del juego -->
         <h3 th:text="${juego.nombre}"></h3>
-        <!-- Precio -->
-        <p class="precio"
-           th:text="${(juego.precio.cantidad.compareTo(T(java.math.BigDecimal).ZERO) == 0) ? 'Gratis' : juego.precio.cantidad + ' €'}">
+        <!-- Precio adaptado -->
+        <p class="precio" 
+           th:text="${juego.precioActual != null 
+                     ? (juego.precioActual.cantidad.compareTo(T(java.math.BigDecimal).ZERO) == 0 
+                        ? 'Gratis' 
+                        : juego.precioActual.cantidad + ' €') 
+                     : 'Sin precio'}">
         </p>
         <!-- Lista de géneros -->
         <p>
@@ -38,6 +42,7 @@
   </th:block>
 </section>
 
+<!-- Resto del JS sin cambios -->
 <script>
   const searchInput = document.getElementById('search');
   const gameCards = document.querySelectorAll('.game-card');

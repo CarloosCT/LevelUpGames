@@ -25,8 +25,8 @@ public class BDinit {
     private JuegoService juegoService;
     @Autowired
     private ImagenService imagenService;
-    @Autowired
-    private ValoracionService valoracionService;
+    /*@Autowired
+    private ValoracionService valoracionService;*/
     @Autowired
     private PrecioService precioService;
 
@@ -47,10 +47,6 @@ public class BDinit {
 
         if (generoService.findAll().isEmpty()) {
             crearGenerosYDesarrolladores();
-        }
-
-        if (precioService.findByCantidad(new java.math.BigDecimal("59.99")) == null) {
-            precioService.save(new java.math.BigDecimal("59.99"));
         }
 
         if (juegoService.findAll().isEmpty()) {
@@ -77,76 +73,85 @@ public class BDinit {
     }
 
     private void crearJuegos() {
-        Genero aventura = generoService.findByNombre("Aventura");
-        Precio precioBase = precioService.findByCantidad(new java.math.BigDecimal("59.99")); // Asegúrate de que exista
+    Genero aventura = generoService.findByNombre("Aventura");
+    java.math.BigDecimal cantidad = new java.math.BigDecimal("59.99");
 
-        // --- Juego 1 ---
-        Juego juego1 = new Juego();
-        juego1.setNombre("Assassin's Creed");
-        juego1.setDescripcion("Un juego de aventuras históricas.");
-        juego1.setGeneros(List.of(aventura));
-        juego1.setPrecio(precioBase);
-        juegoService.save(juego1);
+    // --- Juego 1 ---
+    Juego juego1 = new Juego();
+    juego1.setNombre("Assassin's Creed");
+    juego1.setDescripcion("Un juego de aventuras históricas.");
+    juego1.setGeneros(List.of(aventura));
+    juegoService.save(juego1);  // Guardar primero para obtener ID
 
-        Imagen portada1 = new Imagen("acreed1.jpg", true);
-        portada1.setJuego(juego1);
-        Imagen imgExtra1 = new Imagen("acreed2.jpg");
-        imgExtra1.setJuego(juego1);
-        imagenService.save(portada1);
-        imagenService.save(imgExtra1);
-        juego1.setPortada(portada1);
-        juegoService.save(juego1);
+    precioService.save(cantidad, juego1); // Guardar precio asociado al juego
 
-        // --- Juego 2 ---
-        Juego juego2 = new Juego();
-        juego2.setNombre("Far Cry");
-        juego2.setDescripcion("Acción en mundo abierto en escenarios exóticos.");
-        juego2.setGeneros(List.of(aventura));
-        juego2.setPrecio(precioBase);
-        juegoService.save(juego2);
+    Imagen portada1 = new Imagen("acreed1.jpg", true);
+    portada1.setJuego(juego1);
+    Imagen imgExtra1 = new Imagen("acreed2.jpg");
+    imgExtra1.setJuego(juego1);
+    imagenService.save(portada1);
+    imagenService.save(imgExtra1);
 
-        Imagen portada2 = new Imagen("farcry1.jpg", true);
-        portada2.setJuego(juego2);
-        Imagen imgExtra2 = new Imagen("farcry2.jpg");
-        imgExtra2.setJuego(juego2);
-        imagenService.save(portada2);
-        imagenService.save(imgExtra2);
-        juego2.setPortada(portada2);
-        juegoService.save(juego2);
+    juego1.setPortada(portada1);
+    juegoService.save(juego1);
 
-        // --- Juego 3 ---
-        Juego juego3 = new Juego();
-        juego3.setNombre("Watch Dogs");
-        juego3.setDescripcion("Hackea el sistema en esta aventura urbana.");
-        juego3.setGeneros(List.of(aventura));
-        juego3.setPrecio(precioBase);
-        juegoService.save(juego3);
+    // --- Juego 2 ---
+    Juego juego2 = new Juego();
+    juego2.setNombre("Far Cry");
+    juego2.setDescripcion("Acción en mundo abierto en escenarios exóticos.");
+    juego2.setGeneros(List.of(aventura));
+    juegoService.save(juego2);
 
-        Imagen portada3 = new Imagen("watchdogs1.jpg", true);
-        portada3.setJuego(juego3);
-        Imagen imgExtra3 = new Imagen("watchdogs2.jpg");
-        imgExtra3.setJuego(juego3);
-        imagenService.save(portada3);
-        imagenService.save(imgExtra3);
-        juego3.setPortada(portada3);
-        juegoService.save(juego3);
+    precioService.save(cantidad, juego2);
 
-        // --- Juego 4 ---
-        Juego juego4 = new Juego();
-        juego4.setNombre("Prince of Persia");
-        juego4.setDescripcion("Aventura mítica con combates y acertijos.");
-        juego4.setGeneros(List.of(aventura));
-        juego4.setPrecio(precioBase);
-        juegoService.save(juego4);
+    Imagen portada2 = new Imagen("farcry1.jpg", true);
+    portada2.setJuego(juego2);
+    Imagen imgExtra2 = new Imagen("farcry2.jpg");
+    imgExtra2.setJuego(juego2);
+    imagenService.save(portada2);
+    imagenService.save(imgExtra2);
 
-        Imagen portada4 = new Imagen("pop1.jpg", true);
-        portada4.setJuego(juego4);
-        Imagen imgExtra4 = new Imagen("pop2.jpg");
-        imgExtra4.setJuego(juego4);
-        imagenService.save(portada4);
-        imagenService.save(imgExtra4);
-        juego4.setPortada(portada4);
-        juegoService.save(juego4);
-    }
+    juego2.setPortada(portada2);
+    juegoService.save(juego2);
+
+    // --- Juego 3 ---
+    Juego juego3 = new Juego();
+    juego3.setNombre("Watch Dogs");
+    juego3.setDescripcion("Hackea el sistema en esta aventura urbana.");
+    juego3.setGeneros(List.of(aventura));
+    juegoService.save(juego3);
+
+    precioService.save(cantidad, juego3);
+
+    Imagen portada3 = new Imagen("watchdogs1.jpg", true);
+    portada3.setJuego(juego3);
+    Imagen imgExtra3 = new Imagen("watchdogs2.jpg");
+    imgExtra3.setJuego(juego3);
+    imagenService.save(portada3);
+    imagenService.save(imgExtra3);
+
+    juego3.setPortada(portada3);
+    juegoService.save(juego3);
+
+    // --- Juego 4 ---
+    Juego juego4 = new Juego();
+    juego4.setNombre("Prince of Persia");
+    juego4.setDescripcion("Aventura mítica con combates y acertijos.");
+    juego4.setGeneros(List.of(aventura));
+    juegoService.save(juego4);
+
+    precioService.save(cantidad, juego4);
+
+    Imagen portada4 = new Imagen("pop1.jpg", true);
+    portada4.setJuego(juego4);
+    Imagen imgExtra4 = new Imagen("pop2.jpg");
+    imgExtra4.setJuego(juego4);
+    imagenService.save(portada4);
+    imagenService.save(imgExtra4);
+
+    juego4.setPortada(portada4);
+    juegoService.save(juego4);
+}
+
 
 }

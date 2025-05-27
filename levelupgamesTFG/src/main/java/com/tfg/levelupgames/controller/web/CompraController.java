@@ -15,6 +15,7 @@ import com.tfg.levelupgames.entities.Usuario;
 import com.tfg.levelupgames.exception.DangerException;
 import com.tfg.levelupgames.helper.PRG;
 import com.tfg.levelupgames.entities.Juego;
+import com.tfg.levelupgames.entities.Precio;
 import com.tfg.levelupgames.services.CompraService;
 import com.tfg.levelupgames.services.JuegoService;
 import com.tfg.levelupgames.services.UsuarioService;
@@ -57,8 +58,8 @@ public class CompraController {
 
     @PostMapping("cpost")
     public String cPost(
-    @RequestParam("juegoId") Long juegoId,
-    HttpSession session, ModelMap m) throws DangerException {
+        @RequestParam("juegoId") Long juegoId,
+        HttpSession session, ModelMap m) throws DangerException {
 
     Usuario usuario = (Usuario) session.getAttribute("user");
 
@@ -71,13 +72,23 @@ public class CompraController {
 
     try {
         juego = juegoService.findById(juegoId);
-        BigDecimal saldoActual = usuario.getSaldo();
-        precioJuego = juego.getPrecio().getCantidad();
+
+        if (juego == null) {
+            PRG.error("Juego no encontrado", "/");
+        }
+
+        Precio precioActual = juego.getPrecioActual();
+        if (precioActual == null) {
+            PRG.error("El juego no tiene precio vigente", "/");
+        }
+
+        precioJuego = precioActual.getCantidad();
 
         if (compraService.existeCompra(usuario, juego)) {
             PRG.error("Ya has comprado este juego", "/");
         }
 
+        BigDecimal saldoActual = usuario.getSaldo();
         if (saldoActual.compareTo(precioJuego) < 0) {
             m.put("mensaje", "No tienes saldo suficiente para comprar este juego.");
             m.put("homeUrl", "/");
@@ -102,5 +113,6 @@ public class CompraController {
     m.put("estilos", "/css/compra/confirmacion.css");
     return "_t/frame";
 }
+
 
 }

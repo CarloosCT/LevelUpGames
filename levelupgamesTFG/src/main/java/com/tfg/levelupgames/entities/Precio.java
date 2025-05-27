@@ -1,23 +1,19 @@
 package com.tfg.levelupgames.entities;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 @Entity
 @Data
-@EqualsAndHashCode(exclude = "juegos")
-@ToString(exclude = "juegos")
 public class Precio {
 
     // ==========================================================================
@@ -29,16 +25,37 @@ public class Precio {
     @Column(nullable = false)
     private BigDecimal  cantidad;
 
+    @Column(nullable = false)
+    private LocalDate fechaInicio;
+
+    @Column
+    private LocalDate fechaFin;
+
     // Relaciones
 
-    @OneToMany(mappedBy = "precio")
-    private List<Juego> juegos = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "juego_id", nullable = false)
+    private Juego juego;
 
     // ==========================================================================
 
-    public Precio(BigDecimal  cantidad) {
-        this.cantidad = cantidad;
+    public Precio(BigDecimal cantidad) {
+    this.cantidad = cantidad;
+    this.fechaInicio = LocalDate.now();
     }
+
+    public Precio(BigDecimal cantidad, LocalDate fechaInicio, LocalDate fechaFin) {
+    this.cantidad = cantidad;
+    this.fechaInicio = fechaInicio;
+    this.fechaFin = fechaFin;
+    }
+
+    public Precio(BigDecimal cantidad, Juego juego) {
+    this.cantidad = cantidad;
+    this.juego = juego;
+    this.fechaInicio = LocalDate.now();
+    this.fechaFin = null;
+}
 
     public Precio() {
     }

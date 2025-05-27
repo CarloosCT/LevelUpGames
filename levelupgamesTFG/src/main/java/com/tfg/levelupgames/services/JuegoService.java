@@ -35,23 +35,23 @@ public class JuegoService {
     }
 
     public void saveJuegoConRelaciones(String nombre, String descripcion, List<Long> generosIds, BigDecimal precio,
-            MultipartFile portada, MultipartFile[] imagenes) {
+        MultipartFile portada, MultipartFile[] imagenes) {
 
-        List<Genero> generos = generoService.findByIds(generosIds);
+    List<Genero> generos = generoService.findByIds(generosIds);
 
-        // Guardar el precio
-        precioService.save(precio);
-        Precio precioGuardado = precioService.findByCantidad(precio);
+    Juego juego = new Juego(nombre, descripcion, generos, null, new ArrayList<>());
+    juego = juegoRepository.save(juego);
 
-        // Crear y guardar el juego sin imágenes
-        Juego juego = new Juego(nombre, descripcion, generos, precioGuardado, new ArrayList<>());
-        juego = juegoRepository.save(juego);
+    precioService.save(precio, juego);
 
-        // Lógica de imágenes
-        imagenService.procesarImagenesDeJuego(juego, portada, imagenes);
+    Precio precioActual = precioService.findByJuegoCantidadFechaFinNull(juego, precio);
 
-        juegoRepository.save(juego);
-    }
+    juego.setPrecio(precioActual);
+
+    imagenService.procesarImagenesDeJuego(juego, portada, imagenes);
+
+    juegoRepository.save(juego);
+}
 
     public List<Juego> findAll() {
         return juegoRepository.findAll();

@@ -53,7 +53,6 @@ public class JuegoController {
     Juego juego = juegoService.findById(id);
 
     if (juego == null) {
-        // No existe el juego, redirige o maneja error
         return "redirect:/juego";
     }
 

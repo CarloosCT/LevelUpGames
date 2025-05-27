@@ -27,14 +27,19 @@
     </div>
 
     <div class="detalles-columna">
+        <!-- Aquí podrías añadir detalles adicionales si quieres -->
     </div>
 
     <div class="precio-columna">
-        <h1 th:text="${juego.nombre}" class="juego-titulo" style="margin-bottom: 10px;"></h1>
+    <h1 th:text="${juego.nombre}" class="juego-titulo" style="margin-bottom: 10px;"></h1>
 
-        <h3 th:text="${juego.precio.cantidad == 0.00 ? 'Gratis' : juego.precio.cantidad + ' €'}" class="juego-precio"></h3>
+    <h3 class="juego-precio" 
+    th:if="${juego.precioActual != null}"
+    th:text="${juego.precioActual.cantidad.compareTo(T(java.math.BigDecimal).ZERO) == 0 ? 'Gratis' : juego.precioActual.cantidad + ' €'}">
+    </h3>
+<h3 class="juego-precio" th:if="${juego.precioActual == null}">Sin precio</h3>
 
-        <a th:href="@{'/compra/c/' + ${juego.id}}" class="boton-comprar">Comprar</a>
+    <a th:href="@{'/compra/c/' + ${juego.id}}" class="boton-comprar">Comprar</a>
     </div>
 
 </div>
