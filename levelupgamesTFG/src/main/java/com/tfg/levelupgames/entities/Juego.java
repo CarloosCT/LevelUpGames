@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +22,9 @@ public class Juego {
 
     @Column
     private String descripcion;
+
+    @Column
+    private String descargable;
 
     /*// No se guarda en la base de datos, se calcula a partir de las valoraciones
     @Transient
@@ -64,12 +66,13 @@ public class Juego {
         return suma / valoraciones.size();
     }*/
 
-    public Juego(String nombre, String descripcion, List<Genero> generos, List<Precio> precios, List<Imagen> imagenes) {
+    public Juego(String nombre, String descripcion, List<Genero> generos, List<Precio> precios, List<Imagen> imagenes, String descargable) {
     this.nombre = nombre;
     this.descripcion = descripcion;
     this.generos = generos;
     this.precios = precios;
     this.imagenes = imagenes;
+    this.descargable = descargable;
     }
 
     public void setPortada(Imagen portada) 
@@ -84,16 +87,21 @@ public class Juego {
     }
 
     public Precio getPrecioActual() {
-    LocalDate hoy = LocalDate.now();
+    if (precios == null || precios.isEmpty()) {
+        return null;
+    }
     return precios.stream()
-        .filter(p -> !p.getFechaInicio().isAfter(hoy) &&
-                     (p.getFechaFin() == null || !p.getFechaFin().isBefore(hoy)))
-        .max(Comparator.comparing(Precio::getFechaInicio))
-        .orElse(null);
+                  .filter(p -> p.getFechaFin() == null)
+                  .findFirst()
+                  .orElse(null);
 }
 
 public void setPrecio(Precio nuevoPrecio) {
-    Precio precioActual = getPrecioActual(); // devuelve Precio o null
+    if (precios == null) {
+        precios = new ArrayList<>();
+    }
+
+    Precio precioActual = getPrecioActual();
     if (precioActual != null && precioActual != nuevoPrecio) {
         precioActual.setFechaFin(LocalDate.now());
     }
@@ -104,6 +112,23 @@ public void setPrecio(Precio nuevoPrecio) {
     if (!precios.contains(nuevoPrecio)) {
         precios.add(nuevoPrecio);
     }
+}
+
+    public void setDescargable(String descargable) {
+        this.descargable = descargable;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Juego)) return false;
+        Juego juego = (Juego) o;
+        return id != null && id.equals(juego.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
     }
 
 }

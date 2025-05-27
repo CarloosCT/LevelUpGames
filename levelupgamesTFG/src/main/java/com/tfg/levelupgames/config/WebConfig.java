@@ -4,16 +4,17 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // Cambiar la ubicación de la carpeta uploads
+        // Recursos para imágenes de portada y otros
         registry.addResourceHandler("/uploads/**")
                 .addResourceLocations("file:uploads/");
+
+        // Recursos para archivos descargables
+        registry.addResourceHandler("/downloadables/**")
+                .addResourceLocations("file:downloadables/");
     }
 }

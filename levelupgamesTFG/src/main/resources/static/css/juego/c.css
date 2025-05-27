@@ -233,6 +233,17 @@ nav h1 {
   flex-wrap: wrap;
 }
 
+/* INPUT DE ARCHIVO DESCARGABLE */
+#descargable {
+  padding: 8px;
+  background-color: #2a2a2a;
+  color: white;
+  border-radius: 5px;
+  font-size: 16px;
+  border: none;
+  width: 100%;
+}
+
 /* Responsive: cuando el ancho es menor a 768px */
 @media (max-width: 767px) {
   .form-grid {

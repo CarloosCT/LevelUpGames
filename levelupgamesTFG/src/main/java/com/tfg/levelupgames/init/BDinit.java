@@ -81,9 +81,10 @@ public class BDinit {
     juego1.setNombre("Assassin's Creed");
     juego1.setDescripcion("Un juego de aventuras históricas.");
     juego1.setGeneros(List.of(aventura));
-    juegoService.save(juego1);  // Guardar primero para obtener ID
+    juego1.setDescargable("Assassin's Creed.iso");  // <-- aquí la ruta o archivo
+    juegoService.save(juego1);
 
-    precioService.save(cantidad, juego1); // Guardar precio asociado al juego
+    precioService.save(cantidad, juego1);
 
     Imagen portada1 = new Imagen("acreed1.jpg", true);
     portada1.setJuego(juego1);
@@ -100,6 +101,7 @@ public class BDinit {
     juego2.setNombre("Far Cry");
     juego2.setDescripcion("Acción en mundo abierto en escenarios exóticos.");
     juego2.setGeneros(List.of(aventura));
+    juego2.setDescargable("Far Cry.rar");
     juegoService.save(juego2);
 
     precioService.save(cantidad, juego2);
@@ -119,6 +121,7 @@ public class BDinit {
     juego3.setNombre("Watch Dogs");
     juego3.setDescripcion("Hackea el sistema en esta aventura urbana.");
     juego3.setGeneros(List.of(aventura));
+    juego3.setDescargable("Watch Dogs.exe");
     juegoService.save(juego3);
 
     precioService.save(cantidad, juego3);
@@ -138,6 +141,7 @@ public class BDinit {
     juego4.setNombre("Prince of Persia");
     juego4.setDescripcion("Aventura mítica con combates y acertijos.");
     juego4.setGeneros(List.of(aventura));
+    juego4.setDescargable("Prince of Persia.setup");
     juegoService.save(juego4);
 
     precioService.save(cantidad, juego4);
@@ -152,6 +156,4 @@ public class BDinit {
     juego4.setPortada(portada4);
     juegoService.save(juego4);
 }
-
-
 }

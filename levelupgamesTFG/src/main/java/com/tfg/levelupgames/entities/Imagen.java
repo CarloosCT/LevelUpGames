@@ -51,4 +51,17 @@ public class Imagen {
     public void setPortada(boolean portada) {
         this.portada = portada;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Imagen)) return false;
+        Imagen imagen = (Imagen) o;
+        return id != null && id.equals(imagen.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
 }
