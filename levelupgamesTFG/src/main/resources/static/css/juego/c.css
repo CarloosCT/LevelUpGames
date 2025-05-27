@@ -205,3 +205,49 @@ nav h1 {
   font-size: 16px;
 }
 
+/* NUEVO LAYOUT DE FORMULARIO EN GRID */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* Para campos que deben ocupar ambas columnas */
+.full-width {
+  grid-column: 1 / -1;
+}
+
+/* Agrupación visual individual */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Vista previa de imágenes */
+#portadaPreview,
+#imagenesPreview {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* INPUT DE ARCHIVO DESCARGABLE */
+#descargable {
+  padding: 8px;
+  background-color: #2a2a2a;
+  color: white;
+  border-radius: 5px;
+  font-size: 16px;
+  border: none;
+  width: 100%;
+}
+
+/* Responsive: cuando el ancho es menor a 768px */
+@media (max-width: 767px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+

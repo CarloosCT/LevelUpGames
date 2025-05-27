@@ -1,15 +1,16 @@
 <div class="compra-container">
 
-    <!-- Título del juego -->
     <h1>Compra del juego <span th:text="${juego.nombre}">Nombre del juego</span></h1>
 
-    <!-- Descripción -->
     <p th:text="${juego.descripcion}" class="juego-descripcion"></p>
 
-    <!-- Precio -->
-    <p>Precio: <strong th:text="${juego.precio.cantidad + ' €'}">0 €</strong></p>
+    <p>
+      Precio: 
+      <strong th:if="${juego.precioActual != null}" 
+              th:text="${juego.precioActual.cantidad.compareTo(T(java.math.BigDecimal).ZERO) == 0 ? 'Gratis' : juego.precioActual.cantidad + ' €'}">0 €</strong>
+      <strong th:if="${juego.precioActual == null}">Sin precio</strong>
+    </p>
 
-    <!-- Formulario de compra -->
     <form th:action="@{/compra/cpost}" method="post">
         <input type="hidden" name="juegoId" th:value="${juego.id}" />
         <button type="submit" class="boton-comprar">Comprar</button>

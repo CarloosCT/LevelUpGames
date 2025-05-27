@@ -15,6 +15,7 @@ import com.tfg.levelupgames.entities.Usuario;
 import com.tfg.levelupgames.exception.DangerException;
 import com.tfg.levelupgames.helper.PRG;
 import com.tfg.levelupgames.entities.Juego;
+import com.tfg.levelupgames.entities.Precio;
 import com.tfg.levelupgames.services.CompraService;
 import com.tfg.levelupgames.services.JuegoService;
 import com.tfg.levelupgames.services.UsuarioService;
@@ -57,8 +58,8 @@ public class CompraController {
 
     @PostMapping("cpost")
     public String cPost(
-    @RequestParam("juegoId") Long juegoId,
-    HttpSession session) throws DangerException {
+        @RequestParam("juegoId") Long juegoId,
+        HttpSession session, ModelMap m) throws DangerException {
 
     Usuario usuario = (Usuario) session.getAttribute("user");
 
@@ -66,17 +67,35 @@ public class CompraController {
         PRG.error("Debes iniciar sesión para realizar la compra", "/usuario/login");
     }
 
+    Juego juego = null;
+    BigDecimal precioJuego = null;
+
     try {
-        Juego juego = juegoService.findById(juegoId);
-        BigDecimal saldoActual = usuario.getSaldo();
-        BigDecimal precioJuego = juego.getPrecio().getCantidad();
+        juego = juegoService.findById(juegoId);
+
+        if (juego == null) {
+            PRG.error("Juego no encontrado", "/");
+        }
+
+        Precio precioActual = juego.getPrecioActual();
+        if (precioActual == null) {
+            PRG.error("El juego no tiene precio vigente", "/");
+        }
+
+        precioJuego = precioActual.getCantidad();
 
         if (compraService.existeCompra(usuario, juego)) {
             PRG.error("Ya has comprado este juego", "/");
         }
 
+        BigDecimal saldoActual = usuario.getSaldo();
         if (saldoActual.compareTo(precioJuego) < 0) {
-            PRG.error("No tienes saldo suficiente para comprar este juego", "/");
+            m.put("mensaje", "No tienes saldo suficiente para comprar este juego.");
+            m.put("homeUrl", "/");
+            m.put("saldoUrl", "/saldo/r");
+            m.put("view", "compra/errorSaldo");
+            m.put("estilos", "/css/compra/errorSaldo.css");
+            return "_t/frame";
         }
 
         usuario.setSaldo(saldoActual.subtract(precioJuego));
@@ -88,7 +107,12 @@ public class CompraController {
         PRG.error("No se pudo realizar la compra: " + e.getMessage(), "/");
     }
 
-    return "redirect:/";
+    m.put("juego", juego);
+    m.put("precio", precioJuego);
+    m.put("view", "compra/confirmacion");
+    m.put("estilos", "/css/compra/confirmacion.css");
+    return "_t/frame";
 }
+
 
 }

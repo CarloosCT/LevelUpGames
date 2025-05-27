@@ -75,3 +75,19 @@ nav ul li a {
   position: relative;
   right: 50px;
 }
+
+.logo {
+  display: flex;
+  flex-direction: column;
+  margin-left: 30px;
+  line-height: 1.2;
+}
+
+.eslogan {
+  margin: 0;
+  font-size: 1rem;
+  color: #ffcc00;
+  font-style: italic;
+  font-weight: 600;
+  text-shadow: 1px 1px 2px black;
+}

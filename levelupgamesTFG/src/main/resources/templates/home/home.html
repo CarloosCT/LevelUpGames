@@ -1,37 +1,39 @@
 <section class="search-bar">
   <input type="text" id="search" placeholder="Buscar ...">
-
-  <div class="dropdown">
-    <button class="dropbtn">Filtrar por:</button>
-    <div class="dropdown-content">
-      <a href="#" th:each="genero : ${generos}" th:attr="data-genero=${genero.nombre}" th:text="${genero.nombre}"></a>
-    </div>
-  </div>
 </section>
+
+<!-- Lista horizontal de géneros -->
+<div class="filtro-generos-horizontal">
+  <a href="#" data-genero="" class="genero-link active">Todos</a>
+  <a href="#" th:each="genero : ${generos}" 
+     th:attr="data-genero=${genero.nombre}" 
+     th:text="${genero.nombre}" 
+     class="genero-link"></a>
+</div>
 
 <section class="games">
   <th:block th:each="juego : ${juegos}">
-    <div class="game-card" th:attr="data-name=${juego.nombre.toLowerCase()}"
-      th:attrappend=" data-generos=${juego.nombresGeneros}">
-
+    <div class="game-card" 
+         th:attr="data-name=${juego.nombre.toLowerCase()}"
+         th:attrappend=" data-generos=${juego.nombresGeneros}">
       <a th:href="@{/juego/r/{id}(id=${juego.id})}" target="_self" style="text-decoration: none; color: inherit;">
         <!-- Imagen portada -->
         <div th:if="${juego.portada != null}">
           <img th:src="@{'/uploads/' + ${juego.portada.ruta}}" th:alt="${juego.nombre}" />
         </div>
-
         <!-- Nombre del juego -->
         <h3 th:text="${juego.nombre}"></h3>
-
-        <!-- Precio -->
-        <p class="precio"
-        th:text="${(juego.precio.cantidad.compareTo(T(java.math.BigDecimal).ZERO) == 0) ? 'Gratis' : juego.precio.cantidad + ' €'}">
+        <!-- Precio adaptado -->
+        <p class="precio" 
+           th:text="${juego.precioActual != null 
+                     ? (juego.precioActual.cantidad.compareTo(T(java.math.BigDecimal).ZERO) == 0 
+                        ? 'Gratis' 
+                        : juego.precioActual.cantidad + ' €') 
+                     : 'Sin precio'}">
         </p>
-
-
         <!-- Lista de géneros -->
         <p>
-          <span th:each="genero, iterStat : ${juego.generos}">
+          <span th:each="genero : ${juego.generos}">
             <span class="category" th:text="${genero.nombre}"></span>
           </span>
         </p>
@@ -40,40 +42,45 @@
   </th:block>
 </section>
 
+<!-- Resto del JS sin cambios -->
 <script>
   const searchInput = document.getElementById('search');
   const gameCards = document.querySelectorAll('.game-card');
-  const generoLinks = document.querySelectorAll('.dropdown-content a');
+  const generoLinks = document.querySelectorAll('.genero-link');
 
-  // Filtrar por texto mientras escribes
-  searchInput.addEventListener('input', function () {
-    filtrarJuegos();
-  });
+  let generoSeleccionado = null;
 
-  // Filtrar por género al clicar
+  // Filtrar mientras escribes
+  searchInput.addEventListener('input', filtrarJuegos);
+
   generoLinks.forEach(link => {
     link.addEventListener('click', function (e) {
       e.preventDefault();
-      const generoSeleccionado = this.dataset.genero;
-      filtrarJuegos(generoSeleccionado);
+
+      generoSeleccionado = this.dataset.genero || null;
+
+      // Visual: marca el activo
+      generoLinks.forEach(l => l.classList.remove('active'));
+      this.classList.add('active');
+
+      filtrarJuegos();
     });
   });
 
-  function filtrarJuegos(generoSeleccionado = null) {
+  function filtrarJuegos() {
     const filtroTexto = searchInput.value.toLowerCase();
 
     gameCards.forEach(card => {
-      const nombre = card.getAttribute('data-name');
-      const generos = card.getAttribute('data-generos').split(',');
+      const nombre = card.getAttribute('data-name').toLowerCase();
+      const generosAttr = card.getAttribute('data-generos');
+      const generos = generosAttr ? generosAttr.split(',').map(g => g.trim()) : [];
 
       const coincideTexto = nombre.includes(filtroTexto);
-      const coincideGenero = !generoSeleccionado || generos.includes(generoSeleccionado);
+      const coincideGenero = !generoSeleccionado || generoSeleccionado === "" || generos.includes(generoSeleccionado);
 
       card.style.display = (coincideTexto && coincideGenero) ? '' : 'none';
     });
   }
-
-
 </script>
 
 <script th:inline="javascript">
@@ -100,7 +107,7 @@
 </script>
 
 <script th:if="${alertaRechazo}" type="text/javascript">
-  window.addEventListener('DOMContentLoaded', (event) => {
+  window.addEventListener('DOMContentLoaded', () => {
     alert("Tu solicitud como desarrollador ha sido rechazada.");
   });
 </script>

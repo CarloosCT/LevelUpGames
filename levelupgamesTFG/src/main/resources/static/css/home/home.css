@@ -1,3 +1,4 @@
+/* RESET GENERAL */
 * {
   margin: 0;
   padding: 0;
@@ -13,19 +14,18 @@ body {
   padding: 0 15px;
 }
 
-/* Animación general */
+/* ANIMACIONES */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(15px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* NAV (se mantiene igual que antes) */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* NAVBAR */
 nav {
   background-color: #1f1f1f;
   padding: 15px 30px;
@@ -47,36 +47,20 @@ nav h1 {
   margin-right: 30px;
 }
 
-.menu-left {
+.menu-left,
+.menu-right {
   display: flex;
   list-style: none;
   gap: 20px;
   flex-wrap: wrap;
 }
 
-.menu-left li a {
-  text-decoration: none;
-  color: white;
-  font-weight: bold;
-  transition: color 0.3s;
-}
-
-.menu-left li a:hover {
-  color: #ff5733;
-}
-
-.menu-right {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  list-style: none;
-  flex-wrap: wrap;
-}
-
-.menu-right a {
-  color: #ff5733;
+.menu-left li a,
+.menu-right a,
+input[type="submit"] {
   text-decoration: none;
   font-weight: bold;
+  color: #ff5733;
   background-color: transparent;
   border: 1px solid #ff5733;
   padding: 6px 12px;
@@ -84,7 +68,9 @@ nav h1 {
   transition: background-color 0.3s, color 0.3s;
 }
 
-.menu-right a:hover {
+.menu-left li a:hover,
+.menu-right a:hover,
+input[type="submit"]:hover {
   background-color: #ff5733;
   color: white;
 }
@@ -94,30 +80,14 @@ nav h1 {
   font-size: 16px;
 }
 
-input[type="submit"]{
-  color: #ff5733;
-  text-decoration: none;
-  font-weight: bold;
-  background-color: transparent;
-  border: 1px solid #ff5733;
-  padding: 6px 12px;
-  border-radius: 5px;
-  transition: background-color 0.3s, color 0.3s;
-}
-
-input[type="submit"]:hover {
-  background-color: #ff5733;
-  color: white;
-}
-
 /* SEARCH BAR */
 .search-bar {
   padding: 20px 30px;
   background-color: #1f1f1f;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   gap: 15px;
-  flex-wrap: wrap;
   border-bottom: 2px solid #ff5733;
 }
 
@@ -129,47 +99,35 @@ input[type="submit"]:hover {
   font-size: 16px;
 }
 
-/* Dropdown Filtro */
-.dropdown {
-  position: relative;
+/* BARRA HORIZONTAL DE GÉNEROS */
+.filtro-generos-horizontal {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  padding: 10px 30px 20px;
+  background-color: #1f1f1f;
+  animation: fadeIn 0.5s ease-in-out;
 }
 
-.dropbtn {
+.filtro-generos-horizontal .genero-link {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 8px 16px;
+  border-radius: 5px;
+  background-color: transparent;
+  border: 1px solid #ff5733;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.filtro-generos-horizontal .genero-link:hover,
+.filtro-generos-horizontal .genero-link.active {
   background-color: #ff5733;
   color: white;
-  padding: 10px 15px;
-  font-size: 16px;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
 }
 
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #1f1f1f;
-  min-width: 160px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  border-radius: 5px;
-  z-index: 1;
-}
-
-.dropdown-content a {
-  color: white;
-  padding: 10px 15px;
-  text-decoration: none;
-  display: block;
-}
-
-.dropdown-content a:hover {
-  background-color: #333;
-}
-
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-
-/* HERO SECTION */
+/* HERO */
 .hero {
   text-align: center;
   padding: 50px 20px 30px;
@@ -187,24 +145,12 @@ input[type="submit"]:hover {
   color: #ccc;
 }
 
-/* ANIMACIÓN HERO */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* GAME CARDS */
+/* GAME LIST */
 .games {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 30px;
+  gap: 20px;
   padding: 30px;
 }
 
@@ -213,7 +159,8 @@ input[type="submit"]:hover {
   padding: 20px;
   border-radius: 10px;
   text-align: center;
-  width: 250px;
+  flex: 0 0 calc((100% / 4) - 15px);
+  max-width: calc((100% / 4) - 15px);
   transition: transform 0.3s ease;
   animation: fadeIn 0.6s ease-in-out;
   box-shadow: 0 4px 10px rgba(0,0,0,0.3);
@@ -233,16 +180,11 @@ input[type="submit"]:hover {
   font-size: 20px;
 }
 
-.game-card p {
+.game-card p.precio {
   font-size: 18px;
   font-weight: bold;
   color: #ff5733;
   margin-top: 5px;
-}
-
-/* CATEGORÍAS */
-.categories {
-  margin-top: 10px;
 }
 
 .category {
@@ -254,31 +196,12 @@ input[type="submit"]:hover {
   margin: 2px;
   display: inline-block;
 }
-.games {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-  padding: 30px;
+
+.categories {
+  margin-top: 10px;
 }
 
-.game-card {
-  background: #1f1f1f;
-  padding: 20px;
-  border-radius: 10px;
-  text-align: center;
-  /* Calculamos 4 juegos por fila con margen (gap) */
-  flex: 0 0 calc((100% / 4) - 15px);
-  max-width: calc((100% / 4) - 15px);
-  transition: transform 0.3s ease;
-  animation: fadeIn 0.6s ease-in-out;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-}
-
-.game-card:hover {
-  transform: scale(1.05);
-}
-
+/* MENSAJES */
 .success-message {
   background-color: #28a745;
   color: white;
@@ -288,20 +211,4 @@ input[type="submit"]:hover {
   text-align: center;
   font-weight: bold;
   animation: fadeIn 0.5s ease-in-out;
-}
-
-.category {
-  background: #ff5733;
-  color: white;
-  padding: 4px 8px;
-  border-radius: 5px;
-  font-size: 13px;
-  margin: 2px;
-  display: inline-block;
-}
-
-.precio {
-  font-weight: bold;
-  color: #333;
-  margin: 5px 0;
 }

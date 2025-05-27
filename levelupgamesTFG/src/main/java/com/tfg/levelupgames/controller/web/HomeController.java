@@ -26,13 +26,16 @@ public class HomeController {
     private UsuarioService usuarioService;
 
     @GetMapping("/")
-    public String home(@RequestParam(required = false) String success, @RequestParam(required = false) String cancel,
-            HttpSession session,
-            ModelMap m) {
-        m.put("view", "/home/home");
+    public String home(@RequestParam(required = false) String success, 
+                       @RequestParam(required = false) String cancel,
+                       HttpSession session,
+                       ModelMap m) {
+
         m.put("juegos", juegoService.findAll());
+
         m.put("generos", generoService.findAll());
         m.put("estilos", "/css/home/home.css");
+        m.put("view", "/home/home");
 
         if (success != null) {
             m.put("success", success);

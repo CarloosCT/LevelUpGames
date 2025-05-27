@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tfg.levelupgames.entities.Juego;
 import com.tfg.levelupgames.entities.Precio;
 import com.tfg.levelupgames.repositories.PrecioRepository;
 
@@ -16,39 +17,42 @@ public class PrecioService {
     @Autowired
     private PrecioRepository precioRepository;
 
-    /**
-     * Guarda un nuevo precio solo si no existe uno igual.
-     * Si ya existe, retorna el existente.
-     */
-    public Precio save(BigDecimal  cantidad) {
-        Optional<Precio> precioExistente = precioRepository.findByCantidad(cantidad);
-        return precioExistente.orElseGet(() -> precioRepository.save(new Precio(cantidad)));
+    public void save(BigDecimal cantidad, Juego juego) {
+    Precio nuevoPrecio = new Precio(cantidad, juego);
+    precioRepository.save(nuevoPrecio);
     }
 
     public List<Precio> findAll() {
         return precioRepository.findAll();
     }
 
-    public Precio findByCantidad(BigDecimal  cantidad) {
-        return precioRepository.findByCantidad(cantidad).orElse(null);
+    public Optional<Precio> findByCantidad(BigDecimal cantidad) {
+        return precioRepository.findByCantidad(cantidad);
     }
 
     public Precio findById(Long precioId) {
         return precioRepository.findById(precioId).orElse(null);
     }
 
-    public void d(Long id) throws Exception {
-        Precio precioABorrar = precioRepository.findById(id).get();
-        if (precioABorrar.getJuegos().isEmpty()) {
+    /**
+     * Borra un precio si no tiene juegos asociados (en este modelo un precio tiene un único juego)
+     */
+    public void delete(Long id) throws Exception {
+        Precio precioABorrar = precioRepository.findById(id).orElseThrow(() -> new Exception("Precio no encontrado"));
+        if (precioABorrar.getJuego() == null) {
             precioRepository.deleteById(id);
         } else {
-            throw new Exception("El precio " + precioABorrar.getCantidad() + " tiene juegos asociados");
+            throw new Exception("El precio " + precioABorrar.getCantidad() + " tiene un juego asociado");
         }
     }
 
-    public Precio u(Long id, BigDecimal  cantidad) {
-        Precio precioAModificar = precioRepository.findById(id).get();
+    public Precio update(Long id, BigDecimal cantidad) throws Exception {
+        Precio precioAModificar = precioRepository.findById(id).orElseThrow(() -> new Exception("Precio no encontrado"));
         precioAModificar.setCantidad(cantidad);
         return precioRepository.save(precioAModificar);
     }
+
+    public Precio findByJuegoCantidadFechaFinNull(Juego juego, BigDecimal cantidad) {
+    return precioRepository.findByJuegoAndCantidadAndFechaFinIsNull(juego, cantidad).orElse(null);
+}
 }

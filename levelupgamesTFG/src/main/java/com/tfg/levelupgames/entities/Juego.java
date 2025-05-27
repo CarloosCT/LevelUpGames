@@ -3,6 +3,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,6 +23,9 @@ public class Juego {
     @Column
     private String descripcion;
 
+    @Column
+    private String descargable;
+
     /*// No se guarda en la base de datos, se calcula a partir de las valoraciones
     @Transient
     private Float valoracionMedia;*/
@@ -31,15 +35,15 @@ public class Juego {
     @ManyToMany
     private List<Genero> generos = new ArrayList<>();
 
-    @ManyToOne
-    private Precio precio;
-
     @OneToMany(mappedBy = "juego")
     private List<Imagen> imagenes = new ArrayList<>();
 
     @OneToOne
     @JoinColumn(name = "portada_id")
     private Imagen portada;
+
+    @OneToMany(mappedBy = "juego")
+    private List<Precio> precios = new ArrayList<>();
 
     /*@OneToMany(mappedBy = "juego")
     private List<Valoracion> valoraciones = new ArrayList<>();*/
@@ -62,12 +66,13 @@ public class Juego {
         return suma / valoraciones.size();
     }*/
 
-    public Juego(String nombre, String descripcion, List<Genero> generos, Precio precio, List<Imagen> imagenes) {
-        this.nombre = nombre;
-        this.generos = generos;
-        this.precio = precio;
-        this.imagenes = imagenes;
-        this.descripcion = descripcion;
+    public Juego(String nombre, String descripcion, List<Genero> generos, List<Precio> precios, List<Imagen> imagenes, String descargable) {
+    this.nombre = nombre;
+    this.descripcion = descripcion;
+    this.generos = generos;
+    this.precios = precios;
+    this.imagenes = imagenes;
+    this.descargable = descargable;
     }
 
     public void setPortada(Imagen portada) 
@@ -80,4 +85,50 @@ public class Juego {
                       .map(Genero::getNombre)
                       .collect(Collectors.joining(","));
     }
+
+    public Precio getPrecioActual() {
+    if (precios == null || precios.isEmpty()) {
+        return null;
+    }
+    return precios.stream()
+                  .filter(p -> p.getFechaFin() == null)
+                  .findFirst()
+                  .orElse(null);
+}
+
+public void setPrecio(Precio nuevoPrecio) {
+    if (precios == null) {
+        precios = new ArrayList<>();
+    }
+
+    Precio precioActual = getPrecioActual();
+    if (precioActual != null && precioActual != nuevoPrecio) {
+        precioActual.setFechaFin(LocalDate.now());
+    }
+
+    nuevoPrecio.setFechaFin(null);
+    nuevoPrecio.setJuego(this);
+
+    if (!precios.contains(nuevoPrecio)) {
+        precios.add(nuevoPrecio);
+    }
+}
+
+    public void setDescargable(String descargable) {
+        this.descargable = descargable;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Juego)) return false;
+        Juego juego = (Juego) o;
+        return id != null && id.equals(juego.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
+
 }

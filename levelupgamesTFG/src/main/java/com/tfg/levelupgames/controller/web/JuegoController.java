@@ -53,7 +53,6 @@ public class JuegoController {
     Juego juego = juegoService.findById(id);
 
     if (juego == null) {
-        // No existe el juego, redirige o maneja error
         return "redirect:/juego";
     }
 
@@ -71,7 +70,8 @@ public String cPost(
     @RequestParam List<Long> generosIds,
     @RequestParam BigDecimal precio,
     @RequestParam("imagenes") MultipartFile[] imagenes,
-    @RequestParam("portadaFile") MultipartFile portadaFile) throws DangerException {
+    @RequestParam("portadaFile") MultipartFile portadaFile,
+    @RequestParam("descargable") MultipartFile descargable) throws DangerException {
 
     if (juegoService.existsByNombre(nombre)) {
         PRG.error("Ya existe un juego con el nombre '" + nombre + "'.", "/juego/c");
@@ -107,7 +107,11 @@ public String cPost(
         PRG.error("Puedes subir un máximo de 5 imágenes adicionales.", "/juego/c");
     }
 
-    juegoService.saveJuegoConRelaciones(nombre, descripcion, generosIds, precio, portadaFile, imagenes);
+    if (descargable == null || descargable.isEmpty()) {
+        PRG.error("Debes subir un archivo descargable del juego.", "/juego/c");
+    }
+
+    juegoService.saveJuegoConRelaciones(nombre, descripcion, generosIds, precio, portadaFile, imagenes, descargable);
 
     return "redirect:/panel_administrador/r";
 }

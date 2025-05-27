@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.tfg.levelupgames.entities.Juego;
 import com.tfg.levelupgames.exception.DangerException;
 import com.tfg.levelupgames.helper.PRG;
+import com.tfg.levelupgames.services.JuegoService;
 import com.tfg.levelupgames.services.PrecioService;
 
 @Controller
@@ -20,6 +22,9 @@ public class PrecioController {
 
     @Autowired
     private PrecioService precioService;
+
+    @Autowired
+    private JuegoService juegoService;
 
     @GetMapping("r")
     public String r(
@@ -39,18 +44,25 @@ public class PrecioController {
     }
 
     @PostMapping("c")
-    public String cPost(
-            @RequestParam BigDecimal  cantidad) throws DangerException {
-        try {
-
-            this.precioService.save(cantidad);
-        } catch (Exception e) {
-            PRG.error("El precio " + cantidad + " ya está registrado", "/precio/r");
+public String cPost(
+        @RequestParam Long juegoId,
+        @RequestParam BigDecimal cantidad) throws DangerException {
+    try {
+        Juego juego = juegoService.findById(juegoId);
+        if (juego == null) {
+            PRG.error("Juego no encontrado", "/precio/r");
         }
-        return "redirect:/precio/r";
-    }
 
-    @PostMapping("d")
+        // Guardar el precio con juego y cantidad
+        precioService.save(cantidad, juego);
+
+    } catch (Exception e) {
+        PRG.error("Error al guardar el precio: " + e.getMessage(), "/precio/r");
+    }
+    return "redirect:/precio/r";
+}
+
+    /*@PostMapping("d")
     public String d(
             @RequestParam Long id) throws DangerException {
         try {
@@ -81,5 +93,5 @@ public class PrecioController {
             PRG.error("El precio " + cantidad + " ya existe", "/precio/r");
         }
         return "redirect:/precio/r";
-    }
+    }*/
 }

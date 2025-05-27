@@ -10,19 +10,28 @@
 
         <!-- Datos ocultos para JS -->
         <div class="juego-detalles"
-             th:id="'detalle-' + ${juego.id}" style="display:none;"
-             th:data-nombre="${juego.nombre}"
-             th:data-descripcion="${juego.descripcion}"
-             th:data-precio="${juego.precio.cantidad}"
-             th:data-imagenes="${#strings.listJoin(juego.imagenes.?[ruta != null].![('/uploads/' + ruta)], ',')}">
-        </div>
+          th:id="'detalle-' + ${juego.id}" style="display:none;"
+          th:data-nombre="${juego.nombre}"
+          th:data-descripcion="${juego.descripcion}"
+          th:data-precio="${juego.precioActual != null ? (juego.precioActual.cantidad == 0 ? 'Gratis' : juego.precioActual.cantidad + ' €') : 'Sin precio'}"
+          th:data-imagenes="${#strings.listJoin(juego.imagenes.?[ruta != null].![('/uploads/' + ruta)], ',')}"
+          th:data-descargable="${juego.descargable}"> <!-- actualizado -->
+      </div>
       </li>
     </ul>
   </aside>
 
   <!-- Panel de detalles -->
   <section class="detalle-juego" id="detalle-juego">
-    <p>Selecciona un juego para ver los detalles.</p>
+    <div class="mensaje-inicial" id="mensaje-inicial" th:if="${juegos.size() == 0}">
+      <p>Cuando compres un juego, aparecerá en la lista de la izquierda.</p>
+    </div>
+    <div class="mensaje-inicial" id="mensaje-inicial" th:if="${juegos.size() > 0}">
+      <p>Selecciona un juego para ver los detalles.</p>
+    </div>
+    <div class="contenido-detalle" id="contenido-detalle" style="display:none;">
+      <!-- Aquí se cargan los detalles con JS -->
+    </div>
   </section>
 </div>
 
@@ -33,21 +42,43 @@ function mostrarDetalles(id) {
   const nombre = detalle.getAttribute('data-nombre');
   const descripcion = detalle.getAttribute('data-descripcion');
   const precio = detalle.getAttribute('data-precio');
-  const imagenes = detalle.getAttribute('data-imagenes').split(',');
+  const descargable = detalle.getAttribute('data-descargable');
+  const imagenesData = detalle.getAttribute('data-imagenes');
+  const imagenes = imagenesData ? imagenesData.split(',') : [];
 
-  const panel = document.getElementById('detalle-juego');
+  const mensaje = document.getElementById('mensaje-inicial');
+  const contenido = document.getElementById('contenido-detalle');
 
   let imagenesHtml = '<div class="imagenes-juego">';
   imagenes.forEach(src => {
-    imagenesHtml += `<img src="${src.trim()}" alt="Imagen del juego" />`;
+    const trimmedSrc = src.trim();
+    if(trimmedSrc) {
+      imagenesHtml += `<img src="${trimmedSrc}" alt="Imagen del juego" />`;
+    }
   });
   imagenesHtml += '</div>';
 
-  panel.innerHTML = `
+  let descargaHtml = '';
+  if (descargable) {
+    descargaHtml = `
+      <div class="descarga-juego">
+        <h3>Descargar juego</h3>
+        <a class="boton-descargar" href="/downloadables/${descargable}" download>
+          Descargar
+        </a>
+      </div>
+    `;
+  }
+
+  contenido.innerHTML = `
     <h2>${nombre}</h2>
-    <p><strong>Precio:</strong> ${precio} €</p>
+    <p><strong>Precio:</strong> ${precio}</p>
     <p><strong>Descripción:</strong><br>${descripcion}</p>
     ${imagenesHtml}
+    ${descargaHtml}
   `;
+
+  mensaje.style.display = 'none';
+  contenido.style.display = 'block';
 }
 </script>

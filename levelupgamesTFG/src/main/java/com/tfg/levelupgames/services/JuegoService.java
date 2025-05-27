@@ -1,10 +1,14 @@
 package com.tfg.levelupgames.services;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,23 +39,55 @@ public class JuegoService {
     }
 
     public void saveJuegoConRelaciones(String nombre, String descripcion, List<Long> generosIds, BigDecimal precio,
-            MultipartFile portada, MultipartFile[] imagenes) {
+        MultipartFile portadaFile, MultipartFile[] imagenes, MultipartFile descargable) {
 
-        List<Genero> generos = generoService.findByIds(generosIds);
+    List<Genero> generos = generoService.findByIds(generosIds);
 
-        // Guardar el precio
-        precioService.save(precio);
-        Precio precioGuardado = precioService.findByCantidad(precio);
+    Juego juego = new Juego(nombre, descripcion, generos, new ArrayList<>(), new ArrayList<>(), null);
+    juego = juegoRepository.save(juego);
 
-        // Crear y guardar el juego sin imágenes
-        Juego juego = new Juego(nombre, descripcion, generos, precioGuardado, new ArrayList<>());
-        juego = juegoRepository.save(juego);
+    precioService.save(precio, juego);
+    Precio precioActual = precioService.findByJuegoCantidadFechaFinNull(juego, precio);
+    juego.setPrecio(precioActual);
 
-        // Lógica de imágenes
-        imagenService.procesarImagenesDeJuego(juego, portada, imagenes);
+    // Procesar portada y otras imagenes
+    imagenService.procesarImagenesDeJuego(juego, portadaFile, imagenes);
 
-        juegoRepository.save(juego);
+    // Guardar descargable en disco y asignar nombre o ruta al juego
+    if (descargable != null && !descargable.isEmpty()) {
+        try {
+            Path downloadDir = Paths.get("downloadables");
+            if (!Files.exists(downloadDir)) {
+                Files.createDirectories(downloadDir);
+            }
+
+            // Crear nombre unico para evitar colisiones
+            String nombreOriginal = descargable.getOriginalFilename();
+            String extension = "";
+
+            int i = nombreOriginal.lastIndexOf('.');
+            if (i > 0) {
+                extension = nombreOriginal.substring(i);
+            }
+
+            String nombreArchivoUnico = UUID.randomUUID().toString() + extension;
+
+            Path rutaArchivo = downloadDir.resolve(nombreArchivoUnico);
+
+            Files.copy(descargable.getInputStream(), rutaArchivo, StandardCopyOption.REPLACE_EXISTING);
+
+            // Guardar ruta o nombre archivo en juego
+            juego.setDescargable(nombreArchivoUnico);
+
+        } catch (IOException e) {
+            throw new RuntimeException("Error al guardar el archivo descargable: " + e.getMessage(), e);
+        }
     }
+
+    // Guardar juego con todas las relaciones actualizadas
+    juegoRepository.save(juego);
+}
+
 
     public List<Juego> findAll() {
         return juegoRepository.findAll();
