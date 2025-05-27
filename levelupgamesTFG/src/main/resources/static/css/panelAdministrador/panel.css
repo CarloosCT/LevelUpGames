@@ -187,3 +187,10 @@ h3.game-list-title::after {
 h3.game-list-title:hover::after {
   width: 120px;
 }
+
+div.papelera{
+  width: 50px; height: 50px;
+  background-image: url('/img/icons/papelera.png');
+  background-size: 100%;
+  margin-top: 100px;
+}
