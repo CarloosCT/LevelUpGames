@@ -1,0 +1,140 @@
+/* RESET GENERAL */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background-color: #121212;
+  color: white;
+  animation: fadeIn 1s ease-in-out;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* ANIMACIÓN DE ENTRADA */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* PANEL DE DESARROLLADOR */
+.panel-dev {
+  max-width: 900px;
+  margin: 50px auto;
+  background-color: #1f1f1f;
+  border: 1px solid #ff5733;
+  border-radius: 12px;
+  padding: 30px 40px;
+  box-shadow: 0 0 20px rgba(255, 87, 51, 0.3);
+  text-align: center;
+}
+
+/* TÍTULO PRINCIPAL */
+.panel-dev h1 {
+  font-size: 36px;
+  color: #ff5733;
+  margin-bottom: 30px;
+  font-weight: bold;
+  letter-spacing: 1.2px;
+}
+
+/* BOTONES DEL PANEL */
+.dev-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+
+.dev-buttons a {
+  background-color: #ff5733;
+  color: white;
+  padding: 14px 28px;
+  border-radius: 8px;
+  font-weight: bold;
+  text-decoration: none;
+  box-shadow: 0 0 8px rgba(255, 87, 51, 0.6);
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.dev-buttons a:hover {
+  background-color: #ff2e00;
+  box-shadow: 0 0 12px rgba(255, 46, 0, 0.8);
+}
+
+/* LISTA DE JUEGOS */
+.game-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 20px;
+  padding: 0 10px;
+}
+
+/* TARJETAS DE JUEGOS */
+.game-card {
+  background-color: #1f1f1f;
+  border-radius: 12px;
+  padding: 30px 25px;
+  text-align: center;
+  flex: 0 0 calc((100% / 2) - 30px); /* 2 tarjetas por fila, mucho más grandes */
+  max-width: calc((100% / 2) - 30px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.game-card:hover {
+  transform: scale(1.07);
+  box-shadow: 0 12px 35px rgba(255, 87, 51, 0.7);
+}
+
+.game-card img {
+  width: 100%;
+  border-radius: 12px;
+  object-fit: cover;
+  max-height: 240px; /* Imagen más alta para más impacto */
+}
+
+.game-card h3 {
+  margin-top: 20px;
+  font-size: 26px;
+  color: #ff5733;
+}
+
+.game-card p.precio {
+  font-size: 22px;
+  font-weight: bold;
+  color: #ff5733;
+  margin-top: 12px;
+}
+
+.category {
+  background-color: #ff5733;
+  color: white;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 16px;
+  margin: 6px 5px;
+  display: inline-block;
+  user-select: none;
+}
+
+/* Mensaje cuando no hay juegos */
+.no-juegos {
+  font-size: 24px;
+  color: #ff5733;
+  margin-top: 50px;
+  font-weight: bold;
+}

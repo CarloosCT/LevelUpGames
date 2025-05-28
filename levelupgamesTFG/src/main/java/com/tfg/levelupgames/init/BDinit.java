@@ -76,12 +76,19 @@ public class BDinit {
     Genero aventura = generoService.findByNombre("Aventura");
     java.math.BigDecimal cantidad = new java.math.BigDecimal("59.99");
 
+    // Obtener el usuario admin para asignarlo como desarrollador
+    Usuario admin = usuarioRepository.findByLoginemail("admin1@gmail.com");
+    if (admin == null) {
+        throw new RuntimeException("Usuario administrador no encontrado al crear juegos");
+    }
+
     // --- Juego 1 ---
     Juego juego1 = new Juego();
     juego1.setNombre("Assassin's Creed");
     juego1.setDescripcion("Un juego de aventuras históricas.");
     juego1.setGeneros(List.of(aventura));
-    juego1.setDescargable("Assassin's Creed.iso");  // <-- aquí la ruta o archivo
+    juego1.setDescargable("Assassin's Creed.iso");
+    juego1.setDesarrollador(admin);
     juegoService.save(juego1);
 
     precioService.save(cantidad, juego1);
@@ -102,6 +109,7 @@ public class BDinit {
     juego2.setDescripcion("Acción en mundo abierto en escenarios exóticos.");
     juego2.setGeneros(List.of(aventura));
     juego2.setDescargable("Far Cry.rar");
+    juego2.setDesarrollador(admin);
     juegoService.save(juego2);
 
     precioService.save(cantidad, juego2);
@@ -122,6 +130,7 @@ public class BDinit {
     juego3.setDescripcion("Hackea el sistema en esta aventura urbana.");
     juego3.setGeneros(List.of(aventura));
     juego3.setDescargable("Watch Dogs.exe");
+    juego3.setDesarrollador(admin);
     juegoService.save(juego3);
 
     precioService.save(cantidad, juego3);
@@ -142,6 +151,7 @@ public class BDinit {
     juego4.setDescripcion("Aventura mítica con combates y acertijos.");
     juego4.setGeneros(List.of(aventura));
     juego4.setDescargable("Prince of Persia.setup");
+    juego4.setDesarrollador(admin);
     juegoService.save(juego4);
 
     precioService.save(cantidad, juego4);

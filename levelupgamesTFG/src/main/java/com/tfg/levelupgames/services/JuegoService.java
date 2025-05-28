@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.tfg.levelupgames.entities.Genero;
 import com.tfg.levelupgames.entities.Juego;
 import com.tfg.levelupgames.entities.Precio;
+import com.tfg.levelupgames.entities.Usuario;
 import com.tfg.levelupgames.repositories.JuegoRepository;
 
 @Service
@@ -38,22 +39,27 @@ public class JuegoService {
         juegoRepository.save(juego);
     }
 
-    public void saveJuegoConRelaciones(String nombre, String descripcion, List<Long> generosIds, BigDecimal precio,
-        MultipartFile portadaFile, MultipartFile[] imagenes, MultipartFile descargable) {
+    public void saveJuegoConRelaciones(
+        String nombre,
+        String descripcion,
+        List<Long> generosIds,
+        BigDecimal precio,
+        MultipartFile portadaFile,
+        MultipartFile[] imagenes,
+        MultipartFile descargable,
+        Usuario desarrollador) {
 
     List<Genero> generos = generoService.findByIds(generosIds);
-
     Juego juego = new Juego(nombre, descripcion, generos, new ArrayList<>(), new ArrayList<>(), null);
+    juego.setDesarrollador(desarrollador);
     juego = juegoRepository.save(juego);
 
     precioService.save(precio, juego);
     Precio precioActual = precioService.findByJuegoCantidadFechaFinNull(juego, precio);
     juego.setPrecio(precioActual);
 
-    // Procesar portada y otras imagenes
     imagenService.procesarImagenesDeJuego(juego, portadaFile, imagenes);
 
-    // Guardar descargable en disco y asignar nombre o ruta al juego
     if (descargable != null && !descargable.isEmpty()) {
         try {
             Path downloadDir = Paths.get("downloadables");
@@ -61,7 +67,6 @@ public class JuegoService {
                 Files.createDirectories(downloadDir);
             }
 
-            // Crear nombre unico para evitar colisiones
             String nombreOriginal = descargable.getOriginalFilename();
             String extension = "";
 
@@ -71,12 +76,9 @@ public class JuegoService {
             }
 
             String nombreArchivoUnico = UUID.randomUUID().toString() + extension;
-
             Path rutaArchivo = downloadDir.resolve(nombreArchivoUnico);
 
             Files.copy(descargable.getInputStream(), rutaArchivo, StandardCopyOption.REPLACE_EXISTING);
-
-            // Guardar ruta o nombre archivo en juego
             juego.setDescargable(nombreArchivoUnico);
 
         } catch (IOException e) {
@@ -84,7 +86,6 @@ public class JuegoService {
         }
     }
 
-    // Guardar juego con todas las relaciones actualizadas
     juegoRepository.save(juego);
 }
 
@@ -122,6 +123,10 @@ public class JuegoService {
 
     public boolean existsByNombre(String nombre) {
         return juegoRepository.existsByNombre(nombre);
+    }
+
+    public List<Juego> findByDesarrollador(Usuario desarrollador) {
+    return juegoRepository.findByDesarrollador(desarrollador);
     }
 
     /*

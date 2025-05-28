@@ -45,6 +45,10 @@ public class Juego {
     @OneToMany(mappedBy = "juego")
     private List<Precio> precios = new ArrayList<>();
 
+    @ManyToOne
+    @JoinColumn(name = "desarrollador_id", nullable = false)
+    private Usuario desarrollador;
+
     /*@OneToMany(mappedBy = "juego")
     private List<Valoracion> valoraciones = new ArrayList<>();*/
 
@@ -129,6 +133,10 @@ public void setPrecio(Precio nuevoPrecio) {
     @Override
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
+    }
+
+    public void setDesarrollador(Usuario desarrollador) {
+    this.desarrollador = desarrollador;
     }
 
 }

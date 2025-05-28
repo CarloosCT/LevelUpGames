@@ -1,6 +1,7 @@
 package com.tfg.levelupgames.entities;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Entity;
@@ -39,6 +40,9 @@ public class Usuario {
     @ManyToOne
     @JoinColumn(name = "rol_nombre")
     private Rol rol;
+
+    @OneToMany(mappedBy = "desarrollador")
+    private List<Juego> juegosCreados = new ArrayList<>();
 
     public Usuario(String loginemail, String nombre, String apellido, String password) {
         this.loginemail = loginemail;

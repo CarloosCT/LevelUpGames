@@ -8,7 +8,7 @@
       <li><a href="/">Página Principal</a></li>
       <li th:if="${session.user != null}"><a href="/biblioteca/r">Biblioteca</a></li>
       <li th:if="${session.user != null and session.user.rol.nombre == 'user'}"><a href="/solicitud/c">Hazte desarrollador</a></li>
-      <li th:if="${session.user != null and session.user.rol.nombre == 'developer'}"><a href="">Eres developer</a></li>
+      <li th:if="${session.user != null and session.user.rol.nombre == 'developer'}"><a href="/panel_desarrollador/r">Panel de desarrollador</a></li>
       <li th:if="${session.user != null and session.user.rol.nombre == 'admin'}"><a href="/panel_administrador/r">Panel de administrador</a></li>
       <li th:if="${session.user != null and session.user.rol.nombre == 'admin'}"><a href="/solicitud/r">Solicitudes de Desarrollador</a></li>
     </ul>

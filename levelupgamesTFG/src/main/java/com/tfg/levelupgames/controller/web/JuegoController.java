@@ -14,10 +14,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tfg.levelupgames.entities.Juego;
+import com.tfg.levelupgames.entities.Usuario;
 import com.tfg.levelupgames.exception.DangerException;
 import com.tfg.levelupgames.helper.PRG;
 import com.tfg.levelupgames.services.GeneroService;
 import com.tfg.levelupgames.services.JuegoService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/juego")
@@ -64,14 +67,21 @@ public class JuegoController {
 }
 
     @PostMapping("c")
-public String cPost(
+    public String cPost(
     @RequestParam String nombre,
     @RequestParam String descripcion,
     @RequestParam List<Long> generosIds,
     @RequestParam BigDecimal precio,
     @RequestParam("imagenes") MultipartFile[] imagenes,
     @RequestParam("portadaFile") MultipartFile portadaFile,
-    @RequestParam("descargable") MultipartFile descargable) throws DangerException {
+    @RequestParam("descargable") MultipartFile descargable,
+    HttpSession session) throws DangerException {
+
+    Usuario desarrollador = (Usuario) session.getAttribute("user");
+
+    if (desarrollador == null) {
+        PRG.error("Debes iniciar sesión para crear un juego.", "/usuario/login");
+    }
 
     if (juegoService.existsByNombre(nombre)) {
         PRG.error("Ya existe un juego con el nombre '" + nombre + "'.", "/juego/c");
@@ -111,10 +121,15 @@ public String cPost(
         PRG.error("Debes subir un archivo descargable del juego.", "/juego/c");
     }
 
-    juegoService.saveJuegoConRelaciones(nombre, descripcion, generosIds, precio, portadaFile, imagenes, descargable);
+    juegoService.saveJuegoConRelaciones(
+        nombre, descripcion, generosIds, precio,
+        portadaFile, imagenes, descargable,
+        desarrollador
+    );
 
-    return "redirect:/panel_administrador/r";
+    return "redirect:/panel_desarrollador/r";
 }
+
 
     @GetMapping("u")
     public String u(
