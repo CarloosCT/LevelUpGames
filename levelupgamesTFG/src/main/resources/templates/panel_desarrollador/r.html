@@ -18,7 +18,7 @@
         <h3 class="game-list-title">Tus Juegos</h3>
         <section class="game-list">
             <div th:each="juego : ${juegos}" class="game-card">
-                <a th:href="@{/juego/r/{id}(id=${juego.id})}" target="_self" style="text-decoration: none; color: inherit;">
+                <a th:href="@{/juego/u/{id}(id=${juego.id})}" target="_self" style="text-decoration: none; color: inherit;">
                     <div th:if="${juego.portada != null}">
                         <img th:src="@{'/uploads/' + ${juego.portada.ruta}}" th:alt="${juego.nombre}" style="max-width: 100%; border-radius: 8px;" />
                     </div>

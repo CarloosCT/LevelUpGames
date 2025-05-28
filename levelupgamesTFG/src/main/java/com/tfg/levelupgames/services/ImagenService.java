@@ -106,4 +106,21 @@ public class ImagenService
         throw new RuntimeException("Error al guardar las imágenes: " + e.getMessage(), e);
     }
 }
+
+public void eliminarImagenPorId(Long imgId) {
+    Imagen imagen = imagenRepository.findById(imgId)
+        .orElseThrow(() -> new RuntimeException("Imagen no encontrada con id " + imgId));
+
+    // Borrar archivo físico de la imagen
+    try {
+        Path rutaArchivo = Paths.get("uploads").resolve(imagen.getRuta());
+        Files.deleteIfExists(rutaArchivo);
+    } catch (IOException e) {
+        // Puedes registrar error o lanzar excepción, según convenga
+        throw new RuntimeException("Error al borrar archivo de imagen: " + e.getMessage(), e);
+    }
+
+    // Borrar entidad imagen de la BD
+    imagenRepository.delete(imagen);
+}
 }

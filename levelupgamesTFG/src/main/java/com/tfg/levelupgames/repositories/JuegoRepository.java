@@ -13,4 +13,5 @@ public interface JuegoRepository extends JpaRepository<Juego,Long>{
     List<Juego> findByGenerosNombre(String nombre);
     boolean existsByNombre(String nombre);
     List<Juego> findByDesarrollador(Usuario desarrollador);
+    List<Juego> findByNombre(String nombre);
 }
