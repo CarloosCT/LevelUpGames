@@ -53,6 +53,12 @@ public class PrecioService {
     }
 
     public Precio findByJuegoCantidadFechaFinNull(Juego juego, BigDecimal cantidad) {
-    return precioRepository.findByJuegoAndCantidadAndFechaFinIsNull(juego, cantidad).orElse(null);
-}
+    List<Precio> precios = precioRepository.findByJuegoAndCantidadAndFechaFinIsNull(juego, cantidad);
+    
+    if (precios.isEmpty()) {
+        return null;
+    }
+
+    return precios.get(0);
+    }
 }

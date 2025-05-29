@@ -4,8 +4,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,16 +19,13 @@ import com.tfg.levelupgames.entities.Juego;
 import com.tfg.levelupgames.exception.DangerException;
 import com.tfg.levelupgames.repositories.ImagenRepository;
 
-import java.nio.file.Path;
-
 @Service
-public class ImagenService 
-{
+public class ImagenService {
+
     @Autowired
     private ImagenRepository imagenRepository;
 
-    public void save(Imagen imagen) 
-    {
+    public void save(Imagen imagen) {
         imagenRepository.save(imagen);
     }
 
@@ -43,84 +43,103 @@ public class ImagenService
 
     public void d(Long id) throws DangerException {
         Imagen imagen = this.findById(id);
-
         Path ruta = Paths.get("uploads/" + imagen.getRuta());
         try {
             Files.deleteIfExists(ruta);
         } catch (IOException e) {
             throw new DangerException("Error al eliminar archivo del disco: " + e.getMessage());
         }
-
         imagenRepository.deleteById(id);
     }
 
-     public void u(Long id, String nuevaRuta) throws DangerException {
+    public void u(Long id, String nuevaRuta) throws DangerException {
         Imagen imagen = this.findById(id);
         imagen.setRuta(nuevaRuta);
         imagenRepository.save(imagen);
     }
 
-    public void procesarImagenesDeJuego(Juego juego, MultipartFile portada, MultipartFile[] imagenes) {
+    public void eliminarImagenPorId(Long imgId) {
+        Imagen imagen = imagenRepository.findById(imgId)
+            .orElseThrow(() -> new RuntimeException("Imagen no encontrada con id " + imgId));
+        try {
+            Path rutaArchivo = Paths.get("uploads").resolve(imagen.getRuta());
+            Files.deleteIfExists(rutaArchivo);
+        } catch (IOException e) {
+            throw new RuntimeException("Error al borrar archivo de imagen: " + e.getMessage(), e);
+        }
+        imagenRepository.delete(imagen);
+    }
+
+    public void eliminarImagenesDeJuego(Juego juego) {
+        List<Imagen> imagenes = new ArrayList<>(juego.getImagenes());
+        for (Imagen imagen : imagenes) {
+            if (!imagen.getEsPortada()) {
+                eliminarImagenPorId(imagen.getId());
+            }
+        }
+        juego.getImagenes().removeIf(imagen -> !imagen.getEsPortada());
+    }
+
+    private String generarNombreArchivoUnico(String originalFilename) {
+        String extension = "";
+        int i = originalFilename.lastIndexOf('.');
+        if (i > 0) {
+            extension = originalFilename.substring(i);
+        }
+        return UUID.randomUUID().toString() + extension;
+    }
+
+    public void procesarImagenesDeJuego(Juego juego, MultipartFile nuevaPortada, MultipartFile[] nuevasImagenes) {
     try {
         Path uploadPath = Paths.get("uploads/");
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
 
-        // Guardar portada
-        String nombrePortada = portada.getOriginalFilename();
-        if (nombrePortada == null || nombrePortada.isEmpty()) {
-            throw new RuntimeException("El nombre del archivo de portada es inválido.");
+        // 🔹 Eliminar portada anterior (si hay nueva)
+        if (nuevaPortada != null && !nuevaPortada.isEmpty()) {
+            if (juego.getPortada() != null) {
+                eliminarImagenPorId(juego.getPortada().getId());
+                juego.setPortada(null);
+            }
+
+            String nombreArchivoUnico = generarNombreArchivoUnico(nuevaPortada.getOriginalFilename());
+            Path rutaPortada = uploadPath.resolve(nombreArchivoUnico);
+            Files.copy(nuevaPortada.getInputStream(), rutaPortada, StandardCopyOption.REPLACE_EXISTING);
+
+            Imagen nuevaImgPortada = new Imagen(nombreArchivoUnico, true);
+            nuevaImgPortada.setJuego(juego);
+            imagenRepository.save(nuevaImgPortada); // ✅ Guardamos en BD
+            juego.setPortada(nuevaImgPortada); // ✅ Enlazamos al juego
         }
 
-        String nombreArchivoPortada = Paths.get(nombrePortada).getFileName().toString();
-        Path rutaPortada = uploadPath.resolve(nombreArchivoPortada);
+        // 🔹 Eliminar imágenes anteriores si hay nuevas
+        boolean hayNuevasImagenes = nuevasImagenes != null && Arrays.stream(nuevasImagenes).anyMatch(img -> !img.isEmpty());
 
-        Files.copy(portada.getInputStream(), rutaPortada, StandardCopyOption.REPLACE_EXISTING);
+        if (hayNuevasImagenes) {
+            List<Imagen> imagenesActuales = new ArrayList<>(juego.getImagenes());
+            for (Imagen img : imagenesActuales) {
+                if (!img.getEsPortada()) {
+                    eliminarImagenPorId(img.getId());
+                }
+            }
+            juego.getImagenes().removeIf(img -> !img.getEsPortada());
 
-        Imagen portadaGuardada = new Imagen(nombreArchivoPortada, true);
-        portadaGuardada.setJuego(juego);
-        save(portadaGuardada);
-        juego.setPortada(portadaGuardada);
+            for (MultipartFile imagen : nuevasImagenes) {
+                if (imagen.isEmpty()) continue;
 
-        // Guardar imágenes adicionales
-        List<Imagen> imagenesGuardadas = new ArrayList<>();
-        for (MultipartFile imagen : imagenes) {
-            if (imagen.isEmpty()) continue;
+                String nombreArchivoUnico = generarNombreArchivoUnico(imagen.getOriginalFilename());
+                Path rutaImagen = uploadPath.resolve(nombreArchivoUnico);
+                Files.copy(imagen.getInputStream(), rutaImagen, StandardCopyOption.REPLACE_EXISTING);
 
-            String nombreArchivo = Paths.get(imagen.getOriginalFilename()).getFileName().toString();
-            Path rutaAbsoluta = uploadPath.resolve(nombreArchivo);
-
-            Files.copy(imagen.getInputStream(), rutaAbsoluta, StandardCopyOption.REPLACE_EXISTING);
-
-            Imagen imagenGuardada = new Imagen(nombreArchivo);
-            imagenGuardada.setJuego(juego);
-            save(imagenGuardada);
-
-            imagenesGuardadas.add(imagenGuardada);
+                Imagen nuevaImagen = new Imagen(nombreArchivoUnico, false);
+                nuevaImagen.setJuego(juego);
+                juego.getImagenes().add(nuevaImagen);
+            }
         }
 
-        juego.setImagenes(imagenesGuardadas);
-
     } catch (IOException e) {
-        throw new RuntimeException("Error al guardar las imágenes: " + e.getMessage(), e);
+        throw new RuntimeException("Error al procesar las imágenes: " + e.getMessage(), e);
     }
-}
-
-public void eliminarImagenPorId(Long imgId) {
-    Imagen imagen = imagenRepository.findById(imgId)
-        .orElseThrow(() -> new RuntimeException("Imagen no encontrada con id " + imgId));
-
-    // Borrar archivo físico de la imagen
-    try {
-        Path rutaArchivo = Paths.get("uploads").resolve(imagen.getRuta());
-        Files.deleteIfExists(rutaArchivo);
-    } catch (IOException e) {
-        // Puedes registrar error o lanzar excepción, según convenga
-        throw new RuntimeException("Error al borrar archivo de imagen: " + e.getMessage(), e);
-    }
-
-    // Borrar entidad imagen de la BD
-    imagenRepository.delete(imagen);
 }
 }

@@ -35,10 +35,10 @@ public class Juego {
     @ManyToMany
     private List<Genero> generos = new ArrayList<>();
 
-    @OneToMany(mappedBy = "juego")
+    @OneToMany(mappedBy = "juego", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Imagen> imagenes = new ArrayList<>();
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "portada_id")
     private Imagen portada;
 

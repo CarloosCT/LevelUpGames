@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.tfg.levelupgames.entities.Juego;
 import com.tfg.levelupgames.entities.Usuario;
+import com.tfg.levelupgames.exception.DangerException;
+import com.tfg.levelupgames.helper.PRG;
 import com.tfg.levelupgames.services.JuegoService;
 
 @Controller
@@ -22,12 +24,12 @@ public class DesarrolladorPanelController {
     private JuegoService juegoservice;
 
     @GetMapping("r")
-    public String r(ModelMap m, HttpSession session) {
+    public String r(ModelMap m, HttpSession session) throws DangerException {
 
         Usuario desarrollador = (Usuario) session.getAttribute("user");
 
         if (desarrollador == null) {
-            return "redirect:/login";
+        PRG.error("Debes iniciar sesión para ver tu biblioteca", "/usuario/login");
         }
 
         List<Juego> juegos = juegoservice.findByDesarrollador(desarrollador);

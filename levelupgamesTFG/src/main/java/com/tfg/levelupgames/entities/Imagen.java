@@ -17,12 +17,12 @@ public class Imagen {
 
     private String ruta;
 
-    private boolean portada = false; // <-- NUEVO campo para marcar si es portada
+    private boolean portada = false;
 
     // Relaciones
 
     @ManyToOne
-    @JoinColumn(name = "juego_id", nullable = false)
+    @JoinColumn(name = "juego_id")
     private Juego juego;
 
     // Constructor para crear una imagen con ruta y si es portada
@@ -64,4 +64,8 @@ public class Imagen {
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
     }
+
+    public boolean getEsPortada() {
+    return this.portada;
+}
 }

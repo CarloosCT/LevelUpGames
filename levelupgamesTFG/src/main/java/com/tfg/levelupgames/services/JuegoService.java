@@ -147,15 +147,11 @@ public class JuegoService {
 }
 
     public int contarImagenesExistentes(Long juegoId) {
-        Optional<Juego> optionalJuego = juegoRepository.findById(juegoId);
-        if (optionalJuego.isEmpty()) {
-            return 0;
-        }
-        Juego juego = optionalJuego.get();
-        return (int) juego.getImagenes()
-                .stream()
-                .filter(imagen -> imagen != null && imagen.getRuta() != null && !imagen.getRuta().isEmpty())
-                .count();
+    Juego juego = juegoRepository.findById(juegoId).orElseThrow();
+    return (int) juego.getImagenes()
+            .stream()
+            .filter(imagen -> !imagen.isPortada()) // 👈 no contar portada
+            .count();
     }
 
     public void modificar(
@@ -166,7 +162,7 @@ public class JuegoService {
         BigDecimal precio,
         MultipartFile portadaFile,
         List<MultipartFile> imagenes,
-        String imagenesEliminadas,
+        String imagenesEliminadas, // Ya no se usa
         MultipartFile descargable) {
 
     Juego juego = juegoRepository.findById(id)
@@ -178,25 +174,24 @@ public class JuegoService {
     List<Genero> generos = generoService.findByIds(generosIds);
     juego.setGeneros(generos);
 
+    // Guardamos el juego con datos básicos antes de procesar imágenes y descargable
     juego = juegoRepository.save(juego);
 
+    // Procesamos el precio
     precioService.save(precio, juego);
     Precio precioActual = precioService.findByJuegoCantidadFechaFinNull(juego, precio);
     juego.setPrecio(precioActual);
 
-    if (imagenesEliminadas != null && !imagenesEliminadas.isBlank()) {
-        String[] idsEliminar = imagenesEliminadas.split(",");
-        for (String imgIdStr : idsEliminar) {
-            if (imgIdStr.isBlank())
-                continue;
-            Long imgId = Long.parseLong(imgIdStr.trim());
-            imagenService.eliminarImagenPorId(imgId);
-        }
+    // Procesar imágenes si hay cambios (portada o imágenes)
+    boolean hayNuevaPortada = portadaFile != null && !portadaFile.isEmpty();
+    boolean hayNuevasImagenes = imagenes != null && imagenes.stream().anyMatch(img -> !img.isEmpty());
+
+    if (hayNuevaPortada || hayNuevasImagenes) {
+        MultipartFile[] imagenesArray = (imagenes != null) ? imagenes.toArray(new MultipartFile[0]) : new MultipartFile[0];
+        imagenService.procesarImagenesDeJuego(juego, portadaFile, imagenesArray);
     }
 
-    MultipartFile[] imagenesArray = (imagenes != null) ? imagenes.toArray(new MultipartFile[0]) : new MultipartFile[0];
-    imagenService.procesarImagenesDeJuego(juego, portadaFile, imagenesArray);
-
+    // Procesamos el archivo descargable si se ha subido uno nuevo
     if (descargable != null && !descargable.isEmpty()) {
         try {
             Path downloadDir = Paths.get("downloadables");
@@ -223,6 +218,7 @@ public class JuegoService {
         }
     }
 
+    // Guardamos cambios finales
     juegoRepository.save(juego);
 }
 }
