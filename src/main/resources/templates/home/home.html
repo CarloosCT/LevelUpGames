@@ -19,7 +19,7 @@
       <a th:href="@{/juego/r/{id}(id=${juego.id})}" target="_self" style="text-decoration: none; color: inherit;">
         <!-- Imagen portada -->
         <div th:if="${juego.portada != null}">
-          <img th:src="${juego.portada.ruta}}" th:alt="${juego.nombre}" />
+          <img th:src="${juego.portada.ruta}" th:alt="${juego.nombre}" />
         </div>
         <!-- Nombre del juego -->
         <h3 th:text="${juego.nombre}"></h3>
