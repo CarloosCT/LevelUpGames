@@ -18,7 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.tfg.levelupgames.entities.Imagen;
 import com.tfg.levelupgames.entities.Juego;
 import com.tfg.levelupgames.exception.DangerException;
-import com.tfg.levelupgames.repositories.ImagenRepository; 
+import com.tfg.levelupgames.repositories.ImagenRepository;
+import com.tfg.levelupgames.repositories.JuegoRepository;
 import com.tfg.levelupgames.services.CloudinaryService;
 
 @Service
@@ -28,6 +29,9 @@ public class ImagenService {
 
     @Autowired
     private ImagenRepository imagenRepository;
+
+    @Autowired
+    private JuegoRepository juegoRepository;
 
     public void save(Imagen imagen) {
         imagenRepository.save(imagen);
@@ -98,7 +102,6 @@ public class ImagenService {
 
     public void procesarImagenesDeJuego(Juego juego, MultipartFile portadaFile, MultipartFile[] imagenes) {
         try {
-            // Si hay portada, subir y crear la entidad Imagen con isPortada = true
             if (portadaFile != null && !portadaFile.isEmpty()) {
                 Map<?, ?> uploadResult = cloudinaryService.upload(portadaFile);
                 String url = (String) uploadResult.get("secure_url");
@@ -110,9 +113,12 @@ public class ImagenService {
                 portada.setPortada(true);
                 portada.setJuego(juego);
                 imagenRepository.save(portada);
+
+                // Asignar portada al juego y guardar juego
+                juego.setPortada(portada);
+                juegoRepository.save(juego); // <-- guardar para actualizar la relación
             }
 
-            // Subir imágenes adicionales
             if (imagenes != null) {
                 for (MultipartFile imagenFile : imagenes) {
                     if (imagenFile != null && !imagenFile.isEmpty()) {
@@ -129,7 +135,6 @@ public class ImagenService {
                     }
                 }
             }
-
         } catch (IOException e) {
             throw new RuntimeException("Error subiendo imágenes a Cloudinary", e);
         }
