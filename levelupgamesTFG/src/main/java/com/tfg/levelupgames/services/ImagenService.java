@@ -142,4 +142,64 @@ public class ImagenService {
         throw new RuntimeException("Error al procesar las imágenes: " + e.getMessage(), e);
     }
 }
+
+public void modificar(Juego juego, MultipartFile nuevaPortada, MultipartFile[] nuevasImagenes) {
+    try {
+        Path uploadPath = Paths.get("uploads/");
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+
+        // 1. Eliminar TODAS las imágenes anteriores del juego (incluida la portada)
+        List<Imagen> imagenesExistentes = new ArrayList<>(juego.getImagenes());
+        if (juego.getPortada() != null) {
+            imagenesExistentes.add(juego.getPortada());
+        }
+
+        for (Imagen imagen : imagenesExistentes) {
+            // Borrar archivo físico si existe
+            Path rutaArchivo = uploadPath.resolve(imagen.getRuta());
+            if (Files.exists(rutaArchivo)) {
+                Files.delete(rutaArchivo);
+            }
+            // Borrar de la base de datos
+            imagenRepository.delete(imagen);
+        }
+
+        // Limpiar referencias en el juego
+        juego.setPortada(null);
+        juego.getImagenes().clear();
+
+        // 2. Guardar nueva portada (si se subió)
+        if (nuevaPortada != null && !nuevaPortada.isEmpty()) {
+            String nombreArchivoUnico = generarNombreArchivoUnico(nuevaPortada.getOriginalFilename());
+            Path rutaPortada = uploadPath.resolve(nombreArchivoUnico);
+            Files.copy(nuevaPortada.getInputStream(), rutaPortada, StandardCopyOption.REPLACE_EXISTING);
+
+            Imagen nuevaImgPortada = new Imagen(nombreArchivoUnico, true); // esPortada = true
+            nuevaImgPortada.setJuego(juego);
+            imagenRepository.save(nuevaImgPortada);
+            juego.setPortada(nuevaImgPortada);
+        }
+
+        // 3. Guardar nuevas imágenes adicionales
+        if (nuevasImagenes != null) {
+            for (MultipartFile imagen : nuevasImagenes) {
+                if (imagen == null || imagen.isEmpty()) continue;
+
+                String nombreArchivoUnico = generarNombreArchivoUnico(imagen.getOriginalFilename());
+                Path rutaImagen = uploadPath.resolve(nombreArchivoUnico);
+                Files.copy(imagen.getInputStream(), rutaImagen, StandardCopyOption.REPLACE_EXISTING);
+
+                Imagen nuevaImagen = new Imagen(nombreArchivoUnico, false); // esPortada = false
+                nuevaImagen.setJuego(juego);
+                imagenRepository.save(nuevaImagen);
+                juego.getImagenes().add(nuevaImagen);
+            }
+        }
+
+    } catch (IOException e) {
+        throw new RuntimeException("Error al procesar las imágenes: " + e.getMessage(), e);
+    }
+}
 }

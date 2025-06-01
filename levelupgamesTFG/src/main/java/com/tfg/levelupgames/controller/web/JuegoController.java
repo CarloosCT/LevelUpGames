@@ -151,82 +151,65 @@ public String uPost(
         @RequestParam List<Long> generosIds,
         @RequestParam(required = false) MultipartFile portadaFile,
         @RequestParam(required = false) List<MultipartFile> imagenes,
-        @RequestParam(required = false) String imagenesEliminadas,
         @RequestParam(required = false) MultipartFile descargable
 ) throws DangerException {
 
-    // Validaciones básicas obligatorias (ID, nombre, precio, desc, géneros)
+    // Validaciones básicas
     if (id == null)
         PRG.error("ID del juego es obligatorio.", "/juego/u?id=" + id);
     if (nombre == null || nombre.trim().isEmpty())
         PRG.error("El nombre es obligatorio.", "/juego/u?id=" + id);
-    if (precio == null)
-        PRG.error("El precio es obligatorio.", "/juego/u?id=" + id);
+    if (precio == null || precio.compareTo(BigDecimal.ZERO) < 0)
+        PRG.error("El precio debe ser 0 o mayor.", "/juego/u?id=" + id);
     if (descripcion == null || descripcion.trim().isEmpty())
         PRG.error("La descripción es obligatoria.", "/juego/u?id=" + id);
     if (generosIds == null || generosIds.isEmpty())
         PRG.error("Debes seleccionar al menos un género.", "/juego/u?id=" + id);
 
-    // Validar existencia y nombre único
+    // Validación de nombre único
     if (juegoService.existsByNombre(nombre) && !juegoService.isMismoJuego(id, nombre))
-        PRG.error("Ya existe un juego con el nombre '" + nombre + "'.", "/juego/u?id=" + id);
+        PRG.error("Ya existe un juego con ese nombre.", "/juego/u?id=" + id);
 
-    if (precio.compareTo(BigDecimal.ZERO) < 0)
-        PRG.error("El precio no puede ser negativo.", "/juego/u?id=" + id);
-
-    // VALIDACIÓN PORTADA
+    // Validar portada
     if (portadaFile != null && !portadaFile.isEmpty()) {
         if (!portadaFile.getContentType().startsWith("image/"))
-            PRG.error("La portada debe ser un archivo de imagen válido.", "/juego/u?id=" + id);
-        // Se usará el archivo nuevo
-    } 
-    // Si portadaFile es null o está vacía, se mantiene la portada existente
+            PRG.error("La portada debe ser una imagen válida.", "/juego/u?id=" + id);
+    }
 
-    // VALIDACIÓN IMÁGENES ADICIONALES
-    int imagenesValidas = 0;
-    if (imagenes != null && !imagenes.isEmpty()) {
+    // Validar imágenes adicionales
+    int nuevas = 0;
+    if (imagenes != null) {
         for (MultipartFile imagen : imagenes) {
-            if (imagen != null && !imagen.isEmpty()) {
+            if (!imagen.isEmpty()) {
                 if (!imagen.getContentType().startsWith("image/"))
-                    PRG.error("Todas las imágenes deben ser archivos de imagen válidos.", "/juego/u?id=" + id);
-                imagenesValidas++;
+                    PRG.error("Las imágenes deben ser válidas.", "/juego/u?id=" + id);
+                nuevas++;
             }
         }
     }
-    // Si no hay imágenes nuevas (imagenes null o vacía), se mantienen las existentes
 
-    // Validar número total imágenes después de eliminar las indicadas
-    int actuales = juegoService.contarImagenesExistentes(id);
-    int eliminadasCount = 0;
-    if (imagenesEliminadas != null && !imagenesEliminadas.trim().isEmpty()) {
-        eliminadasCount = imagenesEliminadas.split(",").length;
-    }
-    int totalDespues = actuales - eliminadasCount + imagenesValidas;
+    if (nuevas < 1)
+        PRG.error("Debe haber al menos una imagen adicional.", "/juego/u?id=" + id);
+    if (nuevas > 5)
+        PRG.error("Máximo 5 imágenes adicionales permitidas.", "/juego/u?id=" + id);
 
-    if (totalDespues < 1)
-        PRG.error("Debe haber al menos una imagen adicional del juego.", "/juego/u?id=" + id);
-
-    if ((imagenesValidas > 0 || eliminadasCount > 0) && totalDespues > 5)
-        PRG.error("Puedes subir un máximo de 5 imágenes adicionales.", "/juego/u?id=" + id);
-
-    // VALIDACIÓN DESCARGABLE
+    // Validar archivo descargable
     if (descargable != null && !descargable.isEmpty()) {
         String tipo = descargable.getContentType();
-        if (!(tipo.startsWith("application/") || tipo.startsWith("application/x-"))) 
-            PRG.error("El archivo descargable no es válido.", "/juego/u?id=" + id);
-        // Se usará el nuevo archivo
-    } 
-    // Si descargable es null o vacío, se mantiene el archivo descargable existente
+        if (!(tipo.startsWith("application/") || tipo.startsWith("application/x-")))
+            PRG.error("Archivo descargable no válido.", "/juego/u?id=" + id);
+    }
 
-    // Finalmente llamar al servicio para modificar el juego,
-    // pasando los archivos que pueden ser null o vacíos
+    // Modificar juego
     juegoService.modificar(
             id, nombre, descripcion, generosIds, precio,
-            portadaFile, imagenes, imagenesEliminadas, descargable
+            portadaFile, imagenes, descargable
     );
 
     return "redirect:/panel_desarrollador/r";
 }
+
+
 
 
     @GetMapping("/{id}")

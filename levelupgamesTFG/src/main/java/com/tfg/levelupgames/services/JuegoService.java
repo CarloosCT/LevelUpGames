@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tfg.levelupgames.entities.Genero;
+import com.tfg.levelupgames.entities.Imagen;
 import com.tfg.levelupgames.entities.Juego;
 import com.tfg.levelupgames.entities.Precio;
 import com.tfg.levelupgames.entities.Usuario;
@@ -99,23 +100,31 @@ public class JuegoService {
     }
 
     public void d(Long id) throws Exception {
-        Juego juegoABorrar = juegoRepository.findById(id).get();
-        try {
-            juegoRepository.deleteById(id);
-            juegoABorrar.getImagenes().forEach(imagen -> {
-                try {
-                    imagenService.d(imagen.getId());
-                    String ruta = imagen.getRuta();
-                    Path path = Paths.get("uploads/" + ruta);
-                    path.toFile().delete();
-                } catch (Exception e) {
-                    throw new RuntimeException("Error al eliminar la imagen: " + e.getMessage(), e);
-                }
-            });
-        } catch (Exception e) {
-            throw new Exception("No se pudo eliminar el juego " + juegoABorrar.getNombre());
+    Juego juegoABorrar = juegoRepository.findById(id)
+        .orElseThrow(() -> new Exception("Juego no encontrado con id " + id));
+
+    try {
+        // Primero eliminar todas las imágenes (portada + adicionales)
+        if (juegoABorrar.getPortada() != null) {
+            imagenService.eliminarImagenPorId(juegoABorrar.getPortada().getId());
+            juegoABorrar.setPortada(null);
         }
+
+        // Eliminar imágenes adicionales
+        List<Imagen> imagenes = new ArrayList<>(juegoABorrar.getImagenes());
+        for (Imagen img : imagenes) {
+            imagenService.eliminarImagenPorId(img.getId());
+        }
+        juegoABorrar.getImagenes().clear();
+
+        // Finalmente eliminar el juego
+        juegoRepository.deleteById(id);
+
+    } catch (Exception e) {
+        throw new Exception("No se pudo eliminar el juego " + juegoABorrar.getNombre() + ": " + e.getMessage(), e);
     }
+}
+
 
     public List<Juego> findByGeneroNombre(String nombre) {
         return juegoRepository.findByGenerosNombre(nombre);
@@ -162,7 +171,6 @@ public class JuegoService {
         BigDecimal precio,
         MultipartFile portadaFile,
         List<MultipartFile> imagenes,
-        String imagenesEliminadas, // Ya no se usa
         MultipartFile descargable) {
 
     Juego juego = juegoRepository.findById(id)
@@ -182,16 +190,11 @@ public class JuegoService {
     Precio precioActual = precioService.findByJuegoCantidadFechaFinNull(juego, precio);
     juego.setPrecio(precioActual);
 
-    // Procesar imágenes si hay cambios (portada o imágenes)
-    boolean hayNuevaPortada = portadaFile != null && !portadaFile.isEmpty();
-    boolean hayNuevasImagenes = imagenes != null && imagenes.stream().anyMatch(img -> !img.isEmpty());
+    // Procesar imágenes: se reemplazan todas (portada, imágenes antiguas y nuevas)
+    MultipartFile[] imagenesArray = (imagenes != null) ? imagenes.toArray(new MultipartFile[0]) : new MultipartFile[0];
+    imagenService.modificar(juego, portadaFile, imagenesArray);
 
-    if (hayNuevaPortada || hayNuevasImagenes) {
-        MultipartFile[] imagenesArray = (imagenes != null) ? imagenes.toArray(new MultipartFile[0]) : new MultipartFile[0];
-        imagenService.procesarImagenesDeJuego(juego, portadaFile, imagenesArray);
-    }
-
-    // Procesamos el archivo descargable si se ha subido uno nuevo
+    // Procesar archivo descargable
     if (descargable != null && !descargable.isEmpty()) {
         try {
             Path downloadDir = Paths.get("downloadables");
@@ -218,7 +221,7 @@ public class JuegoService {
         }
     }
 
-    // Guardamos cambios finales
+    // Guardar cambios finales
     juegoRepository.save(juego);
 }
 }

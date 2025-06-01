@@ -139,4 +139,10 @@ public void setPrecio(Precio nuevoPrecio) {
     this.desarrollador = desarrollador;
     }
 
+    public List<Imagen> getImagenesSinPortada() {
+    return imagenes.stream()
+                   .filter(imagen -> !imagen.getEsPortada())
+                   .collect(Collectors.toList());
+    }
+
 }
