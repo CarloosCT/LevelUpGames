@@ -18,6 +18,7 @@ com\tfg\levelupgames\repositories\ImagenRepository.class
 com\tfg\levelupgames\repositories\ValoracionRepository.class
 com\tfg\levelupgames\repositories\GeneroRepository.class
 com\tfg\levelupgames\controller\web\GeneroController.class
+com\tfg\levelupgames\init\BDinit$1.class
 com\tfg\levelupgames\repositories\DesarrolladorRepository.class
 com\tfg\levelupgames\services\UsuarioService.class
 com\tfg\levelupgames\entities\Compra.class

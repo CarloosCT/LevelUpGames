@@ -1,22 +1,28 @@
 package com.tfg.levelupgames.init;
 
 import jakarta.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.tfg.levelupgames.entities.*;
 import com.tfg.levelupgames.repositories.UsuarioRepository;
 import com.tfg.levelupgames.services.*;
 
+import java.io.*;
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class BDinit {
 
     private final UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private CloudinaryService cloudinaryService;
     @Autowired
     private RolService rolService;
     @Autowired
@@ -25,8 +31,6 @@ public class BDinit {
     private JuegoService juegoService;
     @Autowired
     private ImagenService imagenService;
-    /*@Autowired
-    private ValoracionService valoracionService;*/
     @Autowired
     private PrecioService precioService;
 
@@ -73,97 +77,115 @@ public class BDinit {
     }
 
     private void crearJuegos() {
-    Genero aventura = generoService.findByNombre("Aventura");
-    java.math.BigDecimal cantidad = new java.math.BigDecimal("59.99");
+        Genero aventura = generoService.findByNombre("Aventura");
+        BigDecimal cantidad = new BigDecimal("59.99");
+        Usuario admin = usuarioRepository.findByLoginemail("admin1@gmail.com");
+        if (admin == null) {
+            throw new RuntimeException("Usuario administrador no encontrado al crear juegos");
+        }
 
-    // Obtener el usuario admin para asignarlo como desarrollador
-    Usuario admin = usuarioRepository.findByLoginemail("admin1@gmail.com");
-    if (admin == null) {
-        throw new RuntimeException("Usuario administrador no encontrado al crear juegos");
+        crearJuegoConImagenes("Assassin's Creed", "Un juego de aventuras históricas.",
+                "Assassin's Creed.iso", List.of(aventura), admin, cantidad,
+                "acreed1.jpg", "acreed2.jpg");
+
+        crearJuegoConImagenes("Far Cry", "Acción en mundo abierto en escenarios exóticos.",
+                "Far Cry.rar", List.of(aventura), admin, cantidad,
+                "farcry1.jpg", "farcry2.jpg");
+
+        crearJuegoConImagenes("Watch Dogs", "Hackea el sistema en esta aventura urbana.",
+                "Watch Dogs.exe", List.of(aventura), admin, cantidad,
+                "watchdogs1.jpg", "watchdogs2.jpg");
+
+        crearJuegoConImagenes("Prince of Persia", "Aventura mítica con combates y acertijos.",
+                "Prince of Persia.setup", List.of(aventura), admin, cantidad,
+                "pop1.jpg", "pop2.jpg");
     }
 
-    // --- Juego 1 ---
-    Juego juego1 = new Juego();
-    juego1.setNombre("Assassin's Creed");
-    juego1.setDescripcion("Un juego de aventuras históricas.");
-    juego1.setGeneros(List.of(aventura));
-    juego1.setDescargable("Assassin's Creed.iso");
-    juego1.setDesarrollador(admin);
-    juegoService.save(juego1);
+    private void crearJuegoConImagenes(String nombre, String descripcion, String descargable,
+            List<Genero> generos, Usuario desarrollador,
+            BigDecimal precio, String portadaNombre, String extraNombre) {
 
-    precioService.save(cantidad, juego1);
+        try {
+            Juego juego = new Juego();
+            juego.setNombre(nombre);
+            juego.setDescripcion(descripcion);
+            juego.setDescargable(descargable);
+            juego.setGeneros(generos);
+            juego.setDesarrollador(desarrollador);
+            juegoService.save(juego);
+            precioService.save(precio, juego);
 
-    Imagen portada1 = new Imagen("acreed1.jpg", true);
-    portada1.setJuego(juego1);
-    Imagen imgExtra1 = new Imagen("acreed2.jpg");
-    imgExtra1.setJuego(juego1);
-    imagenService.save(portada1);
-    imagenService.save(imgExtra1);
+            Imagen portada = subirImagenDesdeRecursos(portadaNombre, true, juego);
+            imagenService.save(portada);
+            juego.setPortada(portada);
 
-    juego1.setPortada(portada1);
-    juegoService.save(juego1);
+            Imagen extra = subirImagenDesdeRecursos(extraNombre, false, juego);
+            imagenService.save(extra);
 
-    // --- Juego 2 ---
-    Juego juego2 = new Juego();
-    juego2.setNombre("Far Cry");
-    juego2.setDescripcion("Acción en mundo abierto en escenarios exóticos.");
-    juego2.setGeneros(List.of(aventura));
-    juego2.setDescargable("Far Cry.rar");
-    juego2.setDesarrollador(admin);
-    juegoService.save(juego2);
+            juegoService.save(juego);
+        } catch (IOException e) {
+            throw new RuntimeException("Error subiendo imágenes desde recursos", e);
+        }
+    }
 
-    precioService.save(cantidad, juego2);
+    private Imagen subirImagenDesdeRecursos(String nombreArchivo, boolean esPortada, Juego juego) throws IOException {
+        ClassPathResource imgFile = new ClassPathResource("static/juegos/" + nombreArchivo);
+        byte[] content = imgFile.getInputStream().readAllBytes();
 
-    Imagen portada2 = new Imagen("farcry1.jpg", true);
-    portada2.setJuego(juego2);
-    Imagen imgExtra2 = new Imagen("farcry2.jpg");
-    imgExtra2.setJuego(juego2);
-    imagenService.save(portada2);
-    imagenService.save(imgExtra2);
+        MultipartFile multipartFile = new MultipartFile() {
+            @Override
+            public String getName() {
+                return nombreArchivo;
+            }
 
-    juego2.setPortada(portada2);
-    juegoService.save(juego2);
+            @Override
+            public String getOriginalFilename() {
+                return nombreArchivo;
+            }
 
-    // --- Juego 3 ---
-    Juego juego3 = new Juego();
-    juego3.setNombre("Watch Dogs");
-    juego3.setDescripcion("Hackea el sistema en esta aventura urbana.");
-    juego3.setGeneros(List.of(aventura));
-    juego3.setDescargable("Watch Dogs.exe");
-    juego3.setDesarrollador(admin);
-    juegoService.save(juego3);
+            @Override
+            public String getContentType() {
+                return "image/jpeg";
+            }
 
-    precioService.save(cantidad, juego3);
+            @Override
+            public boolean isEmpty() {
+                return content.length == 0;
+            }
 
-    Imagen portada3 = new Imagen("watchdogs1.jpg", true);
-    portada3.setJuego(juego3);
-    Imagen imgExtra3 = new Imagen("watchdogs2.jpg");
-    imgExtra3.setJuego(juego3);
-    imagenService.save(portada3);
-    imagenService.save(imgExtra3);
+            @Override
+            public long getSize() {
+                return content.length;
+            }
 
-    juego3.setPortada(portada3);
-    juegoService.save(juego3);
+            @Override
+            public byte[] getBytes() {
+                return content;
+            }
 
-    // --- Juego 4 ---
-    Juego juego4 = new Juego();
-    juego4.setNombre("Prince of Persia");
-    juego4.setDescripcion("Aventura mítica con combates y acertijos.");
-    juego4.setGeneros(List.of(aventura));
-    juego4.setDescargable("Prince of Persia.setup");
-    juego4.setDesarrollador(admin);
-    juegoService.save(juego4);
+            @Override
+            public InputStream getInputStream() {
+                return new ByteArrayInputStream(content);
+            }
 
-    precioService.save(cantidad, juego4);
+            @Override
+            public void transferTo(File dest) throws IOException {
+                try (OutputStream os = new FileOutputStream(dest)) {
+                    os.write(content);
+                }
+            }
+        };
 
-    Imagen portada4 = new Imagen("pop1.jpg", true);
-    portada4.setJuego(juego4);
-    Imagen imgExtra4 = new Imagen("pop2.jpg");
-    imgExtra4.setJuego(juego4);
-    imagenService.save(portada4);
-    imagenService.save(imgExtra4);
+        Map<?, ?> uploadResult = cloudinaryService.upload(multipartFile);
+        String url = (String) uploadResult.get("secure_url");
+        String publicId = (String) uploadResult.get("public_id");
 
-    juego4.setPortada(portada4);
-    juegoService.save(juego4);
-}
+        Imagen imagen = new Imagen();
+        imagen.setRuta(url);
+        imagen.setPublicId(publicId);
+        imagen.setPortada(esPortada);
+        imagen.setJuego(juego);
+
+        return imagen;
+    }
 }
