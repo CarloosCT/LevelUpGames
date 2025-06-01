@@ -16,9 +16,9 @@ public class CloudinaryService {
 
     public CloudinaryService() {
         this.cloudinary = new Cloudinary(ObjectUtils.asMap(
-            "cloud_name", "tu-cloud-name",
-            "api_key", "tu-api-key",
-            "api_secret", "tu-api-secret"));
+            "cloud_name", "dono6abrn",
+            "api_key", "292832137389456",
+            "api_secret", "bQr6UFPIvN29bnc4FRy2x64rbGQ"));
     }
 
     public Map upload(MultipartFile file) throws IOException {
