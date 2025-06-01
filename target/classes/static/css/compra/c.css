@@ -1,0 +1,164 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #121212;
+    color: white;
+    animation: fadeIn 1s ease-in-out;
+    min-height: 100vh;
+    padding: 20px 15px;
+}
+
+/* Animación general */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Contenedor principal */
+.compra-container {
+    max-width: 600px;
+    margin: 40px auto;
+    background-color: #111;
+    border-radius: 12px;
+    padding: 30px 25px;
+    box-shadow: 0 4px 15px rgba(255, 197, 7, 0.3);
+    color: white;
+    animation: fadeIn 1s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Título */
+.compra-container h1 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #ffb700;
+}
+
+.compra-container h1 span {
+    color: white;
+}
+
+/* Descripción */
+.juego-descripcion {
+    font-size: 16px;
+    line-height: 1.4;
+    color: #ddd;
+}
+
+/* Precio */
+.compra-container p {
+    font-size: 18px;
+    color: #eee;
+}
+
+.compra-container strong {
+    color: #ffc107;
+    font-weight: bold;
+}
+
+/* Botón comprar */
+.boton-comprar {
+    background-color: #ffc107;
+    border: none;
+    padding: 14px 30px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 18px;
+    color: #111;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    box-shadow: 0 4px 8px rgba(255, 197, 7, 0.5);
+}
+
+.boton-comprar:hover {
+    background-color: #e0a800;
+    box-shadow: 0 6px 14px rgba(224, 168, 0, 0.7);
+}
+
+/* NAVBAR GENERAL */
+nav {
+    background-color: #1f1f1f;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* IZQUIERDA: logo + enlaces */
+.nav-left {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* Logo o título */
+nav h1 {
+    color: #ff5733;
+    font-size: 24px;
+    margin-right: 30px;
+}
+
+/* Menú izquierdo */
+.menu-left {
+    display: flex;
+    list-style: none;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.menu-left li a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.menu-left li a:hover {
+    color: #ff5733;
+}
+
+/* DERECHA: login, nombre usuario, cerrar sesión */
+.menu-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    list-style: none;
+    flex-wrap: wrap;
+}
+
+.menu-right a {
+    color: #ff5733;
+    text-decoration: none;
+    font-weight: bold;
+    background-color: transparent;
+    border: 1px solid #ff5733;
+    padding: 6px 12px;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.menu-right a:hover {
+    background-color: #ff5733;
+    color: white;
+}
+
+.menu-right span {
+    color: white;
+    font-size: 16px;
+}

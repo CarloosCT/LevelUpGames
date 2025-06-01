@@ -1,0 +1,15 @@
+<div class="container">
+    <h1>Nuevo género</h1>
+
+    <form action="/genero/u" method="post">
+
+        <label for="idGenero">Nombre</label>
+        <input id="idGenero" type="text" name="nombre" autofocus="autofocus" />
+        <br />
+
+        <input type="hidden" name="id" th:value="${genero.id}" />
+
+        <input type="submit" />
+        <br />
+    </form>
+</div>

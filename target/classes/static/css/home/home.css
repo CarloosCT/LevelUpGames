@@ -1,0 +1,221 @@
+/* RESET GENERAL */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background-color: #121212;
+  color: white;
+  animation: fadeIn 1s ease-in-out;
+  min-height: 100vh;
+  padding: 0 15px;
+}
+
+/* ANIMACIONES */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* NAVBAR */
+nav {
+  background-color: #1f1f1f;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+nav h1 {
+  color: #ff5733;
+  font-size: 24px;
+  margin-right: 30px;
+}
+
+.menu-left,
+.menu-right {
+  display: flex;
+  list-style: none;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.menu-left li a,
+.menu-right a,
+input[type="submit"] {
+  text-decoration: none;
+  font-weight: bold;
+  color: #ff5733;
+  background-color: transparent;
+  border: 1px solid #ff5733;
+  padding: 6px 12px;
+  border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.menu-left li a:hover,
+.menu-right a:hover,
+input[type="submit"]:hover {
+  background-color: #ff5733;
+  color: white;
+}
+
+.menu-right span {
+  color: white;
+  font-size: 16px;
+}
+
+/* SEARCH BAR */
+.search-bar {
+  padding: 20px 30px;
+  background-color: #1f1f1f;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  border-bottom: 2px solid #ff5733;
+}
+
+.search-bar input {
+  width: 300px;
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  font-size: 16px;
+}
+
+/* BARRA HORIZONTAL DE GÉNEROS */
+.filtro-generos-horizontal {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  padding: 10px 30px 20px;
+  background-color: #1f1f1f;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.filtro-generos-horizontal .genero-link {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 8px 16px;
+  border-radius: 5px;
+  background-color: transparent;
+  border: 1px solid #ff5733;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.filtro-generos-horizontal .genero-link:hover,
+.filtro-generos-horizontal .genero-link.active {
+  background-color: #ff5733;
+  color: white;
+}
+
+/* HERO */
+.hero {
+  text-align: center;
+  padding: 50px 20px 30px;
+  animation: fadeInUp 0.8s ease-in-out;
+}
+
+.hero h2 {
+  font-size: 36px;
+  color: #ff5733;
+  margin-bottom: 10px;
+}
+
+.hero p {
+  font-size: 20px;
+  color: #ccc;
+}
+
+/* GAME LIST */
+.games {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 30px;
+}
+
+.game-card {
+  background: #1f1f1f;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  flex: 0 0 calc((100% / 4) - 15px);
+  max-width: calc((100% / 4) - 15px);
+  transition: transform 0.3s ease;
+  animation: fadeIn 0.6s ease-in-out;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.game-card:hover {
+  transform: scale(1.05);
+}
+
+.game-card img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.game-card h3 {
+  margin-top: 10px;
+  font-size: 20px;
+}
+
+.game-card p.precio {
+  font-size: 18px;
+  font-weight: bold;
+  color: #ff5733;
+  margin-top: 5px;
+}
+
+.category {
+  background: #ff5733;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 5px;
+  font-size: 13px;
+  margin: 2px;
+  display: inline-block;
+}
+
+.categories {
+  margin-top: 10px;
+}
+
+/* MENSAJES */
+.success-message {
+  background-color: #28a745;
+  color: white;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: bold;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+div.papelera{
+  width: 150px; height: 150px;
+  background-image: url('/img/icons/papelera.png');
+  background-size: 100%;
+  margin-top: 100px;
+}

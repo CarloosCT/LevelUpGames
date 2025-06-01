@@ -1,0 +1,15 @@
+<div class="container">
+    <h1>Nuevo precio</h1>
+
+    <form action="/precio/u" method="post">
+
+        <label for="idPrecio">Cantidad</label>
+        <input id="idPrecio" type="text" name="cantidad" autofocus="autofocus" />
+        <br />
+
+        <input type="hidden" name="id" th:value="${precio.id}" />
+
+        <input type="submit" />
+        <br />
+    </form>
+</div>

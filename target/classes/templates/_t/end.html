@@ -1,0 +1,50 @@
+<script src="/js/jquery.js"></script>
+<script src="/js/datatables.js"></script>
+<script src="/js/bootstrap.bundle.min.js"></script>
+<script src="/js/datatables.min.js"></script>
+<script src="/js/jquery-ui.js"></script>
+<script>
+    $(document).ready(function(){
+        $('#table').DataTable();
+        $('div.game-card').draggable({
+            revert: true,
+            cursor: 'move',
+            zIndex: 1000
+        });
+
+        $('div.game-card').droppable({
+            accept: '.game-card',
+            drop: function(event, ui) {
+                const draggedCard = ui.draggable;
+                const droppedCard = $(this);
+                
+                const draggedContent = draggedCard.html();
+                draggedCard.html(droppedCard.html());
+                droppedCard.html(draggedContent);
+            }
+        });
+
+        $('div.papelera').droppable({
+            accept: '.game-card',
+            drop: function(event, ui) {
+                const draggedCard = ui.draggable;
+                const confirmacion = confirm("¿Estás seguro de que quieres eliminar esta tarjeta?");
+                if (confirmacion) {
+                    draggedCard.remove();
+
+
+                    const cardId = draggedCard.data('id');
+
+                    $('#deleteCardId').val(cardId);
+
+                    $('#delete-card-form').submit();    
+                }
+                
+            }
+        });
+    });
+</script>
+
+</script>
+</body>
+</html>

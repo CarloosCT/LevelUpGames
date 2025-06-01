@@ -1,0 +1,21 @@
+<nav class="admin-links">
+    <a href="/genero/c">Nuevo género</a>
+    <a href="/genero/r">Listado géneros</a>
+    <a href="/precio/c">Nuevo precio</a>
+    <a href="/precio/r">Listado precios</a>
+    <a href="/imagen/r">Listado imágenes</a>
+    <a href="/juego/c">Nuevo juego</a>
+</nav>
+<br>
+<h3 class="game-list-title">Lista de Juegos</h3>
+<div class="game-list">
+    <div class="game-card" th:each="juego : ${juegos}">
+        <a th:href="@{/juego/{id}(id=${juego.id})}" target="_self" data-id="@{juego.id}">
+            <h3 th:text="${juego.nombre}">Nombre del juego</h3>
+        </a>
+    </div>
+</div>
+<div class="papelera"></div>
+<form id="delete-card-form" method="post" th:action="@{/juego/d}">
+    <input type="hidden" name="id" id="deleteCardId">
+</form>

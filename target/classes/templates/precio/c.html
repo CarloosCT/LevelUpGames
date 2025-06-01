@@ -1,0 +1,33 @@
+<div class="container">
+  <h1>Nuevo precio</h1>
+
+  <form action="/precio/c" method="post" enctype="multipart/form-data" onsubmit="return validarPrecio()">
+   <label for="idPrecio">Cantidad</label>
+        <input id="idPrecio" type="text" name="cantidad" autofocus required />
+        <br />
+
+    
+    <input type="submit" value="Crear nuevo precio" />
+  </form>
+</div>
+
+<script>
+
+  function validarPrecio(){
+            var expresion = /^[0-9]{0,}$/;
+            var cantidad = document.getElementsByTagName("form")[0].cantidad.value.trim();
+            var cantidadCorrecta = false;
+            if(expresion.test(cantidad))
+            {
+                cantidadCorrecta = true;
+            }
+            else
+            {
+                document.getElementsByTagName("form")[0].cantidad.placeholder = "Debe ser un número";
+                document.getElementsByTagName("form")[0].cantidad.value = "";
+                cantidadCorrecta = false;
+            }
+
+            return cantidadCorrecta;
+        }
+</script>

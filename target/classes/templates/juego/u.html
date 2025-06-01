@@ -1,0 +1,284 @@
+<div class="container">
+  <h1>Editar juego</h1>
+
+  <form th:action="@{/juego/u}" method="post" enctype="multipart/form-data" onsubmit="return validarFormulario()" class="form-grid">
+    <!-- Campo oculto para el ID del juego -->
+    <input type="hidden" name="id" th:value="${juego.id}" />
+
+    <!-- Nombre -->
+    <div class="form-group">
+      <label for="idNombre">Nombre</label>
+      <input id="idNombre" type="text" name="nombre" th:value="${juego.nombre}" required autofocus />
+    </div>
+
+    <!-- Precio -->
+    <div class="form-group">
+      <label for="precio">Precio (€)</label>
+      <input type="number" step="0.01" min="0" id="precio" name="precio"
+             th:value="${juego.precioActual != null ? juego.precioActual.cantidad : 0}"
+             placeholder="Introduce el precio" required />
+    </div>
+
+    <!-- Descripción -->
+    <div class="form-group full-width">
+      <label for="idDesc">Descripción</label>
+      <textarea id="idDesc" name="descripcion" rows="4" required th:text="${juego.descripcion}"></textarea>
+    </div>
+
+    <!-- Géneros -->
+    <div class="form-group full-width">
+      <label>Géneros:</label>
+      <div class="checkbox-inline-group" id="generos-container">
+        <span th:each="genero : ${generos}">
+          <label>
+            <input type="checkbox" name="generosIds"
+                   th:value="${genero.id}"
+                   th:checked="${juego.generos.contains(genero)}"
+                   />
+            <span th:text="${genero.nombre}"></span>
+          </label>
+        </span>
+      </div>
+      <div id="error-generos" style="color:red; display:none;">Selecciona al menos un género.</div>
+    </div>
+
+    <!-- Portada -->
+    <div class="form-group full-width">
+      <label for="portada">Nueva portada (opcional):</label>
+      <input id="portada" type="file" name="portadaFile" accept="image/*" />
+      <div id="portadaPreview">
+        <img th:if="${juego.portada != null}" th:src="@{/uploads/} + ${juego.portada.ruta}" class="preview-img" />
+        <button type="button" id="eliminarPortadaBtn" style="display:none; margin-top: 5px;">Eliminar portada actual</button>
+      </div>
+    </div>
+
+    <!-- Imágenes adicionales -->
+    <div class="form-group full-width">
+      <label>Imágenes actuales:</label>
+      <div id="imagenesActualesPreview">
+        <div th:each="img : ${juego.imagenes}"
+             th:if="${img.id != juego.portada.id}"
+             class="preview-img-wrapper">
+          <img th:src="@{/uploads/} + ${img.ruta}" class="preview-img" />
+          <button type="button" class="delete-btn" th:onclick="|eliminarImagenActual(this, '${img.id}')|">&times;</button>
+        </div>
+      </div>
+      <input type="hidden" id="imagenesEliminadas" name="imagenesEliminadas" value="" />
+    </div>
+
+    <div class="form-group full-width">
+      <label for="imagenes">Añadir nuevas imágenes:</label>
+      <input id="imagenes" type="file" name="imagenes" multiple accept="image/*" />
+      <div id="imagenesPreview"></div>
+    </div>
+
+    <!-- Mostrar archivo descargable existente -->
+    <div>
+      <label>Archivo descargable actual:</label>
+      <a th:href="@{'/downloadables/' + ${juego.descargable}}" target="_blank" th:text="${juego.descargable}">Descargar archivo actual</a>
+    </div>
+
+    <!-- Input para subir uno nuevo -->
+    <div class="form-group full-width">
+      <label for="descargable">Nuevo archivo descargable (opcional):</label>
+      <input type="file" id="descargable" name="descargable" accept=".zip,.rar,.exe,.iso,.setup" />
+    </div>
+
+    <!-- Botón -->
+    <div class="form-group full-width">
+      <input type="submit" value="Guardar cambios" />
+    </div>
+  </form>
+</div>
+
+<script>
+  let archivoPortada = null;
+  let archivosImagenes = [];
+  let imagenesEliminadas = [];
+  let portadaEliminada = false; // Nueva variable para controlar si se elimina portada
+
+  const portadaInput = document.getElementById('portada');
+  const portadaPreview = document.getElementById('portadaPreview');
+  const eliminarPortadaBtn = document.getElementById('eliminarPortadaBtn');
+  const imagenesInput = document.getElementById('imagenes');
+  const imagenesPreview = document.getElementById('imagenesPreview');
+  const imagenesEliminadasInput = document.getElementById('imagenesEliminadas');
+
+  // Mostrar botón eliminar portada solo si hay imagen al cargar la página
+  if (portadaPreview.querySelector('img')) {
+    eliminarPortadaBtn.style.display = 'inline-block';
+  }
+
+  portadaInput.addEventListener('change', (e) => {
+    if (e.target.files.length === 0) {
+      archivoPortada = null;
+      // Si portada fue eliminada antes, la mantenemos eliminada
+      if (!portadaEliminada) {
+        // Restaurar la imagen de portada si no se ha eliminado
+        portadaPreview.innerHTML = `<img src="${portadaPreview.querySelector('img')?.src}" class="preview-img" />`;
+        eliminarPortadaBtn.style.display = 'inline-block';
+      }
+      return;
+    }
+    archivoPortada = e.target.files[0];
+    mostrarPortadaPreview(archivoPortada);
+    // Si se selecciona nueva portada, no puede estar eliminada la portada actual
+    portadaEliminada = false;
+    eliminarPortadaBtn.style.display = 'inline-block';
+  });
+
+  function mostrarPortadaPreview(archivo) {
+    portadaPreview.innerHTML = '';
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const container = crearContenedorImagen(e.target.result, () => {
+        archivoPortada = null;
+        portadaPreview.innerHTML = '';
+        portadaInput.value = '';
+        eliminarPortadaBtn.style.display = 'none';
+      });
+      portadaPreview.appendChild(container);
+    };
+    reader.readAsDataURL(archivo);
+  }
+
+  eliminarPortadaBtn.addEventListener('click', () => {
+    archivoPortada = null;
+    portadaEliminada = true;  // Marcamos que la portada fue eliminada
+
+    // Quitar imagen y ocultar el botón
+    portadaPreview.innerHTML = '';
+    eliminarPortadaBtn.style.display = 'none';
+
+    // Limpiar input file de portada para que no se envíe archivo
+    portadaInput.value = '';
+  });
+
+  imagenesInput.addEventListener('change', (e) => {
+    const nuevosArchivos = Array.from(e.target.files);
+    if (archivosImagenes.length + nuevosArchivos.length > 5) {
+      alert('Solo puedes subir hasta 5 imágenes nuevas.');
+      return;
+    }
+    archivosImagenes = archivosImagenes.concat(nuevosArchivos);
+    actualizarPreview();
+    imagenesInput.value = '';
+  });
+
+  function actualizarPreview() {
+    imagenesPreview.innerHTML = '';
+    archivosImagenes.forEach((archivo, index) => {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const container = crearContenedorImagen(e.target.result, () => {
+          archivosImagenes.splice(index, 1);
+          actualizarPreview();
+        });
+        imagenesPreview.appendChild(container);
+      };
+      reader.readAsDataURL(archivo);
+    });
+  }
+
+  function crearContenedorImagen(src, onDelete) {
+    const container = document.createElement('div');
+    container.className = 'preview-img-wrapper';
+
+    const img = document.createElement('img');
+    img.src = src;
+    img.className = 'preview-img';
+    container.appendChild(img);
+
+    const btnEliminar = document.createElement('button');
+    btnEliminar.innerHTML = '&times;';
+    btnEliminar.type = 'button';
+    btnEliminar.className = 'delete-btn';
+    btnEliminar.onclick = onDelete;
+    container.appendChild(btnEliminar);
+
+    return container;
+  }
+
+  function eliminarImagenActual(button, imagenId) {
+    const wrapper = button.parentElement;
+    wrapper.remove();
+    imagenesEliminadas.push(imagenId);
+    imagenesEliminadasInput.value = imagenesEliminadas.join(',');
+  }
+
+  function validarFormulario() {
+    // Validar nombre
+    const nombre = document.getElementById('idNombre').value.trim();
+    if (nombre === '') {
+      alert('El nombre es obligatorio.');
+      return false;
+    }
+
+    // Validar precio (no vacío)
+    const precio = document.getElementById('precio').value;
+    if (precio === '') {
+      alert('El precio es obligatorio (puede ser 0).');
+      return false;
+    }
+
+    // Validar descripción
+    const descripcion = document.getElementById('idDesc').value.trim();
+    if (descripcion === '') {
+      alert('La descripción es obligatoria.');
+      return false;
+    }
+
+    // Validar géneros
+    const checkboxes = document.querySelectorAll('input[name="generosIds"]:checked');
+    const errorGeneros = document.getElementById('error-generos');
+    if (checkboxes.length === 0) {
+      errorGeneros.style.display = 'block';
+      alert('Selecciona al menos un género.');
+      return false;
+    }
+    errorGeneros.style.display = 'none';
+
+    // Validar portada (obligatoria solo si no hay portada nueva ni portada existente visible)
+    const portadaExistente = document.querySelector('#portadaPreview img') !== null;
+    if (!archivoPortada && !portadaExistente && !portadaEliminada) {
+      alert('Debes seleccionar una portada.');
+      return false;
+    }
+    if (portadaEliminada && !archivoPortada) {
+      alert('Has eliminado la portada actual, debes subir una nueva.');
+      return false;
+    }
+
+    // Validar que haya al menos una imagen adicional (existente + nuevas)
+    const imagenesExistentes = document.querySelectorAll('#imagenesActualesPreview .preview-img-wrapper').length;
+    const imagenesNuevas = archivosImagenes.length;
+    if (imagenesExistentes + imagenesNuevas === 0) {
+      alert('Debes tener al menos una imagen adicional.');
+      return false;
+    }
+
+    // Validar descargable (solo si el campo es obligatorio para ti)
+    // Si quieres que sea opcional, comenta o elimina este bloque
+    /*
+    const descargableInput = document.getElementById('descargable');
+    if (descargableInput.files.length === 0) {
+      alert('Debes seleccionar un archivo descargable.');
+      return false;
+    }
+    */
+
+    // Preparar archivos para enviar
+    const portadaDataTransfer = new DataTransfer();
+    if (archivoPortada) {
+      portadaDataTransfer.items.add(archivoPortada);
+      portadaInput.files = portadaDataTransfer.files;
+    }
+
+    const imagenesDataTransfer = new DataTransfer();
+    archivosImagenes.forEach(file => imagenesDataTransfer.items.add(file));
+    imagenesInput.files = imagenesDataTransfer.files;
+
+    return true;
+  }
+</script>

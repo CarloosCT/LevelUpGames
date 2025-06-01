@@ -1,0 +1,90 @@
+<div class="container">
+    <h1>Nuevo usuario</h1>
+
+    <form action="/usuario/c" method="post" onsubmit="return validarUsuario()">
+        <label for="idEmail">Correo</label>
+        <input id="idEmail" type="text" name="loginemail" autofocus="autofocus" />
+
+        <label for="idNombre">Nombre</label>
+        <input id="idNombre" type="text" name="nombre" autofocus="autofocus" />
+        <br />
+
+        <label for="idApe">Apellido</label>
+        <input id="idApe" type="text" name="apellido" />
+        <br />
+
+        <label for="idPassword">Contraseña</label>
+        <input id="idPassword" type="password" name="password" />
+        <br />
+
+        <label for="idPassword">Repetir Contraseña</label>
+        <input id="idPassword" type="password" name="passwordR" />
+        <br />
+
+
+        <input type="submit" />
+        <br />
+    </form>
+
+</div>
+
+<script>
+    function validarUsuario() {
+        var expresion = /^[a-zA-ZáéíóúüÁÉÍÓÚÜñÑçÇ ]{3,}$/;
+        var email = document.getElementsByTagName("form")[0].loginemail.value.trim();
+        var nombre = document.getElementsByTagName("form")[0].nombre.value.trim();
+        var apellido = document.getElementsByTagName("form")[0].apellido.value.trim();
+        var password = document.getElementsByTagName("form")[0].password.value.trim();
+        var passwordR = document.getElementsByTagName("form")[0].passwordR.value.trim();
+
+        var emailCorrecto = false;
+        var nombreCorrecto = false;
+        var apellidoCorrecto = false;
+        var passwordCorrecto = false;
+
+        if (expresion.test(nombre)) {
+            nombreCorrecto = true;
+        } else {
+            nombre.placeholder = "El nombre no es correcto";
+            alert("El nombre no es correcto");
+            nombreCorrecto = false;
+        }
+
+        if (expresion.test(apellido)) {
+            apellidoCorrecto = true;
+        } else {
+            apellido.placeholder = "El apellido no es correcto";
+            alert("El apellido no es correcto");
+            apellidoCorrecto = false;
+        }
+
+        if (email.length >= 5 && email.includes("@") && email.includes(".") && email.indexOf("@") < email.indexOf(".")) {
+            emailCorrecto = true;
+        } else {
+            email.placeholder = "El correo no es correcto";
+            alert("El correo no es correcto");
+            emailCorrecto = false;
+        }
+
+        if (password.length >= 8) {
+            passwordCorrecto = true;
+        } else {
+            password.placeholder = "La contraseña debe tener al menos 8 caracteres";
+            alert("La contraseña debe tener al menos 8 caracteres");
+            passwordCorrecto = false;
+        }
+
+        if(password === passwordR) {
+            passwordCorrecto = true;
+        } else {
+            passwordR.value = "";
+            password.value = "";
+            passwordR.placeholder = "Las contraseñas no coinciden";
+            password.placeholder = "Las contraseñas no coinciden";
+            alert("Las contraseñas no coinciden");
+            passwordCorrecto = false;
+        }
+
+        return nombreCorrecto && apellidoCorrecto && emailCorrecto && passwordCorrecto;
+    }
+</script>
