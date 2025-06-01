@@ -4,7 +4,7 @@
     <ul>
       <li th:each="juego : ${juegos}" class="juego-item" th:onclick="'mostrarDetalles(' + ${juego.id} + ')'">
         <img class="juego-miniatura"
-          th:src="${juego.portada != null} ? ${juego.portada.ruta} : @{/img/default-portada.png}" />
+          th:src="${juego.portada.ruta != null} ? ${juego.portada.ruta} : @{/img/default-portada.png}" />
         <span class="juego-nombre" th:text="${juego.nombre}"></span>
 
         <!-- Datos ocultos para JS -->
