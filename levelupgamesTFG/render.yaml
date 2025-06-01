@@ -1,8 +1,8 @@
 services:
   - type: web
-    name: springboot-app
+    name: levelupgames
     env: java
-    buildCommand: ./mvnw clean install
+    buildCommand: ./mvnw clean package -DskipTests
     startCommand: java -jar target/*.jar
     envVars:
       - key: SPRING_PROFILES_ACTIVE
