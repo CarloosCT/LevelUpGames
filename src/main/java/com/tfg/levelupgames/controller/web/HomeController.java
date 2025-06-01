@@ -35,7 +35,7 @@ public class HomeController {
 
         m.put("generos", generoService.findAll());
         m.put("estilos", "/css/home/home.css");
-        m.put("view", "/home/home");
+        m.put("view", "home/home");
 
         if (success != null) {
             m.put("success", success);
