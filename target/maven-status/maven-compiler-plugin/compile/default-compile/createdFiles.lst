@@ -1,7 +1,7 @@
 com\tfg\levelupgames\config\WebConfig.class
+com\tfg\levelupgames\services\CloudinaryService.class
 com\tfg\levelupgames\controller\web\HomeController.class
 com\tfg\levelupgames\services\ImagenService.class
-main\java\com\tfg\levelupgames\config\CloudinaryConfig.class
 com\tfg\levelupgames\controller\web\JuegoController.class
 com\tfg\levelupgames\repositories\JuegoRepository.class
 com\tfg\levelupgames\controller\web\SolicitudDesarrolladorController.class
@@ -37,11 +37,11 @@ com\tfg\levelupgames\services\JuegoService.class
 com\tfg\levelupgames\entities\Usuario.class
 com\tfg\levelupgames\exception\GlobalExceptionHandler.class
 com\tfg\levelupgames\controller\web\DesarrolladorPanelController.class
+com\tfg\levelupgames\config\CloudinaryConfig.class
 com\tfg\levelupgames\helper\SessionManager.class
 com\tfg\levelupgames\entities\Precio.class
 com\tfg\levelupgames\repositories\UsuarioRepository.class
 com\tfg\levelupgames\controller\web\ImagenController.class
-main\java\com\tfg\levelupgames\services\CloudinaryService.class
 com\tfg\levelupgames\entities\Genero.class
 com\tfg\levelupgames\repositories\RolRepository.class
 com\tfg\levelupgames\exception\InfoException.class

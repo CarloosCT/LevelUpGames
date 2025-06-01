@@ -1,4 +1,4 @@
-package main.java.com.tfg.levelupgames.config;
+package com.tfg.levelupgames.config;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;

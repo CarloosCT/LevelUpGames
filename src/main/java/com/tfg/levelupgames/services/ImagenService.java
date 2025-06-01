@@ -18,13 +18,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.tfg.levelupgames.entities.Imagen;
 import com.tfg.levelupgames.entities.Juego;
 import com.tfg.levelupgames.exception.DangerException;
-import com.tfg.levelupgames.repositories.ImagenRepository;
-
-import main.java.com.tfg.levelupgames.services.CloudinaryService;
+import com.tfg.levelupgames.repositories.ImagenRepository; 
+import com.tfg.levelupgames.services.CloudinaryService;
 
 @Service
 public class ImagenService {
-
     @Autowired
     private CloudinaryService cloudinaryService;
 
