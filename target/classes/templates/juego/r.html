@@ -1,26 +1,17 @@
 <div class="juego-container">
 
     <div class="imagenes-columna">
-        <img id="portada" 
-             th:src="@{'/uploads/' + ${juego.portada.ruta}}"
-             th:attr="data-ruta-imagen=${juego.portada.ruta}" 
-             class="portada-img" 
-             alt="Portada de [[${juego.nombre}]]" />
+        <img id="portada" th:src="@{'/uploads/' + ${juego.portada.ruta}}"
+            th:attr="data-ruta-imagen=${juego.portada.ruta}" class="portada-img" alt="Portada de [[${juego.nombre}]]" />
 
         <div id="miniaturas" class="miniaturas-container">
-            <img th:src="@{'/uploads/' + ${juego.portada.ruta}}" 
-                 th:attr="data-ruta-imagen=${juego.portada.ruta}" 
-                 class="miniatura-img portada-fija"
-                 alt="Miniatura portada de [[${juego.nombre}]]"
-                 onclick="cambiarPortada(this)" />
+            <img th:src="${juego.portada.ruta}" th:attr="data-ruta-imagen=${juego.portada.ruta}"
+                class="miniatura-img portada-fija" alt="Miniatura portada de [[${juego.nombre}]]"
+                onclick="cambiarPortada(this)" />
 
-            <img th:each="imagen : ${juego.imagenes}" 
-                 th:if="${imagen.ruta != juego.portada.ruta}" 
-                 th:src="@{'/uploads/' + ${imagen.ruta}}" 
-                 th:attr="data-ruta-imagen=${imagen.ruta}" 
-                 class="miniatura-img"
-                 alt="Imagen miniatura de [[${juego.nombre}]]"
-                 onclick="cambiarPortada(this)" />
+            <img th:each="imagen : ${juego.imagenes}" th:if="${imagen.ruta != juego.portada.ruta}"
+                th:src="${imagen.ruta}" th:attr="data-ruta-imagen=${imagen.ruta}" class="miniatura-img"
+                alt="Imagen miniatura de [[${juego.nombre}]]" onclick="cambiarPortada(this)" />
         </div>
 
         <p th:text="${juego.descripcion}" class="juego-descripcion"></p>
@@ -31,15 +22,14 @@
     </div>
 
     <div class="precio-columna">
-    <h1 th:text="${juego.nombre}" class="juego-titulo" style="margin-bottom: 10px;"></h1>
+        <h1 th:text="${juego.nombre}" class="juego-titulo" style="margin-bottom: 10px;"></h1>
 
-    <h3 class="juego-precio" 
-    th:if="${juego.precioActual != null}"
-    th:text="${juego.precioActual.cantidad.compareTo(T(java.math.BigDecimal).ZERO) == 0 ? 'Gratis' : juego.precioActual.cantidad + ' €'}">
-    </h3>
-<h3 class="juego-precio" th:if="${juego.precioActual == null}">Sin precio</h3>
+        <h3 class="juego-precio" th:if="${juego.precioActual != null}"
+            th:text="${juego.precioActual.cantidad.compareTo(T(java.math.BigDecimal).ZERO) == 0 ? 'Gratis' : juego.precioActual.cantidad + ' €'}">
+        </h3>
+        <h3 class="juego-precio" th:if="${juego.precioActual == null}">Sin precio</h3>
 
-    <a th:href="@{'/compra/c/' + ${juego.id}}" class="boton-comprar">Comprar</a>
+        <a th:href="@{'/compra/c/' + ${juego.id}}" class="boton-comprar">Comprar</a>
     </div>
 
 </div>

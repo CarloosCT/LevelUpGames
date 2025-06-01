@@ -21,8 +21,12 @@ import com.tfg.levelupgames.entities.Precio;
 import com.tfg.levelupgames.entities.Usuario;
 import com.tfg.levelupgames.repositories.JuegoRepository;
 
+import main.java.com.tfg.levelupgames.services.CloudinaryService;
+
 @Service
 public class JuegoService {
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
     @Autowired
     private JuegoRepository juegoRepository;

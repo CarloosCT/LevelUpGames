@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,13 @@ import com.tfg.levelupgames.entities.Juego;
 import com.tfg.levelupgames.exception.DangerException;
 import com.tfg.levelupgames.repositories.ImagenRepository;
 
+import main.java.com.tfg.levelupgames.services.CloudinaryService;
+
 @Service
 public class ImagenService {
+
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
     @Autowired
     private ImagenRepository imagenRepository;
@@ -41,15 +47,16 @@ public class ImagenService {
         return imagenRepository.findById(id).get();
     }
 
-    public void d(Long id) throws DangerException {
-        Imagen imagen = this.findById(id);
-        Path ruta = Paths.get("uploads/" + imagen.getRuta());
+    public void d(Long id) {
+        Imagen imagen = imagenRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Imagen no encontrada"));
+
         try {
-            Files.deleteIfExists(ruta);
-        } catch (IOException e) {
-            throw new DangerException("Error al eliminar archivo del disco: " + e.getMessage());
+            cloudinaryService.delete(imagen.getPublicId());
+            imagenRepository.delete(imagen);
+        } catch (Exception e) {
+            throw new RuntimeException("Error eliminando imagen en Cloudinary", e);
         }
-        imagenRepository.deleteById(id);
     }
 
     public void u(Long id, String nuevaRuta) throws DangerException {
@@ -60,12 +67,14 @@ public class ImagenService {
 
     public void eliminarImagenPorId(Long imgId) {
         Imagen imagen = imagenRepository.findById(imgId)
-            .orElseThrow(() -> new RuntimeException("Imagen no encontrada con id " + imgId));
+                .orElseThrow(() -> new RuntimeException("Imagen no encontrada con id " + imgId));
         try {
-            Path rutaArchivo = Paths.get("uploads").resolve(imagen.getRuta());
-            Files.deleteIfExists(rutaArchivo);
-        } catch (IOException e) {
-            throw new RuntimeException("Error al borrar archivo de imagen: " + e.getMessage(), e);
+            // Borrar en Cloudinary (solo si tienes publicId)
+            if (imagen.getPublicId() != null) {
+                cloudinaryService.delete(imagen.getPublicId());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error al borrar imagen en Cloudinary: " + e.getMessage(), e);
         }
         imagenRepository.delete(imagen);
     }
@@ -89,57 +98,42 @@ public class ImagenService {
         return UUID.randomUUID().toString() + extension;
     }
 
-    public void procesarImagenesDeJuego(Juego juego, MultipartFile nuevaPortada, MultipartFile[] nuevasImagenes) {
-    try {
-        Path uploadPath = Paths.get("uploads/");
-        if (!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
-        }
+    public void procesarImagenesDeJuego(Juego juego, MultipartFile portadaFile, MultipartFile[] imagenes) {
+        try {
+            // Si hay portada, subir y crear la entidad Imagen con isPortada = true
+            if (portadaFile != null && !portadaFile.isEmpty()) {
+                Map<?, ?> uploadResult = cloudinaryService.upload(portadaFile);
+                String url = (String) uploadResult.get("secure_url");
+                String publicId = (String) uploadResult.get("public_id");
 
-        // 🔹 Eliminar portada anterior (si hay nueva)
-        if (nuevaPortada != null && !nuevaPortada.isEmpty()) {
-            if (juego.getPortada() != null) {
-                eliminarImagenPorId(juego.getPortada().getId());
-                juego.setPortada(null);
+                Imagen portada = new Imagen();
+                portada.setRuta(url);
+                portada.setPublicId(publicId);
+                portada.setPortada(true);
+                portada.setJuego(juego);
+                imagenRepository.save(portada);
             }
 
-            String nombreArchivoUnico = generarNombreArchivoUnico(nuevaPortada.getOriginalFilename());
-            Path rutaPortada = uploadPath.resolve(nombreArchivoUnico);
-            Files.copy(nuevaPortada.getInputStream(), rutaPortada, StandardCopyOption.REPLACE_EXISTING);
+            // Subir imágenes adicionales
+            if (imagenes != null) {
+                for (MultipartFile imagenFile : imagenes) {
+                    if (imagenFile != null && !imagenFile.isEmpty()) {
+                        Map<?, ?> uploadResult = cloudinaryService.upload(imagenFile);
+                        String url = (String) uploadResult.get("secure_url");
+                        String publicId = (String) uploadResult.get("public_id");
 
-            Imagen nuevaImgPortada = new Imagen(nombreArchivoUnico, true);
-            nuevaImgPortada.setJuego(juego);
-            imagenRepository.save(nuevaImgPortada); // ✅ Guardamos en BD
-            juego.setPortada(nuevaImgPortada); // ✅ Enlazamos al juego
-        }
-
-        // 🔹 Eliminar imágenes anteriores si hay nuevas
-        boolean hayNuevasImagenes = nuevasImagenes != null && Arrays.stream(nuevasImagenes).anyMatch(img -> !img.isEmpty());
-
-        if (hayNuevasImagenes) {
-            List<Imagen> imagenesActuales = new ArrayList<>(juego.getImagenes());
-            for (Imagen img : imagenesActuales) {
-                if (!img.getEsPortada()) {
-                    eliminarImagenPorId(img.getId());
+                        Imagen imagen = new Imagen();
+                        imagen.setRuta(url);
+                        imagen.setPublicId(publicId);
+                        imagen.setPortada(false);
+                        imagen.setJuego(juego);
+                        imagenRepository.save(imagen);
+                    }
                 }
             }
-            juego.getImagenes().removeIf(img -> !img.getEsPortada());
 
-            for (MultipartFile imagen : nuevasImagenes) {
-                if (imagen.isEmpty()) continue;
-
-                String nombreArchivoUnico = generarNombreArchivoUnico(imagen.getOriginalFilename());
-                Path rutaImagen = uploadPath.resolve(nombreArchivoUnico);
-                Files.copy(imagen.getInputStream(), rutaImagen, StandardCopyOption.REPLACE_EXISTING);
-
-                Imagen nuevaImagen = new Imagen(nombreArchivoUnico, false);
-                nuevaImagen.setJuego(juego);
-                juego.getImagenes().add(nuevaImagen);
-            }
+        } catch (IOException e) {
+            throw new RuntimeException("Error subiendo imágenes a Cloudinary", e);
         }
-
-    } catch (IOException e) {
-        throw new RuntimeException("Error al procesar las imágenes: " + e.getMessage(), e);
     }
-}
 }

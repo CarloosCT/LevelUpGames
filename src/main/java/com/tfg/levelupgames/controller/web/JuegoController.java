@@ -25,6 +25,7 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/juego")
 public class JuegoController {
+
     @Autowired
     private GeneroService generoService;
 

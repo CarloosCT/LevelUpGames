@@ -28,6 +28,7 @@ C:\Users\catal\Desktop\LevelUpGames\LevelUpGames\src\main\java\com\tfg\levelupga
 C:\Users\catal\Desktop\LevelUpGames\LevelUpGames\src\main\java\com\tfg\levelupgames\helper\PRG.java
 C:\Users\catal\Desktop\LevelUpGames\LevelUpGames\src\main\java\com\tfg\levelupgames\entities\Precio.java
 C:\Users\catal\Desktop\LevelUpGames\LevelUpGames\src\main\java\com\tfg\levelupgames\services\RolService.java
+C:\Users\catal\Desktop\LevelUpGames\LevelUpGames\src\main\java\com\tfg\levelupgames\config\CloudinaryConfig.java
 C:\Users\catal\Desktop\LevelUpGames\LevelUpGames\src\main\java\com\tfg\levelupgames\entities\Usuario.java
 C:\Users\catal\Desktop\LevelUpGames\LevelUpGames\src\main\java\com\tfg\levelupgames\services\DesarrolladorService.java
 C:\Users\catal\Desktop\LevelUpGames\LevelUpGames\src\main\java\com\tfg\levelupgames\repositories\SolicitudDesarrolladorRepository.java
@@ -37,6 +38,7 @@ C:\Users\catal\Desktop\LevelUpGames\LevelUpGames\src\main\java\com\tfg\levelupga
 C:\Users\catal\Desktop\LevelUpGames\LevelUpGames\src\main\java\com\tfg\levelupgames\controller\web\SolicitudDesarrolladorController.java
 C:\Users\catal\Desktop\LevelUpGames\LevelUpGames\src\main\java\com\tfg\levelupgames\entities\Desarrollador.java
 C:\Users\catal\Desktop\LevelUpGames\LevelUpGames\src\main\java\com\tfg\levelupgames\entities\Genero.java
+C:\Users\catal\Desktop\LevelUpGames\LevelUpGames\src\main\java\com\tfg\levelupgames\services\CloudinaryService.java
 C:\Users\catal\Desktop\LevelUpGames\LevelUpGames\src\main\java\com\tfg\levelupgames\entities\Rol.java
 C:\Users\catal\Desktop\LevelUpGames\LevelUpGames\src\main\java\com\tfg\levelupgames\controller\web\ImagenController.java
 C:\Users\catal\Desktop\LevelUpGames\LevelUpGames\src\main\java\com\tfg\levelupgames\repositories\PrecioRepository.java

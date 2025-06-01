@@ -17,6 +17,8 @@ public class Imagen {
 
     private String ruta;
 
+    private String publicId;
+
     private boolean portada = false;
 
     // Relaciones
@@ -40,6 +42,12 @@ public class Imagen {
         this.ruta = "Juego sin imagen";
     }
 
+    public Imagen(String ruta, String publicId, boolean portada) {
+        this.ruta = ruta;
+        this.publicId = publicId;
+        this.portada = portada;
+    }
+
     public void setJuego(Juego juego) {
         this.juego = juego;
     }
@@ -54,8 +62,10 @@ public class Imagen {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Imagen)) return false;
+        if (this == o)
+            return true;
+        if (!(o instanceof Imagen))
+            return false;
         Imagen imagen = (Imagen) o;
         return id != null && id.equals(imagen.id);
     }
@@ -66,6 +76,6 @@ public class Imagen {
     }
 
     public boolean getEsPortada() {
-    return this.portada;
-}
+        return this.portada;
+    }
 }
