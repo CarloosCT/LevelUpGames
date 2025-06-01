@@ -38,7 +38,7 @@
     function cambiarPortada(img) {
         const portada = document.getElementById("portada");
         const nuevaRuta = img.getAttribute("data-ruta-imagen");
-        portada.src = `/uploads/${nuevaRuta}`;
+        portada.src = nuevaRuta;
         portada.setAttribute("data-ruta-imagen", nuevaRuta);
     }
 </script>
