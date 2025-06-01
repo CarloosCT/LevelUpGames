@@ -1,7 +1,7 @@
 <div class="juego-container">
 
     <div class="imagenes-columna">
-        <img id="portada" th:src="@{'/uploads/' + ${juego.portada.ruta}}"
+        <img id="portada" th:src="${juego.portada.ruta}"
             th:attr="data-ruta-imagen=${juego.portada.ruta}" class="portada-img" alt="Portada de [[${juego.nombre}]]" />
 
         <div id="miniaturas" class="miniaturas-container">
