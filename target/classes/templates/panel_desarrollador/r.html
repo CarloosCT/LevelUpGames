@@ -1,12 +1,3 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8" />
-    <title>Panel de Desarrollador</title>
-    <link rel="stylesheet" th:href="@{/css/panelDesarrollador/r.css}" />
-</head>
-<body>
-
 <div class="panel-dev">
     <h1>Panel de Desarrollador</h1>
 
@@ -18,24 +9,33 @@
         <h3 class="game-list-title">Tus Juegos</h3>
         <section class="game-list">
             <div th:each="juego : ${juegos}" class="game-card">
-                <a th:href="@{/juego/u/{id}(id=${juego.id})}" target="_self" style="text-decoration: none; color: inherit;">
-                    <div th:if="${juego.portada != null}">
-                        <img th:src="@{'/uploads/' + ${juego.portada.ruta}}" th:alt="${juego.nombre}" style="max-width: 100%; border-radius: 8px;" />
-                    </div>
-                    <h3 th:text="${juego.nombre}"></h3>
-                    <p class="precio"
-                       th:text="${juego.precioActual != null 
-                                 ? (juego.precioActual.cantidad.compareTo(T(java.math.BigDecimal).ZERO) == 0 
-                                    ? 'Gratis' 
-                                    : juego.precioActual.cantidad + ' €') 
-                                 : 'Sin precio'}">
-                    </p>
-                    <p>
-                        <span th:each="genero : ${juego.generos}">
-                            <span class="category" th:text="${genero.nombre}"></span>
-                        </span>
-                    </p>
-                </a>
+                <div th:if="${juego.portada != null}">
+                    <img th:src="${juego.portada.ruta}" th:alt="${juego.nombre}" />
+                </div>
+                <h3 th:text="${juego.nombre}"></h3>
+                <p class="precio" th:text="${juego.precioActual != null 
+                 ? (juego.precioActual.cantidad.compareTo(T(java.math.BigDecimal).ZERO) == 0 
+                    ? 'Gratis' 
+                    : juego.precioActual.cantidad + ' €') 
+                 : 'Sin precio'}">
+                </p>
+                <p>
+                    <span th:each="genero : ${juego.generos}">
+                        <span class="category" th:text="${genero.nombre}"></span>
+                    </span>
+                </p>
+
+                <!-- 🔧 NUEVO DIV PARA ICONOS -->
+                <div class="card-actions">
+                    <form th:action="@{/juego/u}" method="get">
+                        <input type="hidden" name="id" th:value="${juego.id}" />
+                        <button type="submit"><img src="/img/icons/edit.png" alt="Editar" /></button>
+                    </form>  
+                    <form th:action="@{/juego/d}" method="post">
+                        <input type="hidden" name="id" th:value="${juego.id}" />
+                        <button type="submit"><img src="/img/icons/trash.png" alt="Eliminar" /></button>
+                    </form>
+                </div>
             </div>
         </section>
     </div>
@@ -44,6 +44,3 @@
         <p>Cuando hagas tu primer juego, aparecerá aquí!</p>
     </div>
 </div>
-
-</body>
-</html>

@@ -20,6 +20,7 @@ body {
     opacity: 0;
     transform: translateY(15px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -88,7 +89,8 @@ body {
   border-radius: 12px;
   padding: 30px 25px;
   text-align: center;
-  flex: 0 0 calc((100% / 2) - 30px); /* 2 tarjetas por fila, mucho más grandes */
+  flex: 0 0 calc((100% / 2) - 30px);
+  /* 2 tarjetas por fila, mucho más grandes */
   max-width: calc((100% / 2) - 30px);
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -104,7 +106,8 @@ body {
   width: 100%;
   border-radius: 12px;
   object-fit: cover;
-  max-height: 240px; /* Imagen más alta para más impacto */
+  max-height: 240px;
+  /* Imagen más alta para más impacto */
 }
 
 .game-card h3 {
@@ -137,4 +140,41 @@ body {
   color: #ff5733;
   margin-top: 50px;
   font-weight: bold;
+}
+
+.card-actions {
+  display: flex;
+  justify-content: flex-end; /* Alinea a la derecha */
+  gap: 16px;
+  margin-top: 16px;
+}
+
+/* Formulario en línea para que los botones estén juntos */
+.card-actions form {
+  margin: 0; /* Elimina margen por defecto */
+}
+
+/* Botones sin estilo nativo para que sólo se vea el icono */
+.card-actions form button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, filter 0.3s ease;
+}
+
+/* Iconos dentro de los botones */
+.card-actions form button img {
+  width: 36px;   /* Tamaño mayor */
+  height: 36px;
+  filter: brightness(0) invert(1); /* Blanco en fondo oscuro */
+}
+
+/* Hover efecto */
+.card-actions form button:hover img {
+  transform: scale(1.2);
+  filter: brightness(0) invert(70%) sepia(100%) saturate(500%) hue-rotate(-10deg);
 }

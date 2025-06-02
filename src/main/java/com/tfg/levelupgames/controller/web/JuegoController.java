@@ -132,8 +132,9 @@ public class JuegoController {
 }
 
 
-    @GetMapping("u/{id}")
-    public String u(@PathVariable Long id, ModelMap m) {
+    @GetMapping("u")
+    public String u(ModelMap m,
+                    @RequestParam Long id) {
         
     m.put("juego", juegoService.findById(id));
     m.put("generos", generoService.findAll());
@@ -239,13 +240,12 @@ public String uPost(
     }
 
     @PostMapping("d")
-    public String d(
-            @RequestParam Long id) throws DangerException {
+    public String d( @RequestParam Long id) throws DangerException {
         try {
             juegoService.d(id);
         } catch (Exception e) {
             PRG.error(e.getMessage(), "/juego/r");
         }
-        return "redirect:/panel_administrador/r";
+        return "redirect:/panel_desarrollador/r";
     }
 }

@@ -91,15 +91,6 @@ public class ImagenService {
         juego.getImagenes().removeIf(imagen -> !imagen.getEsPortada());
     }
 
-    private String generarNombreArchivoUnico(String originalFilename) {
-        String extension = "";
-        int i = originalFilename.lastIndexOf('.');
-        if (i > 0) {
-            extension = originalFilename.substring(i);
-        }
-        return UUID.randomUUID().toString() + extension;
-    }
-
     public void procesarImagenesDeJuego(Juego juego, MultipartFile portadaFile, MultipartFile[] imagenes) {
         try {
             if (portadaFile != null && !portadaFile.isEmpty()) {

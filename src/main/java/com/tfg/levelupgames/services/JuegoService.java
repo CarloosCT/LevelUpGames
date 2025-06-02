@@ -6,9 +6,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,18 +16,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tfg.levelupgames.entities.Genero;
+import com.tfg.levelupgames.entities.Imagen;
 import com.tfg.levelupgames.entities.Juego;
 import com.tfg.levelupgames.entities.Precio;
 import com.tfg.levelupgames.entities.Usuario;
 import com.tfg.levelupgames.repositories.JuegoRepository;
 
-import com.tfg.levelupgames.services.CloudinaryService;
-
 @Service
 public class JuegoService {
-    @Autowired
-    private CloudinaryService cloudinaryService;
-
     @Autowired
     private JuegoRepository juegoRepository;
 
@@ -103,21 +99,36 @@ public class JuegoService {
     }
 
     public void d(Long id) throws Exception {
-        Juego juegoABorrar = juegoRepository.findById(id).get();
+        Juego juegoABorrar = juegoRepository.findById(id)
+                .orElseThrow(() -> new Exception("Juego no encontrado con id: " + id));
+
         try {
-            juegoRepository.deleteById(id);
-            juegoABorrar.getImagenes().forEach(imagen -> {
-                try {
-                    imagenService.d(imagen.getId());
-                    String ruta = imagen.getRuta();
-                    Path path = Paths.get("uploads/" + ruta);
-                    path.toFile().delete();
-                } catch (Exception e) {
-                    throw new RuntimeException("Error al eliminar la imagen: " + e.getMessage(), e);
-                }
-            });
+            // Finalizar solo el precio actual (con fechaFin == null)
+            Precio precioActual = juegoABorrar.getPrecioActual();
+            if (precioActual != null) {
+                precioActual.setFechaFin(LocalDate.now());
+            }
+
+            // Eliminar portada si existe
+            if (juegoABorrar.getPortada() != null) {
+                imagenService.d(juegoABorrar.getPortada().getId());
+                juegoABorrar.setPortada(null); // desvincular portada
+            }
+
+            // Eliminar imágenes asociadas
+            for (Imagen imagen : new ArrayList<>(juegoABorrar.getImagenes())) {
+                imagenService.d(imagen.getId());
+            }
+            juegoABorrar.getImagenes().clear(); // desvincular imágenes
+
+            // Guardar cambios
+            juegoRepository.save(juegoABorrar);
+
+            // Finalmente, eliminar el juego completo
+            juegoRepository.delete(juegoABorrar);
+
         } catch (Exception e) {
-            throw new Exception("No se pudo eliminar el juego " + juegoABorrar.getNombre());
+            throw new Exception("No se pudo eliminar el juego " + juegoABorrar.getNombre(), e);
         }
     }
 
@@ -134,95 +145,97 @@ public class JuegoService {
     }
 
     public boolean isMismoJuego(Long id, String nombre) {
-    List<Juego> juegos = juegoRepository.findByNombre(nombre);
-    if (juegos.isEmpty()) {
-        // No hay juegos con ese nombre => no hay conflicto
+        List<Juego> juegos = juegoRepository.findByNombre(nombre);
+        if (juegos.isEmpty()) {
+            // No hay juegos con ese nombre => no hay conflicto
+            return true;
+        }
+        // Verifica si alguno de esos juegos tiene un ID diferente
+        for (Juego juego : juegos) {
+            if (!juego.getId().equals(id)) {
+                // Encontró otro juego distinto con el mismo nombre
+                return false;
+            }
+        }
+        // Todos los juegos encontrados tienen el mismo ID que el pasado => es el mismo
+        // juego
         return true;
     }
-    // Verifica si alguno de esos juegos tiene un ID diferente
-    for (Juego juego : juegos) {
-        if (!juego.getId().equals(id)) {
-            // Encontró otro juego distinto con el mismo nombre
-            return false;
-        }
-    }
-    // Todos los juegos encontrados tienen el mismo ID que el pasado => es el mismo juego
-    return true;
-}
 
     public int contarImagenesExistentes(Long juegoId) {
-    Juego juego = juegoRepository.findById(juegoId).orElseThrow();
-    return (int) juego.getImagenes()
-            .stream()
-            .filter(imagen -> !imagen.isPortada()) // 👈 no contar portada
-            .count();
+        Juego juego = juegoRepository.findById(juegoId).orElseThrow();
+        return (int) juego.getImagenes()
+                .stream()
+                .filter(imagen -> !imagen.isPortada()) // 👈 no contar portada
+                .count();
     }
 
     public void modificar(
-        Long id,
-        String nombre,
-        String descripcion,
-        List<Long> generosIds,
-        BigDecimal precio,
-        MultipartFile portadaFile,
-        List<MultipartFile> imagenes,
-        String imagenesEliminadas, // Ya no se usa
-        MultipartFile descargable) {
+            Long id,
+            String nombre,
+            String descripcion,
+            List<Long> generosIds,
+            BigDecimal precio,
+            MultipartFile portadaFile,
+            List<MultipartFile> imagenes,
+            String imagenesEliminadas, // Ya no se usa
+            MultipartFile descargable) {
 
-    Juego juego = juegoRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Juego no encontrado con id " + id));
+        Juego juego = juegoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Juego no encontrado con id " + id));
 
-    juego.setNombre(nombre);
-    juego.setDescripcion(descripcion);
+        juego.setNombre(nombre);
+        juego.setDescripcion(descripcion);
 
-    List<Genero> generos = generoService.findByIds(generosIds);
-    juego.setGeneros(generos);
+        List<Genero> generos = generoService.findByIds(generosIds);
+        juego.setGeneros(generos);
 
-    // Guardamos el juego con datos básicos antes de procesar imágenes y descargable
-    juego = juegoRepository.save(juego);
+        // Guardamos el juego con datos básicos antes de procesar imágenes y descargable
+        juego = juegoRepository.save(juego);
 
-    // Procesamos el precio
-    precioService.save(precio, juego);
-    Precio precioActual = precioService.findByJuegoCantidadFechaFinNull(juego, precio);
-    juego.setPrecio(precioActual);
+        // Procesamos el precio
+        precioService.save(precio, juego);
+        Precio precioActual = precioService.findByJuegoCantidadFechaFinNull(juego, precio);
+        juego.setPrecio(precioActual);
 
-    // Procesar imágenes si hay cambios (portada o imágenes)
-    boolean hayNuevaPortada = portadaFile != null && !portadaFile.isEmpty();
-    boolean hayNuevasImagenes = imagenes != null && imagenes.stream().anyMatch(img -> !img.isEmpty());
+        // Procesar imágenes si hay cambios (portada o imágenes)
+        boolean hayNuevaPortada = portadaFile != null && !portadaFile.isEmpty();
+        boolean hayNuevasImagenes = imagenes != null && imagenes.stream().anyMatch(img -> !img.isEmpty());
 
-    if (hayNuevaPortada || hayNuevasImagenes) {
-        MultipartFile[] imagenesArray = (imagenes != null) ? imagenes.toArray(new MultipartFile[0]) : new MultipartFile[0];
-        imagenService.procesarImagenesDeJuego(juego, portadaFile, imagenesArray);
-    }
-
-    // Procesamos el archivo descargable si se ha subido uno nuevo
-    if (descargable != null && !descargable.isEmpty()) {
-        try {
-            Path downloadDir = Paths.get("downloadables");
-            if (!Files.exists(downloadDir)) {
-                Files.createDirectories(downloadDir);
-            }
-
-            String nombreOriginal = descargable.getOriginalFilename();
-            String extension = "";
-
-            int i = nombreOriginal.lastIndexOf('.');
-            if (i > 0) {
-                extension = nombreOriginal.substring(i);
-            }
-
-            String nombreArchivoUnico = UUID.randomUUID().toString() + extension;
-            Path rutaArchivo = downloadDir.resolve(nombreArchivoUnico);
-
-            Files.copy(descargable.getInputStream(), rutaArchivo, StandardCopyOption.REPLACE_EXISTING);
-            juego.setDescargable(nombreArchivoUnico);
-
-        } catch (IOException e) {
-            throw new RuntimeException("Error al guardar el archivo descargable: " + e.getMessage(), e);
+        if (hayNuevaPortada || hayNuevasImagenes) {
+            MultipartFile[] imagenesArray = (imagenes != null) ? imagenes.toArray(new MultipartFile[0])
+                    : new MultipartFile[0];
+            imagenService.procesarImagenesDeJuego(juego, portadaFile, imagenesArray);
         }
-    }
 
-    // Guardamos cambios finales
-    juegoRepository.save(juego);
-}
+        // Procesamos el archivo descargable si se ha subido uno nuevo
+        if (descargable != null && !descargable.isEmpty()) {
+            try {
+                Path downloadDir = Paths.get("downloadables");
+                if (!Files.exists(downloadDir)) {
+                    Files.createDirectories(downloadDir);
+                }
+
+                String nombreOriginal = descargable.getOriginalFilename();
+                String extension = "";
+
+                int i = nombreOriginal.lastIndexOf('.');
+                if (i > 0) {
+                    extension = nombreOriginal.substring(i);
+                }
+
+                String nombreArchivoUnico = UUID.randomUUID().toString() + extension;
+                Path rutaArchivo = downloadDir.resolve(nombreArchivoUnico);
+
+                Files.copy(descargable.getInputStream(), rutaArchivo, StandardCopyOption.REPLACE_EXISTING);
+                juego.setDescargable(nombreArchivoUnico);
+
+            } catch (IOException e) {
+                throw new RuntimeException("Error al guardar el archivo descargable: " + e.getMessage(), e);
+            }
+        }
+
+        // Guardamos cambios finales
+        juegoRepository.save(juego);
+    }
 }
