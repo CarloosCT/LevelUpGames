@@ -9,12 +9,12 @@
 
         <form th:action="@{/solicitud/aprobar}" method="post">
             <input type="hidden" name="id" th:value="${sol.id}" />
-            <button type="submit">Aprobar</button>
+            <input type="submit" value="Aprobar"/>
         </form>
 
         <form th:action="@{/solicitud/rechazar}" method="post">
             <input type="hidden" name="id" th:value="${sol.id}" />
-            <button type="submit">Rechazar</button>
+            <input type="submit" value="Rechazar"/>
         </form>
 
         <hr />
