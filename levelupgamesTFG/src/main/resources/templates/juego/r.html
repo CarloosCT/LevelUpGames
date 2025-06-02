@@ -1,54 +1,60 @@
 <div class="juego-container">
 
-    <div class="imagenes-columna">
-        <img id="portada" 
-             th:src="@{'/uploads/' + ${juego.portada.ruta}}"
-             th:attr="data-ruta-imagen=${juego.portada.ruta}" 
-             class="portada-img" 
-             alt="Portada de [[${juego.nombre}]]" />
+  <!-- Columna de imágenes -->
+  <div class="imagenes-columna">
+    <img id="portada" 
+         th:src="@{'/uploads/' + ${juego.portada.ruta}}"
+         th:attr="data-ruta-imagen=${juego.portada.ruta}" 
+         class="portada-img" 
+         alt="Portada de [[${juego.nombre}]]" />
 
-        <div id="miniaturas" class="miniaturas-container">
-            <img th:src="@{'/uploads/' + ${juego.portada.ruta}}" 
-                 th:attr="data-ruta-imagen=${juego.portada.ruta}" 
-                 class="miniatura-img portada-fija"
-                 alt="Miniatura portada de [[${juego.nombre}]]"
-                 onclick="cambiarPortada(this)" />
+    <div id="miniaturas" class="miniaturas-container">
+      <img th:src="@{'/uploads/' + ${juego.portada.ruta}}" 
+           th:attr="data-ruta-imagen=${juego.portada.ruta}" 
+           class="miniatura-img portada-fija"
+           alt="Miniatura portada de [[${juego.nombre}]]"
+           onclick="cambiarPortada(this)" />
 
-            <img th:each="imagen : ${juego.imagenes}" 
-                 th:if="${imagen.ruta != juego.portada.ruta}" 
-                 th:src="@{'/uploads/' + ${imagen.ruta}}" 
-                 th:attr="data-ruta-imagen=${imagen.ruta}" 
-                 class="miniatura-img"
-                 alt="Imagen miniatura de [[${juego.nombre}]]"
-                 onclick="cambiarPortada(this)" />
-        </div>
-
-        <p th:text="${juego.descripcion}" class="juego-descripcion"></p>
+      <img th:each="imagen : ${juego.imagenes}" 
+           th:if="${imagen.ruta != juego.portada.ruta}" 
+           th:src="@{'/uploads/' + ${imagen.ruta}}" 
+           th:attr="data-ruta-imagen=${imagen.ruta}" 
+           class="miniatura-img"
+           alt="Imagen miniatura de [[${juego.nombre}]]"
+           onclick="cambiarPortada(this)" />
     </div>
 
-    <div class="detalles-columna">
-        <!-- Aquí podrías añadir detalles adicionales si quieres -->
-    </div>
+    <p th:text="${juego.descripcion}" class="juego-descripcion"></p>
+  </div>
 
-    <div class="precio-columna">
+  <!-- Columna de detalles (vacía por ahora) -->
+  <div class="detalles-columna">
+    <!-- Puedes agregar información extra aquí -->
+  </div>
+
+  <!-- Columna de precio y botón de compra -->
+  <div class="precio-columna">
     <h1 th:text="${juego.nombre}" class="juego-titulo" style="margin-bottom: 10px;"></h1>
 
+    <!-- Precio usando getPrecioActual() -->
     <h3 class="juego-precio" 
-    th:if="${juego.precioActual != null}"
-    th:text="${juego.precioActual.cantidad.compareTo(T(java.math.BigDecimal).ZERO) == 0 ? 'Gratis' : juego.precioActual.cantidad + ' €'}">
+        th:if="${juego.precioActual != null}"
+        th:text="${juego.precioActual.cantidad.compareTo(T(java.math.BigDecimal).ZERO) == 0 
+                 ? 'Gratis' 
+                 : juego.precioActual.cantidad + ' €'}">
     </h3>
-<h3 class="juego-precio" th:if="${juego.precioActual == null}">Sin precio</h3>
+    <h3 class="juego-precio" th:if="${juego.precioActual == null}">Sin precio</h3>
 
     <a th:href="@{'/compra/c/' + ${juego.id}}" class="boton-comprar">Comprar</a>
-    </div>
+  </div>
 
 </div>
 
 <script>
-    function cambiarPortada(img) {
-        const portada = document.getElementById("portada");
-        const nuevaRuta = img.getAttribute("data-ruta-imagen");
-        portada.src = `/uploads/${nuevaRuta}`;
-        portada.setAttribute("data-ruta-imagen", nuevaRuta);
-    }
+  function cambiarPortada(img) {
+    const portada = document.getElementById("portada");
+    const nuevaRuta = img.getAttribute("data-ruta-imagen");
+    portada.src = `/uploads/${nuevaRuta}`;
+    portada.setAttribute("data-ruta-imagen", nuevaRuta);
+  }
 </script>
