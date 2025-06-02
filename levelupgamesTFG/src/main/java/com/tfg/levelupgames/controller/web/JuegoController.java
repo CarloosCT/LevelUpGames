@@ -17,6 +17,7 @@ import com.tfg.levelupgames.entities.Juego;
 import com.tfg.levelupgames.entities.Usuario;
 import com.tfg.levelupgames.exception.DangerException;
 import com.tfg.levelupgames.helper.PRG;
+import com.tfg.levelupgames.services.CompraService;
 import com.tfg.levelupgames.services.GeneroService;
 import com.tfg.levelupgames.services.JuegoService;
 
@@ -25,11 +26,15 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/juego")
 public class JuegoController {
+    
     @Autowired
     private GeneroService generoService;
 
     @Autowired
     private JuegoService juegoService;
+
+    @Autowired
+    private CompraService compraService;
 
     @GetMapping("c")
     public String c(ModelMap m) {
@@ -50,16 +55,24 @@ public class JuegoController {
 
     @GetMapping("r/{id}")
     public String r(
-        @PathVariable Long id,
-        ModelMap m) {
+    @PathVariable Long id,
+    HttpSession session,
+    ModelMap m) {
 
     Juego juego = juegoService.findById(id);
-
     if (juego == null) {
         return "redirect:/juego";
     }
 
+    Usuario usuario = (Usuario) session.getAttribute("user");
+
+    // Obtener solo la valoración media del juego (que ya tienes en la entidad Juego)
+    float valoracionMedia = juego.getValoracionMedia();
+
     m.put("juego", juego);
+    m.put("user", usuario);
+    m.put("valoracionMedia", valoracionMedia);
+    m.put("tieneJuego", compraService.existeCompra(usuario, juego));
     m.put("view", "juego/r");
     m.put("estilos", "/css/juego/r.css");
 
@@ -208,10 +221,6 @@ public String uPost(
 
     return "redirect:/panel_desarrollador/r";
 }
-
-
-
-
     @GetMapping("/{id}")
     public String verJuego(@PathVariable Long id, ModelMap m) {
         m.put("juego", juegoService.findById(id));

@@ -195,3 +195,44 @@ nav h1 {
     border: 2px solid transparent;
     transition: border-color 0.3s ease;
 }
+
+.valoracion {
+  display: flex;
+  gap: 5px;
+  font-size: 30px;
+  line-height: 1; /* evita doble línea */
+}
+
+.valoracion .estrella {
+  position: relative;
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  color: lightgray;
+  overflow: hidden;
+}
+
+/* Estrella dorada parcialmente rellena */
+.valoracion .estrella::before {
+  content: '★';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--fill-percent, 0%);
+  height: 100%;
+  color: gold;
+  overflow: hidden;
+  z-index: 1;
+  white-space: nowrap;
+}
+
+/* Estrella base gris visible debajo */
+.valoracion .estrella::after {
+  content: '★';
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: lightgray;
+  z-index: 0;
+}
+

@@ -1,3 +1,38 @@
+<style>
+  .valoracion {
+    font-size: 2.5rem;
+    user-select: none;
+  }
+  .valoracion.solo-lectura .estrella {
+    cursor: default;
+  }
+  .valoracion .estrella {
+    color: gray;
+    cursor: default;
+    position: relative;
+    display: inline-block;
+    width: 1.2em;
+    height: 1.2em;
+  }
+  .valoracion .estrella:hover,
+  .valoracion .estrella:hover ~ .estrella {
+    color: gray;
+  }
+  .valoracion.solo-lectura .estrella {
+    color: gold;
+  }
+  /* Usamos CSS variable --fill-percent para relleno progresivo */
+  .valoracion .estrella::before {
+    content: "★";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: var(--fill-percent, 0%);
+    overflow: hidden;
+    color: gold;
+  }
+</style>
+
 <div class="juego-container">
 
   <!-- Columna de imágenes -->
@@ -32,9 +67,27 @@
     <!-- Puedes agregar información extra aquí -->
   </div>
 
-  <!-- Columna de precio y botón de compra -->
+  <!-- Columna de precio, título, valoración y botón de compra -->
   <div class="precio-columna">
     <h1 th:text="${juego.nombre}" class="juego-titulo" style="margin-bottom: 10px;"></h1>
+
+    <!-- Valoración siempre visible -->
+    <div class="valoracion" 
+     th:classappend="${user == null or !tieneJuego} ? 'solo-lectura' : ''"
+     th:attr="data-tiene-juego=${tieneJuego}">
+  <span class="estrella" data-valor="1">&#9733;</span>
+  <span class="estrella" data-valor="2">&#9733;</span>
+  <span class="estrella" data-valor="3">&#9733;</span>
+  <span class="estrella" data-valor="4">&#9733;</span>
+  <span class="estrella" data-valor="5">&#9733;</span>
+</div>
+
+<div class="sin-sesion" th:if="${user == null}">
+  <small>Inicia sesión para valorar este juego.</small>
+</div>
+<div class="sin-juego" th:if="${user != null and !tieneJuego}">
+  <small>No puedes valorar este juego porque no lo has comprado.</small>
+</div>
 
     <!-- Precio usando getPrecioActual() -->
     <h3 class="juego-precio" 
@@ -50,11 +103,63 @@
 
 </div>
 
-<script>
-  function cambiarPortada(img) {
-    const portada = document.getElementById("portada");
-    const nuevaRuta = img.getAttribute("data-ruta-imagen");
-    portada.src = `/uploads/${nuevaRuta}`;
-    portada.setAttribute("data-ruta-imagen", nuevaRuta);
+<script th:inline="javascript">
+/*<![CDATA[*/
+const juegoId = [[${juego.id}]];
+const userLogged = [[${user != null}]];
+const tieneJuego = [[${tieneJuego}]];
+const valoracionMedia = [[${valoracionMedia != null ? valoracionMedia : 0}]];
+
+document.addEventListener('DOMContentLoaded', () => {
+  const estrellas = document.querySelectorAll('.valoracion .estrella');
+
+  function pintarEstrellas(valor) {
+    estrellas.forEach((estrella, i) => {
+      const starIndex = i + 1;
+      let fill = 0;
+
+      if (valor >= starIndex) {
+        fill = 100;
+      } else if (valor > i && valor < starIndex) {
+        fill = (valor - i) * 100;
+      }
+
+      estrella.style.setProperty('--fill-percent', `${fill}%`);
+    });
   }
+
+  pintarEstrellas(valoracionMedia);
+
+  if (!userLogged || !tieneJuego) return;  // Aquí bloqueamos valoración si no tiene el juego
+
+  estrellas.forEach(estrella => {
+    estrella.style.cursor = 'pointer';
+    estrella.addEventListener('click', async () => {
+      const valor = parseInt(estrella.getAttribute('data-valor'));
+      const formData = new URLSearchParams();
+      formData.append("juegoId", juegoId);
+      formData.append("valoracion", valor);
+
+      try {
+        const res = await fetch('/valoracion/cpost', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: formData
+        });
+
+        if (res.redirected) {
+          window.location.href = res.url;
+        } else if (res.ok) {
+          alert('Valoración enviada. ¡Gracias!');
+          pintarEstrellas(valor);
+        } else {
+          alert('Error enviando valoración.');
+        }
+      } catch (e) {
+        alert('Error de red al enviar valoración.');
+      }
+    });
+  });
+});
+/*]]>*/
 </script>

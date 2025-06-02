@@ -1,5 +1,7 @@
 package com.tfg.levelupgames.entities;
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,10 +15,8 @@ public class Valoracion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String comentario;
-
     @Column(nullable = false)
-    private Float nota;
+    private BigDecimal nota;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
@@ -26,9 +26,8 @@ public class Valoracion {
     @JoinColumn(name = "juego_id", nullable = false)
     private Juego juego;
 
-    public Valoracion(String comentario, Float nota, Usuario usuario, Juego juego) {
-        this.comentario = comentario;
-        this.nota = nota;
+    public Valoracion(Usuario usuario, Juego juego, BigDecimal valoracion) {
+        this.nota = valoracion;
         this.usuario = usuario;
         this.juego = juego;
     }
