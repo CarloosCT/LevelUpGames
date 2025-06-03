@@ -47,7 +47,28 @@
 
         <a th:href="@{'/compra/c/' + ${juego.id}}" class="boton-comprar">Comprar</a>
     </div>
+</div>
 
+<div class="seccion-comentarios">
+    <h2>Comentarios</h2>
+
+    <form th:action="@{/comentario/cpost}" method="post">
+        <input type="hidden" name="juegoId" th:value="${juego.id}" />
+        <textarea name="contenido" placeholder="Escribe un comentario" required></textarea>
+        <button type="submit">Enviar comentario</button>
+    </form>
+
+    <div th:if="${#lists.isEmpty(comentarios)}">
+        <p style="text-align:center; color:#aaa;">Este juego aún no tiene comentarios.</p>
+    </div>
+
+    <div th:each="comentario : ${comentarios}" class="comentario">
+        <p>
+            <span class="comentario-autor"
+                th:text="${comentario.usuario.nombre + ' ' + comentario.usuario.apellido}">Usuario</span>
+        </p>
+        <p class="comentario-contenido" th:text="${comentario.contenido}">Contenido del comentario</p>
+    </div>
 </div>
 
 <script>

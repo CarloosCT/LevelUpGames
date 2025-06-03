@@ -17,6 +17,7 @@ import com.tfg.levelupgames.entities.Juego;
 import com.tfg.levelupgames.entities.Usuario;
 import com.tfg.levelupgames.exception.DangerException;
 import com.tfg.levelupgames.helper.PRG;
+import com.tfg.levelupgames.services.ComentarioService;
 import com.tfg.levelupgames.services.CompraService;
 import com.tfg.levelupgames.services.GeneroService;
 import com.tfg.levelupgames.services.JuegoService;
@@ -35,6 +36,9 @@ public class JuegoController {
 
     @Autowired
     private CompraService compraService;
+
+    @Autowired
+    private ComentarioService comentarioService;
 
     @GetMapping("c")
     public String c(ModelMap m) {
@@ -60,20 +64,20 @@ public class JuegoController {
             ModelMap m) {
 
         Juego juego = juegoService.findById(id);
+        
         if (juego == null) {
             return "redirect:/juego";
         }
 
         Usuario usuario = (Usuario) session.getAttribute("user");
 
-        // Obtener solo la valoración media del juego (que ya tienes en la entidad
-        // Juego)
         float valoracionMedia = juego.getValoracionMedia();
 
         m.put("juego", juego);
         m.put("user", usuario);
         m.put("valoracionMedia", valoracionMedia);
         m.put("tieneJuego", compraService.existeCompra(usuario, juego));
+        m.put("comentarios", comentarioService.getComentariosPorJuegoId(id));
         m.put("view", "juego/r");
         m.put("estilos", "/css/juego/r.css");
 

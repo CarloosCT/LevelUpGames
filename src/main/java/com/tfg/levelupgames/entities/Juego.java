@@ -55,6 +55,9 @@ public class Juego {
     private List<Valoracion> valoraciones = new ArrayList<>();
 
     @OneToMany(mappedBy = "juego")
+    private List<Comentario> comentarios = new ArrayList<>();
+
+    @OneToMany(mappedBy = "juego")
     private List<Compra> compras = new ArrayList<>();
 
     public Juego(String nombre, String descripcion, List<Genero> generos, List<Precio> precios, List<Imagen> imagenes,

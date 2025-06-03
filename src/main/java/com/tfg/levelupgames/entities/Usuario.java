@@ -29,13 +29,11 @@ public class Usuario {
     private boolean mostrarAlertaRechazo;
     private BigDecimal saldo;
 
-    /*
-     * @OneToMany(mappedBy = "usuario")
-     * private List<Compra> compras;
-     */
-
     @OneToMany(mappedBy = "usuario")
     private List<Valoracion> valoraciones;
+
+    @OneToMany(mappedBy = "usuario")
+    private List<Valoracion> comentarios;
 
     @ManyToOne
     @JoinColumn(name = "rol_nombre")
