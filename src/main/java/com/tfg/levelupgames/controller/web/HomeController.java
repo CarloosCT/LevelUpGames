@@ -5,7 +5,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
+import com.tfg.levelupgames.entities.Juego;
 import com.tfg.levelupgames.entities.Usuario;
 import com.tfg.levelupgames.services.GeneroService;
 import com.tfg.levelupgames.services.JuegoService;
@@ -26,12 +30,19 @@ public class HomeController {
     private UsuarioService usuarioService;
 
     @GetMapping("/")
-    public String home(@RequestParam(required = false) String success, 
-                       @RequestParam(required = false) String cancel,
-                       HttpSession session,
-                       ModelMap m) {
+    public String home(@RequestParam(required = false) String success,
+            @RequestParam(required = false) String cancel,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "8") int size,
+            HttpSession session,
+            ModelMap m) {
 
-        m.put("juegos", juegoService.findAll());
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Juego> juegosPage = juegoService.findAll(pageable);
+
+        m.put("juegos", juegosPage.getContent());
+        m.put("currentPage", page);
+        m.put("totalPages", juegosPage.getTotalPages());
 
         m.put("generos", generoService.findAll());
         m.put("estilos", "/css/home/home.css");

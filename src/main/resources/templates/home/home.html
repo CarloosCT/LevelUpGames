@@ -5,17 +5,14 @@
 <!-- Lista horizontal de géneros -->
 <div class="filtro-generos-horizontal">
   <a href="#" data-genero="" class="genero-link active">Todos</a>
-  <a href="#" th:each="genero : ${generos}" 
-     th:attr="data-genero=${genero.nombre}" 
-     th:text="${genero.nombre}" 
-     class="genero-link"></a>
+  <a href="#" th:each="genero : ${generos}" th:attr="data-genero=${genero.nombre}" th:text="${genero.nombre}"
+    class="genero-link"></a>
 </div>
 
 <section class="games">
   <th:block th:each="juego : ${juegos}">
-    <div class="game-card" 
-         th:attr="data-name=${juego.nombre.toLowerCase()}"
-         th:attrappend=" data-generos=${juego.nombresGeneros}">
+    <div class="game-card" th:attr="data-name=${juego.nombre.toLowerCase()}"
+      th:attrappend=" data-generos=${juego.nombresGeneros}">
       <a th:href="@{/juego/r/{id}(id=${juego.id})}" target="_self" style="text-decoration: none; color: inherit;">
         <!-- Imagen portada -->
         <div th:if="${juego.portada != null}">
@@ -24,8 +21,7 @@
         <!-- Nombre del juego -->
         <h3 th:text="${juego.nombre}"></h3>
         <!-- Precio usando getPrecioActual -->
-        <p class="precio" 
-           th:text="${juego.precioActual != null 
+        <p class="precio" th:text="${juego.precioActual != null 
                      ? (juego.precioActual.cantidad.compareTo(T(java.math.BigDecimal).ZERO) == 0 
                         ? 'Gratis' 
                         : juego.precioActual.cantidad + ' €') 
@@ -41,6 +37,14 @@
     </div>
   </th:block>
 </section>
+
+<div class="pagination">
+  <a th:if="${currentPage > 0}" th:href="@{/(page=${currentPage - 1})}" class="page-btn">Anterior</a>
+
+  <span th:text="'Página ' + (${currentPage} + 1) + ' de ' + ${totalPages}"></span>
+
+  <a th:if="${currentPage + 1 < totalPages}" th:href="@{/(page=${currentPage + 1})}" class="page-btn">Siguiente</a>
+</div>
 
 <!-- Filtro por texto y género -->
 <script>

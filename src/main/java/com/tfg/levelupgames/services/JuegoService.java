@@ -17,6 +17,8 @@ import com.tfg.levelupgames.entities.Juego;
 import com.tfg.levelupgames.entities.Precio;
 import com.tfg.levelupgames.entities.Usuario;
 import com.tfg.levelupgames.repositories.JuegoRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class JuegoService {
@@ -80,6 +82,10 @@ public class JuegoService {
 
     public List<Juego> findAll() {
         return juegoRepository.findAll();
+    }
+
+    public Page<Juego> findAll(Pageable pageable) {
+        return juegoRepository.findAll(pageable);
     }
 
     public Juego findById(Long id) {
