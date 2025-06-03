@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.tfg.levelupgames.entities.Usuario;
 import com.tfg.levelupgames.exception.DangerException;
-import com.tfg.levelupgames.helper.PRG;
 import com.tfg.levelupgames.dto.CompraDTO;
 import com.tfg.levelupgames.entities.Compra;
 import com.tfg.levelupgames.entities.Juego;
@@ -37,7 +36,9 @@ public String r(HttpSession session, ModelMap m) throws DangerException {
     Usuario usuario = (Usuario) session.getAttribute("user");
 
     if (usuario == null) {
-        PRG.error("Debes iniciar sesión para ver tu biblioteca", "/usuario/login");
+        m.put("view", "errores/loginError");
+        m.put("estilos", "/css/loginError.css");
+        return "_t/frame";
     }
 
     List<Compra> compras = compraService.findByUsuario(usuario);

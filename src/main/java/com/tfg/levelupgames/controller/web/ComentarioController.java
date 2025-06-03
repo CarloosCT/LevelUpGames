@@ -37,7 +37,9 @@ public class ComentarioController {
 
         Object userObj = session.getAttribute("user");
         if (userObj == null) {
-            throw new DangerException("Debes iniciar sesión para comentar.");
+            m.put("view", "errores/loginError");
+            m.put("estilos", "/css/loginError.css");
+            return "_t/frame";
         }
 
         Usuario usuario = (Usuario) userObj;

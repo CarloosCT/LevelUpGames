@@ -1,0 +1,10 @@
+<div class="container">
+  <h1>Necesitas estar logeado para acceder a esta función</h1>
+
+  <p th:text="${mensaje}" class="error-text"></p>
+
+  <div class="button-group">
+    <a th:href="@{/}" class="btn">Volver al inicio</a>
+    <a th:href="@{/usuario/login}" class="btn btn-primary">Ir a logearme</a>
+  </div>
+</div>

@@ -65,8 +65,9 @@ public class CompraController {
     Usuario usuario = (Usuario) session.getAttribute("user");
 
     if (usuario == null) {
-        PRG.error("Debes iniciar sesión para realizar la compra", "/usuario/login");
-        return null;
+        m.put("view", "errores/loginError");
+        m.put("estilos", "/css/loginError.css");
+        return "_t/frame";
     }
 
     Juego juego = null;

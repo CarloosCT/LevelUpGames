@@ -33,10 +33,13 @@ public class SaldoController {
     }
 
     @PostMapping("add")
-    public String añadirSaldo(@RequestParam BigDecimal cantidad, HttpSession session) {
+    public String añadirSaldo(@RequestParam BigDecimal cantidad, HttpSession session, ModelMap m) {
         Usuario usuario = (Usuario) session.getAttribute("user");
+        
         if (usuario == null) {
-            return "redirect:/login";
+            m.put("view", "errores/loginError");
+            m.put("estilos", "/css/loginError.css");
+            return "_t/frame";
         }
 
         usuarioService.sumarSaldo(usuario.getId(), cantidad);

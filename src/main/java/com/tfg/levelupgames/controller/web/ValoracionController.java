@@ -41,7 +41,9 @@ public class ValoracionController {
         Usuario usuario = (Usuario) session.getAttribute("user");
 
         if (usuario == null) {
-            PRG.error("Debes iniciar sesión para valorar", "/usuario/login");
+            m.put("view", "errores/loginError");
+            m.put("estilos", "/css/loginError.css");
+            return "_t/frame";
         }
 
         Juego juego = juegoService.findById(juegoId);

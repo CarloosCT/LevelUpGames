@@ -1,0 +1,58 @@
+.container {
+  max-width: 600px;
+  margin: 50px auto;
+  background-color: #1f1f1f;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(255, 87, 51, 0.2);
+  text-align: center;
+}
+
+.alert {
+  font-size: 18px;
+  margin-bottom: 30px;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: bold;
+  color: white;
+}
+
+.alert-success {
+  background-color: #28a745;
+}
+
+.alert-error,
+.error-text {
+  background-color: #ff4444;
+  color: white;
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.btn {
+  background-color: #444;
+  color: white;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+  border: none;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #666;
+}
+
+.btn-primary {
+  background-color: #ff5733;
+}
+
+.btn-primary:hover {
+  background-color: #ff2e00;
+}

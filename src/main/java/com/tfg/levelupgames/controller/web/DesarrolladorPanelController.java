@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.tfg.levelupgames.entities.Juego;
 import com.tfg.levelupgames.entities.Usuario;
 import com.tfg.levelupgames.exception.DangerException;
-import com.tfg.levelupgames.helper.PRG;
 import com.tfg.levelupgames.services.JuegoService;
 
 @Controller
@@ -29,7 +28,9 @@ public class DesarrolladorPanelController {
         Usuario desarrollador = (Usuario) session.getAttribute("user");
 
         if (desarrollador == null) {
-        PRG.error("Debes iniciar sesión para ver tu biblioteca", "/usuario/login");
+            m.put("view", "errores/loginError");
+            m.put("estilos", "/css/loginError.css");
+            return "_t/frame";
         }
 
         List<Juego> juegos = juegoservice.findByDesarrollador(desarrollador);
