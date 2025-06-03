@@ -13,20 +13,17 @@ body {
     padding: 0 15px;
 }
 
-/* Animación general */
 @keyframes fadeIn {
     from {
         opacity: 0;
         transform: translateY(15px);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);
     }
 }
 
-/* NAV (se mantiene igual que antes) */
 nav {
     background-color: #1f1f1f;
     padding: 15px 30px;
@@ -48,36 +45,34 @@ nav h1 {
     margin-right: 30px;
 }
 
-.menu-left {
+.menu-left, .menu-right {
     display: flex;
     list-style: none;
     gap: 20px;
     flex-wrap: wrap;
 }
 
-.menu-left li a {
+.menu-right {
+    gap: 15px;
+    align-items: center;
+}
+
+.menu-left li a, .menu-right a {
     text-decoration: none;
-    color: white;
     font-weight: bold;
     transition: color 0.3s;
+}
+
+.menu-left li a {
+    color: white;
 }
 
 .menu-left li a:hover {
     color: #ff5733;
 }
 
-.menu-right {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    list-style: none;
-    flex-wrap: wrap;
-}
-
 .menu-right a {
     color: #ff5733;
-    text-decoration: none;
-    font-weight: bold;
     background-color: transparent;
     border: 1px solid #ff5733;
     padding: 6px 12px;
@@ -110,22 +105,24 @@ nav h1 {
     flex: 1 1 280px;
     display: flex;
     flex-direction: column;
-    align-items: center; /* centra portada y miniaturas */
+    align-items: center;
     gap: 15px;
-    max-width: 600px; /* permite que miniaturas usen más espacio debajo */
+    max-width: 800px;
+    /*margin-left: 10px;*/
 }
 
 .imagenes-columna img#portada {
     width: 100%;
-    max-width: 500px;
+    max-width: 650px;
     height: auto;
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    object-fit: contain;
 }
 
 #miniaturas-carrusel {
     width: 100%;
-    max-width: 500px;
+    max-width: 650px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -143,11 +140,10 @@ nav h1 {
 }
 
 .miniaturas-wrapper img {
-    width: 120px;
-    height: 90px;
+    width: 160px;
+    height: 120px;
     border-radius: 8px;
     object-fit: cover;
-    /* mejor que contain para miniaturas */
     cursor: pointer;
     display: inline-block;
     margin-right: 8px;
@@ -219,15 +215,12 @@ nav h1 {
     color: #121212;
     font-size: 16px;
     text-align: center;
-    /* Centra el texto */
     text-decoration: none;
-    /* Elimina subrayado */
     transition: all 0.3s ease;
     box-shadow: 0 4px 10px rgba(255, 193, 7, 0.3);
     position: relative;
     overflow: hidden;
     display: inline-block;
-    /* Asegura que el texto se centre correctamente */
 }
 
 .boton-comprar::after {
@@ -252,7 +245,6 @@ nav h1 {
     box-shadow: 0 6px 14px rgba(255, 193, 7, 0.4);
     transform: translateY(-2px);
     text-decoration: none;
-    /* Asegura que no aparezca subrayado al hacer hover */
 }
 
 .valoracion {
@@ -260,7 +252,6 @@ nav h1 {
     gap: 5px;
     font-size: 30px;
     line-height: 1;
-    /* evita doble línea */
 }
 
 .valoracion .estrella {
@@ -272,7 +263,6 @@ nav h1 {
     overflow: hidden;
 }
 
-/* Estrella dorada parcialmente rellena */
 .valoracion .estrella::before {
     content: '★';
     position: absolute;
@@ -286,7 +276,6 @@ nav h1 {
     white-space: nowrap;
 }
 
-/* Estrella base gris visible debajo */
 .valoracion .estrella::after {
     content: '★';
     position: absolute;
@@ -296,7 +285,6 @@ nav h1 {
     z-index: 0;
 }
 
-/* === Comentarios debajo del juego === */
 .seccion-comentarios {
     max-width: 1200px;
     margin: 40px auto;
