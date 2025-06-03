@@ -5,10 +5,13 @@
     <p th:text="${juego.descripcion}" class="juego-descripcion"></p>
 
     <p>
-      Precio: 
-      <strong th:if="${juego.precioActual != null}" 
-              th:text="${juego.precioActual.cantidad.compareTo(T(java.math.BigDecimal).ZERO) == 0 ? 'Gratis' : juego.precioActual.cantidad + ' €'}">0 €</strong>
-      <strong th:if="${juego.precioActual == null}">Sin precio</strong>
+        Precio:
+        <strong th:if="${juego.precioActual != null}"
+                th:text="${juego.precioActual.cantidad.compareTo(T(java.math.BigDecimal).ZERO) == 0 
+                          ? 'Gratis' 
+                          : juego.precioActual.cantidad + ' €'}">
+        </strong>
+        <strong th:if="${juego.precioActual == null}">Sin precio</strong>
     </p>
 
     <form th:action="@{/compra/cpost}" method="post">

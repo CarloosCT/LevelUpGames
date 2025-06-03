@@ -2,7 +2,6 @@
   <h1>Editar juego</h1>
 
   <form th:action="@{/juego/u}" method="post" enctype="multipart/form-data" onsubmit="return validarFormulario()" class="form-grid">
-    <!-- Campo oculto para el ID del juego -->
     <input type="hidden" name="id" th:value="${juego.id}" />
 
     <!-- Nombre -->
@@ -33,8 +32,7 @@
           <label>
             <input type="checkbox" name="generosIds"
                    th:value="${genero.id}"
-                   th:checked="${juego.generos.contains(genero)}"
-                   />
+                   th:checked="${juego.generos.contains(genero)}" />
             <span th:text="${genero.nombre}"></span>
           </label>
         </span>
@@ -52,33 +50,31 @@
       </div>
     </div>
 
-    <!-- Imágenes adicionales -->
+    <!-- Imágenes actuales -->
     <div class="form-group full-width">
       <label>Imágenes actuales:</label>
       <div id="imagenesActualesPreview">
-        <div th:each="img : ${juego.imagenes}"
-             th:if="${img.id != juego.portada.id}"
-             class="preview-img-wrapper">
+        <div th:each="img : ${juego.imagenes}" th:if="${img.id != juego.portada?.id}" class="preview-img-wrapper">
           <img th:src="@{/uploads/} + ${img.ruta}" class="preview-img" />
-          <button type="button" class="delete-btn" th:onclick="|eliminarImagenActual(this, '${img.id}')|">&times;</button>
+          <input type="hidden" name="imagenesExistentes" th:value="${img.id}" />
+          <button type="button" class="delete-btn" onclick="eliminarImagenActual(this)">&times;</button>
         </div>
       </div>
-      <input type="hidden" id="imagenesEliminadas" name="imagenesEliminadas" value="" />
     </div>
 
+    <!-- Imágenes nuevas -->
     <div class="form-group full-width">
       <label for="imagenes">Añadir nuevas imágenes:</label>
       <input id="imagenes" type="file" name="imagenes" multiple accept="image/*" />
       <div id="imagenesPreview"></div>
     </div>
 
-    <!-- Mostrar archivo descargable existente -->
+    <!-- Archivo descargable -->
     <div>
       <label>Archivo descargable actual:</label>
       <a th:href="@{'/downloadables/' + ${juego.descargable}}" target="_blank" th:text="${juego.descargable}">Descargar archivo actual</a>
     </div>
 
-    <!-- Input para subir uno nuevo -->
     <div class="form-group full-width">
       <label for="descargable">Nuevo archivo descargable (opcional):</label>
       <input type="file" id="descargable" name="descargable" accept=".zip,.rar,.exe,.iso,.setup" />
@@ -94,17 +90,14 @@
 <script>
   let archivoPortada = null;
   let archivosImagenes = [];
-  let imagenesEliminadas = [];
-  let portadaEliminada = false; // Nueva variable para controlar si se elimina portada
+  let portadaEliminada = false;
 
   const portadaInput = document.getElementById('portada');
   const portadaPreview = document.getElementById('portadaPreview');
   const eliminarPortadaBtn = document.getElementById('eliminarPortadaBtn');
   const imagenesInput = document.getElementById('imagenes');
   const imagenesPreview = document.getElementById('imagenesPreview');
-  const imagenesEliminadasInput = document.getElementById('imagenesEliminadas');
 
-  // Mostrar botón eliminar portada solo si hay imagen al cargar la página
   if (portadaPreview.querySelector('img')) {
     eliminarPortadaBtn.style.display = 'inline-block';
   }
@@ -112,24 +105,23 @@
   portadaInput.addEventListener('change', (e) => {
     if (e.target.files.length === 0) {
       archivoPortada = null;
-      // Si portada fue eliminada antes, la mantenemos eliminada
       if (!portadaEliminada) {
-        // Restaurar la imagen de portada si no se ha eliminado
-        portadaPreview.innerHTML = `<img src="${portadaPreview.querySelector('img')?.src}" class="preview-img" />`;
-        eliminarPortadaBtn.style.display = 'inline-block';
+        const existingImg = portadaPreview.querySelector('img');
+        if (existingImg) {
+          portadaPreview.innerHTML = `<img src="${existingImg.src}" class="preview-img" />`;
+          eliminarPortadaBtn.style.display = 'inline-block';
+        }
       }
       return;
     }
     archivoPortada = e.target.files[0];
     mostrarPortadaPreview(archivoPortada);
-    // Si se selecciona nueva portada, no puede estar eliminada la portada actual
     portadaEliminada = false;
     eliminarPortadaBtn.style.display = 'inline-block';
   });
 
   function mostrarPortadaPreview(archivo) {
     portadaPreview.innerHTML = '';
-
     const reader = new FileReader();
     reader.onload = function (e) {
       const container = crearContenedorImagen(e.target.result, () => {
@@ -145,22 +137,14 @@
 
   eliminarPortadaBtn.addEventListener('click', () => {
     archivoPortada = null;
-    portadaEliminada = true;  // Marcamos que la portada fue eliminada
-
-    // Quitar imagen y ocultar el botón
+    portadaEliminada = true;
     portadaPreview.innerHTML = '';
     eliminarPortadaBtn.style.display = 'none';
-
-    // Limpiar input file de portada para que no se envíe archivo
     portadaInput.value = '';
   });
 
   imagenesInput.addEventListener('change', (e) => {
     const nuevosArchivos = Array.from(e.target.files);
-    if (archivosImagenes.length + nuevosArchivos.length > 5) {
-      alert('Solo puedes subir hasta 5 imágenes nuevas.');
-      return;
-    }
     archivosImagenes = archivosImagenes.concat(nuevosArchivos);
     actualizarPreview();
     imagenesInput.value = '';
@@ -184,52 +168,45 @@
   function crearContenedorImagen(src, onDelete) {
     const container = document.createElement('div');
     container.className = 'preview-img-wrapper';
-
     const img = document.createElement('img');
     img.src = src;
     img.className = 'preview-img';
     container.appendChild(img);
-
     const btnEliminar = document.createElement('button');
     btnEliminar.innerHTML = '&times;';
     btnEliminar.type = 'button';
     btnEliminar.className = 'delete-btn';
     btnEliminar.onclick = onDelete;
     container.appendChild(btnEliminar);
-
     return container;
   }
 
-  function eliminarImagenActual(button, imagenId) {
+  function eliminarImagenActual(button) {
     const wrapper = button.parentElement;
+    const inputHidden = wrapper.querySelector('input[type="hidden"][name="imagenesExistentes"]');
+    if (inputHidden) inputHidden.remove();
     wrapper.remove();
-    imagenesEliminadas.push(imagenId);
-    imagenesEliminadasInput.value = imagenesEliminadas.join(',');
   }
 
   function validarFormulario() {
-    // Validar nombre
     const nombre = document.getElementById('idNombre').value.trim();
     if (nombre === '') {
       alert('El nombre es obligatorio.');
       return false;
     }
 
-    // Validar precio (no vacío)
     const precio = document.getElementById('precio').value;
     if (precio === '') {
-      alert('El precio es obligatorio (puede ser 0).');
+      alert('El precio es obligatorio.');
       return false;
     }
 
-    // Validar descripción
     const descripcion = document.getElementById('idDesc').value.trim();
     if (descripcion === '') {
       alert('La descripción es obligatoria.');
       return false;
     }
 
-    // Validar géneros
     const checkboxes = document.querySelectorAll('input[name="generosIds"]:checked');
     const errorGeneros = document.getElementById('error-generos');
     if (checkboxes.length === 0) {
@@ -239,7 +216,6 @@
     }
     errorGeneros.style.display = 'none';
 
-    // Validar portada (obligatoria solo si no hay portada nueva ni portada existente visible)
     const portadaExistente = document.querySelector('#portadaPreview img') !== null;
     if (!archivoPortada && !portadaExistente && !portadaEliminada) {
       alert('Debes seleccionar una portada.');
@@ -250,25 +226,13 @@
       return false;
     }
 
-    // Validar que haya al menos una imagen adicional (existente + nuevas)
-    const imagenesExistentes = document.querySelectorAll('#imagenesActualesPreview .preview-img-wrapper').length;
+    const imagenesExistentes = document.querySelectorAll('input[name="imagenesExistentes"]').length;
     const imagenesNuevas = archivosImagenes.length;
     if (imagenesExistentes + imagenesNuevas === 0) {
       alert('Debes tener al menos una imagen adicional.');
       return false;
     }
 
-    // Validar descargable (solo si el campo es obligatorio para ti)
-    // Si quieres que sea opcional, comenta o elimina este bloque
-    /*
-    const descargableInput = document.getElementById('descargable');
-    if (descargableInput.files.length === 0) {
-      alert('Debes seleccionar un archivo descargable.');
-      return false;
-    }
-    */
-
-    // Preparar archivos para enviar
     const portadaDataTransfer = new DataTransfer();
     if (archivoPortada) {
       portadaDataTransfer.items.add(archivoPortada);

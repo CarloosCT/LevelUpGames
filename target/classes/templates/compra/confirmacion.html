@@ -1,7 +1,13 @@
 <div class="container">
   <h1>¡Compra realizada con éxito!</h1>
 
-  <p>Has adquirido <strong th:text="${juego.nombre}">Nombre del juego</strong> por <strong th:text="${precio}">0€</strong>.</p>
+  <p>
+    Has adquirido <strong th:text="${juego.nombre}">Nombre del juego</strong> por
+    <strong th:if="${juego.precioActual != null}"
+            th:text="${#numbers.formatDecimal(juego.precioActual.cantidad, 1, 'COMMA', 2, 'POINT')} + ' €'">
+    </strong>
+    <strong th:if="${juego.precioActual == null}">Sin precio</strong>.
+  </p>
 
   <a href="/" class="btn btn-primary">Volver al inicio</a>
 </div>

@@ -23,7 +23,7 @@
         </div>
         <!-- Nombre del juego -->
         <h3 th:text="${juego.nombre}"></h3>
-        <!-- Precio adaptado -->
+        <!-- Precio usando getPrecioActual -->
         <p class="precio" 
            th:text="${juego.precioActual != null 
                      ? (juego.precioActual.cantidad.compareTo(T(java.math.BigDecimal).ZERO) == 0 
@@ -42,7 +42,7 @@
   </th:block>
 </section>
 
-<!-- Resto del JS sin cambios -->
+<!-- Filtro por texto y género -->
 <script>
   const searchInput = document.getElementById('search');
   const gameCards = document.querySelectorAll('.game-card');
@@ -50,7 +50,6 @@
 
   let generoSeleccionado = null;
 
-  // Filtrar mientras escribes
   searchInput.addEventListener('input', filtrarJuegos);
 
   generoLinks.forEach(link => {
@@ -59,7 +58,6 @@
 
       generoSeleccionado = this.dataset.genero || null;
 
-      // Visual: marca el activo
       generoLinks.forEach(l => l.classList.remove('active'));
       this.classList.add('active');
 
@@ -83,6 +81,7 @@
   }
 </script>
 
+<!-- Mensajes de alerta -->
 <script th:inline="javascript">
   document.addEventListener('DOMContentLoaded', function () {
     let successMsg = /*[[${success}]]*/ null;

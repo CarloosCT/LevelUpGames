@@ -1,6 +1,7 @@
 package com.tfg.levelupgames.services;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,5 +61,10 @@ public class PrecioService {
     }
 
     return precios.get(0);
+    }
+
+    public Precio findMasCercanoAntesDeFecha(Juego juego, LocalDate fecha) {
+    return precioRepository.findTopByJuegoAndFechaInicioLessThanEqualOrderByFechaInicioDesc(juego, fecha)
+            .orElse(null);
     }
 }

@@ -28,7 +28,7 @@ public class CompraService {
     return compraRepository.existsByUsuarioAndJuego(usuario, juego);
     }
 
-    public List<Juego> findJuegosByUsuario(Usuario usuario) {
-    return compraRepository.findJuegosByUsuario(usuario);
+    public List<Compra> findByUsuario(Usuario usuario) {
+    return compraRepository.findByUsuario(usuario);
     }
 }

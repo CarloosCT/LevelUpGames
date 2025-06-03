@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,35 +55,11 @@ public class Juego {
     @JoinColumn(name = "desarrollador_id", nullable = false)
     private Usuario desarrollador;
 
-    /*
-     * @OneToMany(mappedBy = "juego")
-     * private List<Valoracion> valoraciones = new ArrayList<>();
-     */
+    @OneToMany(mappedBy = "juego")
+    private List<Valoracion> valoraciones = new ArrayList<>();
 
-    /*
-     * @OneToMany(mappedBy = "juego")
-     * private List<Compra> compras = new ArrayList<>();
-     */
-
-    /*
-     * @ManyToOne
-     * 
-     * @JoinColumn(name = "desarrollador_id", nullable = false)
-     * private Desarrollador desarrollador;
-     */
-
-    /*
-     * // MÉTODO PARA CALCULAR LA MEDIA
-     * public Float getValoracionMedia() {
-     * if (valoraciones == null || valoraciones.isEmpty()) return 0f;
-     * 
-     * float suma = 0f;
-     * for (Valoracion v : valoraciones) {
-     * suma += v.getNota();
-     * }
-     * return suma / valoraciones.size();
-     * }
-     */
+    @OneToMany(mappedBy = "juego")
+    private List<Compra> compras = new ArrayList<>();
 
     public Juego(String nombre, String descripcion, List<Genero> generos, List<Precio> precios, List<Imagen> imagenes,
             String descargable) {
@@ -154,4 +132,32 @@ public class Juego {
         this.desarrollador = desarrollador;
     }
 
+    public List<Imagen> getImagenesSinPortada() {
+        return imagenes.stream()
+                .filter(imagen -> !imagen.getEsPortada())
+                .collect(Collectors.toList());
+    }
+
+    public float getValoracionMedia() {
+        if (valoraciones == null || valoraciones.isEmpty()) {
+            return 0f;
+        }
+
+        BigDecimal suma = BigDecimal.ZERO;
+        int contador = 0;
+
+        for (Valoracion v : valoraciones) {
+            if (v.getNota() != null) {
+                suma = suma.add(v.getNota());
+                contador++;
+            }
+        }
+
+        if (contador == 0) {
+            return 0f;
+        }
+
+        BigDecimal media = suma.divide(BigDecimal.valueOf(contador), 2, RoundingMode.HALF_UP);
+        return media.floatValue();
+    }
 }

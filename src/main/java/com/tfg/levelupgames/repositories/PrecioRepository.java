@@ -1,6 +1,7 @@
 package com.tfg.levelupgames.repositories;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,4 +16,5 @@ public interface PrecioRepository extends JpaRepository<Precio, Long> {
     Optional<Precio> findByCantidad(BigDecimal cantidad);
     Optional<Precio> findById(int id);
     List<Precio> findByJuegoAndCantidadAndFechaFinIsNull(Juego juego, BigDecimal cantidad);
+    Optional<Precio> findTopByJuegoAndFechaInicioLessThanEqualOrderByFechaInicioDesc(Juego juego, LocalDate fecha);
 }
