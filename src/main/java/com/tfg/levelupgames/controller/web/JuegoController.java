@@ -109,14 +109,14 @@ public class JuegoController {
             PRG.error("Debes subir una imagen de portada.", "/juego/c");
         }
 
-        if (!portadaFile.getContentType().startsWith("image/")) {
+        if (portadaFile == null || portadaFile.isEmpty() || portadaFile.getContentType() == null || !portadaFile.getContentType().startsWith("image/")) {
             PRG.error("La portada debe ser un archivo de imagen válido.", "/juego/c");
         }
 
         int imagenesValidas = 0;
         for (MultipartFile imagen : imagenes) {
             if (imagen != null && !imagen.isEmpty()) {
-                if (!imagen.getContentType().startsWith("image/")) {
+                if (imagen.getContentType() == null || !imagen.getContentType().startsWith("image/")) {
                     PRG.error("Todas las imágenes deben ser archivos de imagen válidos.", "/juego/c");
                 }
                 imagenesValidas++;

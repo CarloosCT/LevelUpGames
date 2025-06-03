@@ -2,7 +2,6 @@ package com.tfg.levelupgames.services;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,11 +20,13 @@ public class CloudinaryService {
             "api_secret", "bQr6UFPIvN29bnc4FRy2x64rbGQ"));
     }
 
-    public Map upload(MultipartFile file) throws IOException {
-        return cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
+    @SuppressWarnings("unchecked")
+    public Map<String, Object> upload(MultipartFile file) throws IOException {
+        return (Map<String, Object>) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
     }
 
-    public Map delete(String publicId) throws IOException {
-        return cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
+    @SuppressWarnings("unchecked")
+    public Map<String, Object> delete(String publicId) throws IOException {
+        return (Map<String, Object>) cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
     }
 }

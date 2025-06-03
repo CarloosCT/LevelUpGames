@@ -71,8 +71,8 @@ public class JuegoService {
                 String nombreOriginal = descargable.getOriginalFilename();
                 String extension = "";
 
-                int i = nombreOriginal.lastIndexOf('.');
-                if (i > 0) {
+                int i = (nombreOriginal != null) ? nombreOriginal.lastIndexOf('.') : -1;
+                if (nombreOriginal != null && i > 0) {
                     extension = nombreOriginal.substring(i);
                 }
 
@@ -219,8 +219,8 @@ public class JuegoService {
                 String nombreOriginal = descargable.getOriginalFilename();
                 String extension = "";
 
-                int i = nombreOriginal.lastIndexOf('.');
-                if (i > 0) {
+                int i = (nombreOriginal != null) ? nombreOriginal.lastIndexOf('.') : -1;
+                if (nombreOriginal != null && i > 0) {
                     extension = nombreOriginal.substring(i);
                 }
 

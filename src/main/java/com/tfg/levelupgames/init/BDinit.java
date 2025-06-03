@@ -134,16 +134,19 @@ public class BDinit {
 
         MultipartFile multipartFile = new MultipartFile() {
             @Override
+            @org.springframework.lang.NonNull
             public String getName() {
                 return nombreArchivo;
             }
 
             @Override
+            @org.springframework.lang.NonNull
             public String getOriginalFilename() {
                 return nombreArchivo;
             }
 
             @Override
+            @org.springframework.lang.NonNull
             public String getContentType() {
                 return "image/jpeg";
             }
@@ -159,17 +162,19 @@ public class BDinit {
             }
 
             @Override
+            @org.springframework.lang.NonNull
             public byte[] getBytes() {
                 return content;
             }
 
             @Override
+            @org.springframework.lang.NonNull
             public InputStream getInputStream() {
                 return new ByteArrayInputStream(content);
             }
 
             @Override
-            public void transferTo(File dest) throws IOException {
+            public void transferTo(@org.springframework.lang.NonNull File dest) throws IOException {
                 try (OutputStream os = new FileOutputStream(dest)) {
                     os.write(content);
                 }

@@ -42,6 +42,7 @@ public class CompraController {
         Usuario usuario = (Usuario) session.getAttribute("user");
         if (usuario == null) {
             PRG.error("Debes iniciar sesión para comprar", "/usuario/login");
+            return null;
         }
 
         Juego juego = juegoService.findById(id);
@@ -65,6 +66,7 @@ public class CompraController {
 
     if (usuario == null) {
         PRG.error("Debes iniciar sesión para realizar la compra", "/usuario/login");
+        return null;
     }
 
     Juego juego = null;
@@ -75,14 +77,14 @@ public class CompraController {
 
         if (juego == null) {
             PRG.error("Juego no encontrado", "/");
+        } else {
+            Precio precioActual = juego.getPrecioActual();
+            if (precioActual == null) {
+                PRG.error("El juego no tiene precio vigente", "/");
+            } else {
+                precioJuego = precioActual.getCantidad();
+            }
         }
-
-        Precio precioActual = juego.getPrecioActual();
-        if (precioActual == null) {
-            PRG.error("El juego no tiene precio vigente", "/");
-        }
-
-        precioJuego = precioActual.getCantidad();
 
         if (compraService.existeCompra(usuario, juego)) {
             PRG.error("Ya has comprado este juego", "/");
