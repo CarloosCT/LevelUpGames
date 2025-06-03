@@ -281,4 +281,10 @@ public class JuegoService {
         // Guardar cambios en la BD
         juegoRepository.save(juego);
     }
+
+    public Usuario getDeveloper(Long id) {
+    Juego juego = juegoRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Juego no encontrado con ID: " + id));
+    return juego.getDesarrollador();
+    }
 }

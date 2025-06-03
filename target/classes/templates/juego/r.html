@@ -25,7 +25,14 @@
     </div>
 
     <div class="precio-columna">
-        <h1 th:text="${juego.nombre}" class="juego-titulo" style="margin-bottom: 10px;"></h1>
+        <h1 th:text="${juego.nombre}" class="juego-titulo"></h1>
+
+        <p class="juego-desarrollador">
+            Desarrollado por
+            <span th:text="${juego.desarrollador.nombre + ' ' + juego.desarrollador.apellido}">Nombre Apellido</span>
+        </p>
+
+        <p class="juego-descripcion" th:text="${juego.descripcion}">Descripción del juego</p>
 
         <div class="valoracion" th:classappend="${user == null or !tieneJuego} ? 'solo-lectura' : ''"
             th:attr="data-tiene-juego=${tieneJuego}">
@@ -62,7 +69,7 @@
     </form>
 
     <div th:if="${#lists.isEmpty(comentarios)}">
-        <p style="text-align:center; color:#aaa;">Este juego aún no tiene comentarios.</p>
+        <p>Este juego aún no tiene comentarios.</p>
     </div>
 
     <div th:each="comentario : ${comentarios}" class="comentario">
@@ -81,7 +88,7 @@
         const nextBtn = document.getElementById('nextBtn');
 
         let scrollAmount = 0;
-        const scrollStep = 130; // ancho imagen (120) + margin (8) aprox
+        const scrollStep = 130;
 
         prevBtn.addEventListener('click', () => {
             scrollAmount = Math.max(scrollAmount - scrollStep, 0);
@@ -94,9 +101,7 @@
             wrapper.style.transform = `translateX(-${scrollAmount}px)`;
         });
 
-        // Para que al hacer click en miniatura se marque con borde azul
         const miniaturas = wrapper.querySelectorAll('img.miniatura-img');
-
         miniaturas.forEach(img => {
             img.addEventListener('click', () => {
                 miniaturas.forEach(i => i.classList.remove('selected'));
@@ -111,7 +116,6 @@
         portada.src = nuevaRuta;
         portada.setAttribute("data-ruta-imagen", nuevaRuta);
 
-        // Actualizar miniaturas para marcar la seleccionada
         const miniaturas = document.querySelectorAll('.miniatura-img');
         miniaturas.forEach(i => i.classList.remove('selected'));
         img.classList.add('selected');
@@ -145,7 +149,7 @@
 
         pintarEstrellas(valoracionMedia);
 
-        if (!userLogged || !tieneJuego) return;  // Aquí bloqueamos valoración si no tiene el juego
+        if (!userLogged || !tieneJuego) return;
 
         estrellas.forEach(estrella => {
             estrella.style.cursor = 'pointer';

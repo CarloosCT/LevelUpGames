@@ -78,6 +78,7 @@ public class JuegoController {
         m.put("valoracionMedia", valoracionMedia);
         m.put("tieneJuego", compraService.existeCompra(usuario, juego));
         m.put("comentarios", comentarioService.getComentariosPorJuegoId(id));
+        m.put("developer", juegoService.getDeveloper(id));
         m.put("view", "juego/r");
         m.put("estilos", "/css/juego/r.css");
 
