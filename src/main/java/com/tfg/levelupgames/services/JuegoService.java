@@ -2,28 +2,20 @@ package com.tfg.levelupgames.services;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.tfg.levelupgames.controller.web.ImagenController;
 import com.tfg.levelupgames.entities.Genero;
 import com.tfg.levelupgames.entities.Imagen;
 import com.tfg.levelupgames.entities.Juego;
 import com.tfg.levelupgames.entities.Precio;
 import com.tfg.levelupgames.entities.Usuario;
-import com.tfg.levelupgames.repositories.ImagenRepository;
 import com.tfg.levelupgames.repositories.JuegoRepository;
 
 @Service
@@ -39,9 +31,6 @@ public class JuegoService {
 
     @Autowired
     private ImagenService imagenService;
-
-    @Autowired
-    private ImagenRepository imagenRepository;
 
     @Autowired
     private CloudinaryService cloudinaryService;
