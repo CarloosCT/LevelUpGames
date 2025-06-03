@@ -30,7 +30,7 @@
                     <form th:action="@{/juego/u}" method="get">
                         <input type="hidden" name="id" th:value="${juego.id}" />
                         <button type="submit"><img src="/img/icons/edit.png" alt="Editar" /></button>
-                    </form>  
+                    </form>
                     <form th:action="@{/juego/d}" method="post">
                         <input type="hidden" name="id" th:value="${juego.id}" />
                         <button type="submit"><img src="/img/icons/trash.png" alt="Eliminar" /></button>
@@ -42,5 +42,15 @@
 
     <div th:if="${juegos == null or juegos.isEmpty()}" class="no-juegos">
         <p>Cuando hagas tu primer juego, aparecerá aquí!</p>
+    </div>
+
+    <div class="pagination">
+        <a th:if="${currentPage > 0}" th:href="@{/panel_desarrollador/r(page=${currentPage - 1})}"
+            class="page-btn">Anterior</a>
+
+        <span th:text="'Página ' + (${currentPage + 1}) + ' de ' + ${totalPages}"></span>
+
+        <a th:if="${currentPage + 1 < totalPages}" th:href="@{/panel_desarrollador/r(page=${currentPage + 1})}"
+            class="page-btn">Siguiente</a>
     </div>
 </div>

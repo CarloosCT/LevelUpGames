@@ -145,8 +145,8 @@ public class JuegoService {
         return juegoRepository.existsByNombre(nombre);
     }
 
-    public List<Juego> findByDesarrollador(Usuario desarrollador) {
-        return juegoRepository.findByDesarrollador(desarrollador);
+    public Page<Juego> findByDesarrollador(Usuario desarrollador, Pageable pageable) {
+        return juegoRepository.findByDesarrollador(desarrollador, pageable);
     }
 
     public boolean isMismoJuego(Long id, String nombre) {
@@ -283,8 +283,8 @@ public class JuegoService {
     }
 
     public Usuario getDeveloper(Long id) {
-    Juego juego = juegoRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Juego no encontrado con ID: " + id));
-    return juego.getDesarrollador();
+        Juego juego = juegoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Juego no encontrado con ID: " + id));
+        return juego.getDesarrollador();
     }
 }

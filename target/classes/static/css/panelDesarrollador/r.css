@@ -178,3 +178,47 @@ body {
   transform: scale(1.2);
   filter: brightness(0) invert(70%) sepia(100%) saturate(500%) hue-rotate(-10deg);
 }
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.page-btn {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(0, 123, 255, 0.4);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.page-btn:hover, .page-btn:focus {
+  background-color: #0056b3;
+  box-shadow: 0 4px 12px rgba(0, 86, 179, 0.6);
+  outline: none;
+}
+
+.page-btn:disabled, 
+.page-btn[disabled], 
+.page-btn[aria-disabled="true"] {
+  background-color: #cccccc;
+  box-shadow: none;
+  color: #666666;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.pagination span {
+  font-size: 1rem;
+  color: white;
+  user-select: none;
+}
