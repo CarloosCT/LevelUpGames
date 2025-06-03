@@ -18,21 +18,20 @@
 
             <button id="nextBtn" class="carrusel-btn">&gt;</button>
         </div>
-    </div>
 
-    <div class="detalles-columna">
-        <!-- Aquí podrías añadir detalles adicionales si quieres -->
+        <div class="descripcion-desarrollador-container">
+            <p class="juego-desarrollador">
+                Desarrollado por
+                <span th:text="${juego.desarrollador.nombre + ' ' + juego.desarrollador.apellido}">Nombre
+                    Apellido</span>
+            </p>
+
+            <p class="juego-descripcion" th:text="${juego.descripcion}">Descripción del juego</p>
+        </div>
     </div>
 
     <div class="precio-columna">
         <h1 th:text="${juego.nombre}" class="juego-titulo"></h1>
-
-        <p class="juego-desarrollador">
-            Desarrollado por
-            <span th:text="${juego.desarrollador.nombre + ' ' + juego.desarrollador.apellido}">Nombre Apellido</span>
-        </p>
-
-        <p class="juego-descripcion" th:text="${juego.descripcion}">Descripción del juego</p>
 
         <div class="valoracion" th:classappend="${user == null or !tieneJuego} ? 'solo-lectura' : ''"
             th:attr="data-tiene-juego=${tieneJuego}">

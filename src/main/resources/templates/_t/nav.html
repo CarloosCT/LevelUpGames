@@ -23,7 +23,7 @@
       <div class="dropdown-content-avatar">
         <a th:if="${session.user == null}" href="/usuario/login">Iniciar sesión</a>
         <a th:if="${session.user == null}" href="/usuario/c">Registrarse</a>
-        <a th:if="${session.user != null}" href="/usuario/perfil">Configuración</a>
+        <a th:if="${session.user != null}" href="/perfil/r">Perfil</a>
         <a th:if="${session.user != null}" href="/usuario/logout">Cerrar sesión</a>
       </div>
     </div>

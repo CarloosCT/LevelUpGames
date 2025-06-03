@@ -1,0 +1,23 @@
+<ul class="menu-lateral-separado">
+    <li><a href="/configuracion">Configuración</a></li>
+    <li><a href="/historial-compras">Historial de compras</a></li>
+    <li><a href="/seguridad">Seguridad</a></li>
+    <li><a href="/valoraciones">Valoraciones</a></li>
+    <li><a href="/resenas">Reseñas</a></li>
+</ul>
+
+<div class="container">
+    <h1>Configuración de Usuario</h1>
+    <form method="POST" action="/usuario/configuracion/guardar">
+        <label for="loginemail">Email:</label>
+        <input type="email" id="loginemail" name="loginemail" disabled th:placeholder="${usuario.loginemail}">
+
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" required th:value="${usuario.nombre}">
+
+        <label for="apellido">Apellido:</label>
+        <input type="text" id="apellido" name="apellido" required th:value="${usuario.apellido}">
+
+        <button type="submit">Guardar cambios</button>
+    </form>
+</div>
