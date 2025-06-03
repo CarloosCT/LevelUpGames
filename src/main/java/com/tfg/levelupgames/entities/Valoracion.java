@@ -31,4 +31,8 @@ public class Valoracion {
         this.usuario = usuario;
         this.juego = juego;
     }
+
+    public void setValor(BigDecimal valoracion) {
+    this.nota = valoracion;
+    }
 }

@@ -1,6 +1,7 @@
 package com.tfg.levelupgames.services;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,16 @@ public class ValoracionService {
     private ValoracionRepository valoracionRepository;
 
     public void save(Juego juego, Usuario usuario, BigDecimal valoracion) {
-        valoracionRepository.save(new Valoracion(usuario, juego, valoracion));
+    Optional<Valoracion> optValoracion = valoracionRepository.findByUsuarioAndJuego(usuario, juego);
 
+    if (optValoracion.isPresent()) {
+        Valoracion v = optValoracion.get();
+        v.setValor(valoracion);
+        valoracionRepository.save(v);
+    } else {
+        // No existe: crear una nueva
+        Valoracion nuevaValoracion = new Valoracion(usuario, juego, valoracion);
+        valoracionRepository.save(nuevaValoracion);
     }
+}
 }
