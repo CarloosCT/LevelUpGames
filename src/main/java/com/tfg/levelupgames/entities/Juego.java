@@ -29,14 +29,10 @@ public class Juego {
     @Column
     private String descargable;
 
-    /*
-     * // No se guarda en la base de datos, se calcula a partir de las valoraciones
-     * 
-     * @Transient
-     * private Float valoracionMedia;
-     */
+    private String descargablePublicId;
 
-    // Relaciones
+    @Column(name = "nombre_descargable_original")
+    private String nombreDescargableOriginal;
 
     @ManyToMany
     private List<Genero> generos = new ArrayList<>();
@@ -134,7 +130,7 @@ public class Juego {
 
     public List<Imagen> getImagenesSinPortada() {
         return imagenes.stream()
-                .filter(imagen -> !imagen.getEsPortada())
+                .filter(imagen -> !imagen.isPortada())
                 .collect(Collectors.toList());
     }
 

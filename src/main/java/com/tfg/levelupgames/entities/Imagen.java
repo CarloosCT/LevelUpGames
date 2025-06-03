@@ -48,6 +48,12 @@ public class Imagen {
         this.portada = portada;
     }
 
+    public Imagen(String ruta, String publicId) {
+        this.ruta = ruta;
+        this.publicId = publicId;
+        this.portada = false;
+    }
+
     public void setJuego(Juego juego) {
         this.juego = juego;
     }
@@ -73,9 +79,5 @@ public class Imagen {
     @Override
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
-    }
-
-    public boolean getEsPortada() {
-        return this.portada;
     }
 }

@@ -109,7 +109,6 @@ public class BDinit {
             Juego juego = new Juego();
             juego.setNombre(nombre);
             juego.setDescripcion(descripcion);
-            juego.setDescargable(descargable);
             juego.setGeneros(generos);
             juego.setDesarrollador(desarrollador);
             juegoService.save(juego);
@@ -122,6 +121,19 @@ public class BDinit {
             Imagen extra = subirImagenDesdeRecursos(extraNombre, false, juego);
             imagenService.save(extra);
 
+            ClassPathResource descargableFile = new ClassPathResource("static/descargables/" + descargable);
+            if (!descargableFile.exists()) {
+                throw new RuntimeException("Archivo descargable no encontrado: " + descargable);
+            }
+
+            MultipartFile multipartDescargable = multipartFileFromResource("static/descargables/" + descargable,
+                    "application/octet-stream");
+
+            Map<?, ?> uploadResult = cloudinaryService.upload(multipartDescargable, Map.of("resource_type", "raw"));
+            juego.setDescargable((String) uploadResult.get("secure_url"));
+            juego.setDescargablePublicId((String) uploadResult.get("public_id"));
+            juego.setNombreDescargableOriginal(multipartDescargable.getOriginalFilename());
+
             juegoService.save(juego);
         } catch (IOException e) {
             throw new RuntimeException("Error subiendo imágenes desde recursos", e);
@@ -129,26 +141,41 @@ public class BDinit {
     }
 
     private Imagen subirImagenDesdeRecursos(String nombreArchivo, boolean esPortada, Juego juego) throws IOException {
-        ClassPathResource imgFile = new ClassPathResource("static/juegos/" + nombreArchivo);
-        byte[] content = imgFile.getInputStream().readAllBytes();
+        MultipartFile multipartFile = multipartFileFromResource("static/juegos/" + nombreArchivo, "image/jpeg");
 
-        MultipartFile multipartFile = new MultipartFile() {
+        Map<?, ?> uploadResult = cloudinaryService.upload(multipartFile);
+        String url = (String) uploadResult.get("secure_url");
+        String publicId = (String) uploadResult.get("public_id");
+
+        Imagen imagen = new Imagen();
+        imagen.setRuta(url);
+        imagen.setPublicId(publicId);
+        imagen.setPortada(esPortada);
+        imagen.setJuego(juego);
+
+        return imagen;
+    }
+
+    private MultipartFile multipartFileFromResource(String rutaRecurso, String contentType) throws IOException {
+        ClassPathResource resource = new ClassPathResource(rutaRecurso);
+        byte[] content = resource.getInputStream().readAllBytes();
+
+        String nombreArchivo = resource.getFilename();
+
+        return new MultipartFile() {
             @Override
-            @org.springframework.lang.NonNull
             public String getName() {
                 return nombreArchivo;
             }
 
             @Override
-            @org.springframework.lang.NonNull
             public String getOriginalFilename() {
                 return nombreArchivo;
             }
 
             @Override
-            @org.springframework.lang.NonNull
             public String getContentType() {
-                return "image/jpeg";
+                return contentType;
             }
 
             @Override
@@ -162,35 +189,21 @@ public class BDinit {
             }
 
             @Override
-            @org.springframework.lang.NonNull
             public byte[] getBytes() {
                 return content;
             }
 
             @Override
-            @org.springframework.lang.NonNull
             public InputStream getInputStream() {
                 return new ByteArrayInputStream(content);
             }
 
             @Override
-            public void transferTo(@org.springframework.lang.NonNull File dest) throws IOException {
+            public void transferTo(File dest) throws IOException {
                 try (OutputStream os = new FileOutputStream(dest)) {
                     os.write(content);
                 }
             }
         };
-
-        Map<?, ?> uploadResult = cloudinaryService.upload(multipartFile);
-        String url = (String) uploadResult.get("secure_url");
-        String publicId = (String) uploadResult.get("public_id");
-
-        Imagen imagen = new Imagen();
-        imagen.setRuta(url);
-        imagen.setPublicId(publicId);
-        imagen.setPortada(esPortada);
-        imagen.setJuego(juego);
-
-        return imagen;
     }
 }

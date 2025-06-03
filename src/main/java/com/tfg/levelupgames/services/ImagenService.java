@@ -48,7 +48,7 @@ public class ImagenService {
                 .orElseThrow(() -> new RuntimeException("Imagen no encontrada"));
 
         try {
-            cloudinaryService.delete(imagen.getPublicId());
+            cloudinaryService.delete(imagen.getPublicId(), "image");
             imagenRepository.delete(imagen);
         } catch (Exception e) {
             throw new RuntimeException("Error eliminando imagen en Cloudinary", e);
@@ -67,7 +67,7 @@ public class ImagenService {
         try {
             // Borrar en Cloudinary (solo si tienes publicId)
             if (imagen.getPublicId() != null) {
-                cloudinaryService.delete(imagen.getPublicId());
+                cloudinaryService.delete(imagen.getPublicId(), "image");
             }
         } catch (Exception e) {
             throw new RuntimeException("Error al borrar imagen en Cloudinary: " + e.getMessage(), e);
@@ -78,11 +78,11 @@ public class ImagenService {
     public void eliminarImagenesDeJuego(Juego juego) {
         List<Imagen> imagenes = new ArrayList<>(juego.getImagenes());
         for (Imagen imagen : imagenes) {
-            if (!imagen.getEsPortada()) {
+            if (!imagen.isPortada()) {
                 eliminarImagenPorId(imagen.getId());
             }
         }
-        juego.getImagenes().removeIf(imagen -> !imagen.getEsPortada());
+        juego.getImagenes().removeIf(imagen -> !imagen.isPortada());
     }
 
     public void procesarImagenesDeJuego(Juego juego, MultipartFile portadaFile, MultipartFile[] imagenes) {

@@ -26,7 +26,7 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/juego")
 public class JuegoController {
-    
+
     @Autowired
     private GeneroService generoService;
 
@@ -109,7 +109,8 @@ public class JuegoController {
             PRG.error("Debes subir una imagen de portada.", "/juego/c");
         }
 
-        if (portadaFile == null || portadaFile.isEmpty() || portadaFile.getContentType() == null || !portadaFile.getContentType().startsWith("image/")) {
+        if (portadaFile == null || portadaFile.isEmpty() || portadaFile.getContentType() == null
+                || !portadaFile.getContentType().startsWith("image/")) {
             PRG.error("La portada debe ser un archivo de imagen válido.", "/juego/c");
         }
 
@@ -164,7 +165,22 @@ public class JuegoController {
             @RequestParam List<Long> generosIds,
             @RequestParam(required = false) MultipartFile portadaFile,
             @RequestParam(required = false) List<MultipartFile> imagenes,
-            @RequestParam(required = false) MultipartFile descargable) throws DangerException {
+            @RequestParam(required = false) MultipartFile descargable,
+            @RequestParam(required = false) List<Long> imagenesExistentes) throws DangerException {
+
+        try {
+            juegoService.actualizarJuego(
+                    id,
+                    nombre,
+                    descripcion,
+                    generosIds,
+                    precio,
+                    portadaFile,
+                    imagenes,
+                    descargable, imagenesExistentes);
+        } catch (Exception e) {
+            PRG.error(e.getMessage(), "/juego/u?id=" + id);
+        }
 
         return "redirect:/panel_desarrollador/r";
     }

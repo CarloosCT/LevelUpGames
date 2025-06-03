@@ -15,9 +15,9 @@ public class CloudinaryService {
 
     public CloudinaryService() {
         this.cloudinary = new Cloudinary(ObjectUtils.asMap(
-            "cloud_name", "dono6abrn",
-            "api_key", "292832137389456",
-            "api_secret", "bQr6UFPIvN29bnc4FRy2x64rbGQ"));
+                "cloud_name", "dono6abrn",
+                "api_key", "292832137389456",
+                "api_secret", "bQr6UFPIvN29bnc4FRy2x64rbGQ"));
     }
 
     @SuppressWarnings("unchecked")
@@ -26,7 +26,13 @@ public class CloudinaryService {
     }
 
     @SuppressWarnings("unchecked")
-    public Map<String, Object> delete(String publicId) throws IOException {
-        return (Map<String, Object>) cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
+    public Map<String, Object> upload(MultipartFile file, Map<String, Object> options) throws IOException {
+        return (Map<String, Object>) cloudinary.uploader().upload(file.getBytes(), options);
+    }
+
+    @SuppressWarnings("unchecked")
+    public Map<String, Object> delete(String publicId, String resourceType) throws IOException {
+        return (Map<String, Object>) cloudinary.uploader().destroy(publicId,
+                ObjectUtils.asMap("resource_type", resourceType));
     }
 }
