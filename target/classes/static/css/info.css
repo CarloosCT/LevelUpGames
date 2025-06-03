@@ -14,7 +14,7 @@
   padding: 10px;
   border-radius: 8px;
   font-weight: bold;
-  color: white;
+  color: black;
 }
 
 .alert-success {
@@ -24,7 +24,7 @@
 .alert-error,
 .error-text {
   background-color: #ff4444;
-  color: white;
+  color: black;
 }
 
 .button-group {

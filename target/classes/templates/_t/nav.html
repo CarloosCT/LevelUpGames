@@ -15,7 +15,7 @@
   </div>
 
   <div class="menu-right">
-    <div class="saldo" th:if="${session.user != null}">
+    <div class="saldo" th:if="${session.user != null and session.user.rol.nombre != 'admin'}">
       <a href="/saldo/r" th:text="'Saldo: ' + ${session.user.saldo} + ' €'"></a>
     </div>
     <div class="dropdown-avatar">

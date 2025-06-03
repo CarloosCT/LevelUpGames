@@ -1,20 +1,23 @@
 <div class="juego-container">
 
     <div class="imagenes-columna">
-        <img id="portada" th:src="${juego.portada.ruta}" th:attr="data-ruta-imagen=${juego.portada.ruta}"
-            class="portada-img" alt="Portada de [[${juego.nombre}]]" />
+        <img id="portada" th:src="${juego.portada.ruta}" alt="Portada principal del juego" />
 
-        <div id="miniaturas" class="miniaturas-container">
-            <img th:src="${juego.portada.ruta}" th:attr="data-ruta-imagen=${juego.portada.ruta}"
-                class="miniatura-img portada-fija" alt="Miniatura portada de [[${juego.nombre}]]"
-                onclick="cambiarPortada(this)" />
+        <div id="miniaturas-carrusel" class="miniaturas-carrusel">
+            <button id="prevBtn" class="carrusel-btn">&lt;</button>
 
-            <img th:each="imagen : ${juego.imagenes}" th:if="${imagen.ruta != juego.portada.ruta}"
-                th:src="${imagen.ruta}" th:attr="data-ruta-imagen=${imagen.ruta}" class="miniatura-img"
-                alt="Imagen miniatura de [[${juego.nombre}]]" onclick="cambiarPortada(this)" />
+            <div class="miniaturas-wrapper">
+                <img th:src="${juego.portada.ruta}" th:attr="data-ruta-imagen=${juego.portada.ruta}"
+                    class="miniatura-img portada-fija" alt="Miniatura portada de [[${juego.nombre}]]"
+                    onclick="cambiarPortada(this)" />
+
+                <img th:each="imagen : ${juego.imagenes}" th:if="${imagen.ruta != juego.portada.ruta}"
+                    th:src="${imagen.ruta}" th:attr="data-ruta-imagen=${imagen.ruta}" class="miniatura-img"
+                    alt="Imagen miniatura de [[${juego.nombre}]]" onclick="cambiarPortada(this)" />
+            </div>
+
+            <button id="nextBtn" class="carrusel-btn">&gt;</button>
         </div>
-
-        <p th:text="${juego.descripcion}" class="juego-descripcion"></p>
     </div>
 
     <div class="detalles-columna">
@@ -72,11 +75,46 @@
 </div>
 
 <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const wrapper = document.querySelector('.miniaturas-wrapper');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        let scrollAmount = 0;
+        const scrollStep = 130; // ancho imagen (120) + margin (8) aprox
+
+        prevBtn.addEventListener('click', () => {
+            scrollAmount = Math.max(scrollAmount - scrollStep, 0);
+            wrapper.style.transform = `translateX(-${scrollAmount}px)`;
+        });
+
+        nextBtn.addEventListener('click', () => {
+            const maxScroll = wrapper.scrollWidth - wrapper.clientWidth;
+            scrollAmount = Math.min(scrollAmount + scrollStep, maxScroll);
+            wrapper.style.transform = `translateX(-${scrollAmount}px)`;
+        });
+
+        // Para que al hacer click en miniatura se marque con borde azul
+        const miniaturas = wrapper.querySelectorAll('img.miniatura-img');
+
+        miniaturas.forEach(img => {
+            img.addEventListener('click', () => {
+                miniaturas.forEach(i => i.classList.remove('selected'));
+                img.classList.add('selected');
+            });
+        });
+    });
+
     function cambiarPortada(img) {
         const portada = document.getElementById("portada");
         const nuevaRuta = img.getAttribute("data-ruta-imagen");
         portada.src = nuevaRuta;
         portada.setAttribute("data-ruta-imagen", nuevaRuta);
+
+        // Actualizar miniaturas para marcar la seleccionada
+        const miniaturas = document.querySelectorAll('.miniatura-img');
+        miniaturas.forEach(i => i.classList.remove('selected'));
+        img.classList.add('selected');
     }
 </script>
 
