@@ -47,6 +47,7 @@ com\tfg\levelupgames\entities\Genero.class
 com\tfg\levelupgames\repositories\RolRepository.class
 com\tfg\levelupgames\exception\InfoException.class
 com\tfg\levelupgames\services\GeneroService.class
+com\tfg\levelupgames\dto\CompraDTO.class
 com\tfg\levelupgames\helper\H.class
 com\tfg\levelupgames\init\BDinit.class
 com\tfg\levelupgames\repositories\CompraRepository.class
