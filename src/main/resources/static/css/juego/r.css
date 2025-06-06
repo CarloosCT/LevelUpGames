@@ -393,3 +393,21 @@ nav h1 {
     font-size: 0.95rem;
     color: #ddd;
 }
+
+@media (max-width: 768px) {
+    .juego-container {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .imagenes-columna,
+    .detalles-columna,
+    .precio-columna {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .precio-columna {
+        order: 3;
+    }
+}
