@@ -619,5 +619,20 @@ div.papelera {
   }
 }
 
+@media (max-width: 768px) {
+  .menu-right {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .menu-right .saldo {
+    order: 2; /* se asegura que va después del avatar */
+    margin-top: 8px; /* espacio entre avatar y saldo */
+  }
+
+  .menu-right .dropdown-avatar {
+    order: 1;
+  }
+}
 
 
