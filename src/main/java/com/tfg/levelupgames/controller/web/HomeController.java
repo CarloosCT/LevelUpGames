@@ -30,15 +30,18 @@ public class HomeController {
     private UsuarioService usuarioService;
 
     @GetMapping("/")
-    public String home(@RequestParam(required = false) String success,
-            @RequestParam(required = false) String cancel,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "8") int size,
-            HttpSession session,
-            ModelMap m) {
-
+    public String home(
+        @RequestParam(required = false) String success,
+        @RequestParam(required = false) String cancel,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "8") int size,
+        @RequestParam(required = false) String search,
+        @RequestParam(required = false) String genero,
+        HttpSession session,
+        ModelMap m
+    ) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Juego> juegosPage = juegoService.findAll(pageable);
+        Page<Juego> juegosPage = juegoService.buscarJuegosFiltrados(search, genero, pageable);
 
         m.put("juegos", juegosPage.getContent());
         m.put("currentPage", page);
@@ -47,6 +50,9 @@ public class HomeController {
         m.put("generos", generoService.findAll());
         m.put("estilos", "/css/home/home.css");
         m.put("view", "home/home");
+
+        m.put("search", search);
+        m.put("genero", genero);
 
         if (success != null) {
             m.put("success", success);

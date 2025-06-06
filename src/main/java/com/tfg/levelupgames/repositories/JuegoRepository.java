@@ -14,4 +14,7 @@ public interface JuegoRepository extends JpaRepository<Juego,Long>{
     boolean existsByNombre(String nombre);
     Page<Juego> findByDesarrollador(Usuario desarrollador, Pageable pageable);
     List<Juego> findByNombre(String nombre);
+    Page<Juego> findByNombreContainingIgnoreCase(String nombre, Pageable pageable);
+    Page<Juego> findByGenerosNombreIgnoreCase(String genero, Pageable pageable);
+    Page<Juego> findByNombreContainingIgnoreCaseAndGenerosNombreIgnoreCase(String nombre, String genero, Pageable pageable);
 }

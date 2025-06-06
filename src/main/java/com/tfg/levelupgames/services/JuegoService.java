@@ -22,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 
 @Service
 public class JuegoService {
+
     @Autowired
     private JuegoRepository juegoRepository;
 
@@ -39,6 +40,107 @@ public class JuegoService {
 
     public void save(Juego juego) {
         juegoRepository.save(juego);
+    }
+
+    public Juego findById(Long id) {
+        return juegoRepository.findById(id).orElse(null);
+    }
+
+    public List<Juego> findAll() {
+        return juegoRepository.findAll();
+    }
+
+    public Page<Juego> findAll(Pageable pageable) {
+        return juegoRepository.findAll(pageable);
+    }
+
+    public boolean existsByNombre(String nombre) {
+        return juegoRepository.existsByNombre(nombre);
+    }
+
+    public List<Juego> findByGeneroNombre(String nombre) {
+        return juegoRepository.findByGenerosNombre(nombre);
+    }
+
+    public Page<Juego> findByDesarrollador(Usuario desarrollador, Pageable pageable) {
+        return juegoRepository.findByDesarrollador(desarrollador, pageable);
+    }
+
+    public Usuario getDeveloper(Long id) {
+        Juego juego = juegoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Juego no encontrado con ID: " + id));
+        return juego.getDesarrollador();
+    }
+
+    public int contarImagenesExistentes(Long juegoId) {
+        Juego juego = juegoRepository.findById(juegoId).orElseThrow();
+        return (int) juego.getImagenes()
+                .stream()
+                .filter(imagen -> !imagen.isPortada())
+                .count();
+    }
+
+    public boolean isMismoJuego(Long id, String nombre) {
+        List<Juego> juegos = juegoRepository.findByNombre(nombre);
+        if (juegos.isEmpty()) {
+            return true;
+        }
+        for (Juego juego : juegos) {
+            if (!juego.getId().equals(id)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public Page<Juego> buscarJuegosFiltrados(String search, String genero, Pageable pageable) {
+        if ((search == null || search.isBlank()) && (genero == null || genero.isBlank())) {
+            return juegoRepository.findAll(pageable);
+        } else if (search != null && !search.isBlank() && (genero == null || genero.isBlank())) {
+            return juegoRepository.findByNombreContainingIgnoreCase(search, pageable);
+        } else if ((search == null || search.isBlank()) && genero != null && !genero.isBlank()) {
+            return juegoRepository.findByGenerosNombreIgnoreCase(genero, pageable);
+        } else {
+            return juegoRepository.findByNombreContainingIgnoreCaseAndGenerosNombreIgnoreCase(search, genero, pageable);
+        }
+    }
+
+    public void d(Long id) throws Exception {
+        Juego juegoABorrar = juegoRepository.findById(id)
+                .orElseThrow(() -> new Exception("Juego no encontrado con id: " + id));
+
+        try {
+            Precio precioActual = juegoABorrar.getPrecioActual();
+            if (precioActual != null) {
+                precioActual.setFechaFin(LocalDate.now());
+            }
+
+            if (juegoABorrar.getPortada() != null) {
+                imagenService.d(juegoABorrar.getPortada().getId());
+                juegoABorrar.setPortada(null);
+            }
+
+            for (Imagen imagen : new ArrayList<>(juegoABorrar.getImagenes())) {
+                imagenService.d(imagen.getId());
+            }
+            juegoABorrar.getImagenes().clear();
+
+            if (juegoABorrar.getDescargablePublicId() != null && !juegoABorrar.getDescargablePublicId().isEmpty()) {
+                try {
+                    cloudinaryService.delete(juegoABorrar.getDescargablePublicId(), "raw");
+                    juegoABorrar.setDescargable(null);
+                    juegoABorrar.setDescargablePublicId(null);
+                } catch (IOException e) {
+                    System.err.println("Error eliminando descargable en Cloudinary: " + e.getMessage());
+                }
+            }
+
+            juegoRepository.save(juegoABorrar);
+            juegoRepository.delete(juegoABorrar);
+
+        } catch (Exception e) {
+            throw new Exception("No se pudo eliminar el juego " + juegoABorrar.getNombre(), e);
+        }
     }
 
     public void saveJuegoConRelaciones(
@@ -80,118 +182,26 @@ public class JuegoService {
         juegoRepository.save(juego);
     }
 
-    public List<Juego> findAll() {
-        return juegoRepository.findAll();
-    }
-
-    public Page<Juego> findAll(Pageable pageable) {
-        return juegoRepository.findAll(pageable);
-    }
-
-    public Juego findById(Long id) {
-        return juegoRepository.findById(id).orElse(null);
-    }
-
-    public void d(Long id) throws Exception {
-        Juego juegoABorrar = juegoRepository.findById(id)
-                .orElseThrow(() -> new Exception("Juego no encontrado con id: " + id));
-
-        try {
-            // Finalizar solo el precio actual (con fechaFin == null)
-            Precio precioActual = juegoABorrar.getPrecioActual();
-            if (precioActual != null) {
-                precioActual.setFechaFin(LocalDate.now());
-            }
-
-            // Eliminar portada si existe
-            if (juegoABorrar.getPortada() != null) {
-                imagenService.d(juegoABorrar.getPortada().getId());
-                juegoABorrar.setPortada(null); // desvincular portada
-            }
-
-            // Eliminar imágenes asociadas
-            for (Imagen imagen : new ArrayList<>(juegoABorrar.getImagenes())) {
-                imagenService.d(imagen.getId());
-            }
-            juegoABorrar.getImagenes().clear(); // desvincular imágenes
-
-            if (juegoABorrar.getDescargablePublicId() != null && !juegoABorrar.getDescargablePublicId().isEmpty()) {
-                try {
-                    cloudinaryService.delete(juegoABorrar.getDescargablePublicId(), "raw");
-                    juegoABorrar.setDescargable(null);
-                    juegoABorrar.setDescargablePublicId(null);
-                } catch (IOException e) {
-                    // Loguear o manejar error, pero no detener la eliminación completa
-                    System.err.println("Error eliminando descargable en Cloudinary: " + e.getMessage());
-                }
-            }
-
-            // Guardar cambios
-            juegoRepository.save(juegoABorrar);
-
-            // Finalmente, eliminar el juego completo
-            juegoRepository.delete(juegoABorrar);
-
-        } catch (Exception e) {
-            throw new Exception("No se pudo eliminar el juego " + juegoABorrar.getNombre(), e);
-        }
-    }
-
-    public List<Juego> findByGeneroNombre(String nombre) {
-        return juegoRepository.findByGenerosNombre(nombre);
-    }
-
-    public boolean existsByNombre(String nombre) {
-        return juegoRepository.existsByNombre(nombre);
-    }
-
-    public Page<Juego> findByDesarrollador(Usuario desarrollador, Pageable pageable) {
-        return juegoRepository.findByDesarrollador(desarrollador, pageable);
-    }
-
-    public boolean isMismoJuego(Long id, String nombre) {
-        List<Juego> juegos = juegoRepository.findByNombre(nombre);
-        if (juegos.isEmpty()) {
-            // No hay juegos con ese nombre => no hay conflicto
-            return true;
-        }
-        // Verifica si alguno de esos juegos tiene un ID diferente
-        for (Juego juego : juegos) {
-            if (!juego.getId().equals(id)) {
-                // Encontró otro juego distinto con el mismo nombre
-                return false;
-            }
-        }
-        // Todos los juegos encontrados tienen el mismo ID que el pasado => es el mismo
-        // juego
-        return true;
-    }
-
-    public int contarImagenesExistentes(Long juegoId) {
-        Juego juego = juegoRepository.findById(juegoId).orElseThrow();
-        return (int) juego.getImagenes()
-                .stream()
-                .filter(imagen -> !imagen.isPortada()) // 👈 no contar portada
-                .count();
-    }
-
-    public void actualizarJuego(Long id, String nombre, String descripcion, List<Long> generosIds,
-            BigDecimal nuevoPrecio, MultipartFile portadaFile,
-            List<MultipartFile> imagenesFiles, MultipartFile descargableFile,
+    public void actualizarJuego(
+            Long id,
+            String nombre,
+            String descripcion,
+            List<Long> generosIds,
+            BigDecimal nuevoPrecio,
+            MultipartFile portadaFile,
+            List<MultipartFile> imagenesFiles,
+            MultipartFile descargableFile,
             List<Long> imagenesExistentesIds) throws Exception {
 
         Juego juego = juegoRepository.findById(id)
                 .orElseThrow(() -> new Exception("Juego no encontrado con id: " + id));
 
-        // Actualiza nombre, descripcion, géneros
         juego.setNombre(nombre);
         juego.setDescripcion(descripcion);
 
-        // Actualiza géneros (asumiendo que tienes un método para obtener los géneros)
         List<Genero> generos = generoService.findByIds(generosIds);
         juego.setGeneros(generos);
 
-        // Actualiza precio, cerrando el anterior con fechaFin hoy
         Precio precioActual = juego.getPrecioActual();
         if (precioActual != null && precioActual.getCantidad().compareTo(nuevoPrecio) != 0) {
             precioActual.setFechaFin(LocalDate.now());
@@ -204,9 +214,7 @@ public class JuegoService {
         nuevoPrecioEntidad.setJuego(juego);
         juego.setPrecio(nuevoPrecioEntidad);
 
-        // Subir y actualizar portada si hay archivo nuevo
         if (portadaFile != null && !portadaFile.isEmpty()) {
-            // Si tiene portada previa, borrar en Cloudinary
             if (juego.getPortada() != null) {
                 imagenService.eliminarImagenPorId(juego.getPortada().getId());
                 juego.setPortada(null);
@@ -223,11 +231,10 @@ public class JuegoService {
             juego.getImagenes().add(portada);
         }
 
-        // Subir nuevas imágenes y añadirlas
         if (juego.getImagenes() != null && !juego.getImagenes().isEmpty()) {
             List<Imagen> imagenesAEliminar = new ArrayList<>();
             for (Imagen imagen : juego.getImagenes()) {
-                if (!imagen.isPortada()) { // no tocar la portada aquí
+                if (!imagen.isPortada()) {
                     if (imagenesExistentesIds == null || !imagenesExistentesIds.contains(imagen.getId())) {
                         imagenesAEliminar.add(imagen);
                     }
@@ -244,7 +251,6 @@ public class JuegoService {
             }
         }
 
-        // Subir nuevas imágenes y añadirlas
         if (imagenesFiles != null && !imagenesFiles.isEmpty()) {
             for (MultipartFile file : imagenesFiles) {
                 if (file != null && !file.isEmpty()) {
@@ -259,13 +265,11 @@ public class JuegoService {
             }
         }
 
-        // Actualizar archivo descargable: subir y guardar URL
         if (descargableFile != null && !descargableFile.isEmpty()) {
             if (juego.getDescargablePublicId() != null) {
                 try {
                     cloudinaryService.delete(juego.getDescargablePublicId(), "raw");
                 } catch (IOException e) {
-                    // Manejar el error según convenga (log o lanzar excepción)
                     System.err.println("No se pudo borrar el descargable previo: " + e.getMessage());
                 }
             }
@@ -278,13 +282,6 @@ public class JuegoService {
             juego.setNombreDescargableOriginal(descargableFile.getOriginalFilename());
         }
 
-        // Guardar cambios en la BD
         juegoRepository.save(juego);
-    }
-
-    public Usuario getDeveloper(Long id) {
-        Juego juego = juegoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Juego no encontrado con ID: " + id));
-        return juego.getDesarrollador();
     }
 }
