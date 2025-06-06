@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.tfg.levelupgames.entities.Usuario;
 import com.tfg.levelupgames.exception.DangerException;
-import com.tfg.levelupgames.helper.PRG;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -20,7 +19,9 @@ public class PerfilController {
             HttpSession s) throws DangerException {
         Usuario usuario = (Usuario) s.getAttribute("user");
         if (usuario == null) {
-            PRG.error("Debes iniciar sesión para ver tu perfil", "/usuario/login");
+            m.put("view", "errores/loginError");
+            m.put("estilos", "/css/loginError.css");
+            return "_t/frame";
         }
         m.put("view", "usuario/perfil");
         m.put("estilos", "/css/usuario/perfil.css");

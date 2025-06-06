@@ -1,3 +1,5 @@
+<button class="toggle-menu-btn">☰ Menú</button>
+
 <ul class="menu-lateral-separado">
     <li><a href="/configuracion">Configuración</a></li>
     <li><a href="/historial-compras">Historial de compras</a></li>
@@ -21,3 +23,14 @@
         <button type="submit">Guardar cambios</button>
     </form>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const toggleBtn = document.querySelector(".toggle-menu-btn");
+    const menu = document.querySelector(".menu-lateral-separado");
+
+    toggleBtn.addEventListener("click", function () {
+      menu.classList.toggle("abierto");
+    });
+  });
+</script>
