@@ -30,7 +30,9 @@
 
 <script>
     function validarUsuario() {
-        var expresion = /^[a-zA-ZáéíóúüÁÉÍÓÚÜñÑçÇ ]{3,}$/;
+
+        var expresionNombre = /^[a-zA-ZÀ-ÿ\s]{1,40}$/;
+        var expresionEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         var email = document.getElementsByTagName("form")[0].loginemail.value.trim();
         var nombre = document.getElementsByTagName("form")[0].nombre.value.trim();
         var apellido = document.getElementsByTagName("form")[0].apellido.value.trim();
@@ -42,26 +44,25 @@
         var apellidoCorrecto = false;
         var passwordCorrecto = false;
 
-        if (expresion.test(nombre)) {
+        if (expresionNombre.test(nombre)) {
             nombreCorrecto = true;
         } else {
-            nombre.placeholder = "El nombre no es correcto";
+
             alert("El nombre no es correcto");
             nombreCorrecto = false;
         }
 
-        if (expresion.test(apellido)) {
+        if (expresionNombre.test(apellido)) {
             apellidoCorrecto = true;
         } else {
-            apellido.placeholder = "El apellido no es correcto";
+
             alert("El apellido no es correcto");
             apellidoCorrecto = false;
         }
 
-        if (email.length >= 5 && email.includes("@") && email.includes(".") && email.indexOf("@") < email.indexOf(".")) {
+        if (expresionEmail.test(email)) {
             emailCorrecto = true;
         } else {
-            email.placeholder = "El correo no es correcto";
             alert("El correo no es correcto");
             emailCorrecto = false;
         }
@@ -69,7 +70,7 @@
         if (password.length >= 8) {
             passwordCorrecto = true;
         } else {
-            password.placeholder = "La contraseña debe tener al menos 8 caracteres";
+
             alert("La contraseña debe tener al menos 8 caracteres");
             passwordCorrecto = false;
         }
@@ -79,8 +80,6 @@
         } else {
             passwordR.value = "";
             password.value = "";
-            passwordR.placeholder = "Las contraseñas no coinciden";
-            password.placeholder = "Las contraseñas no coinciden";
             alert("Las contraseñas no coinciden");
             passwordCorrecto = false;
         }

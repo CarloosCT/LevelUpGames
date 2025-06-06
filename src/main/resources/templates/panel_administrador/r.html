@@ -1,21 +1,34 @@
-<nav class="admin-links">
-    <a href="/genero/c">Nuevo género</a>
-    <a href="/genero/r">Listado géneros</a>
-    <a href="/precio/c">Nuevo precio</a>
-    <a href="/precio/r">Listado precios</a>
-    <a href="/imagen/r">Listado imágenes</a>
-    <a href="/juego/c">Nuevo juego</a>
+
+<!-- En el body -->
+<nav class="admin-links container">
+  <div class="row justify-content-center">
+    <div class="col-auto"><a href="/genero/c">Nuevo género</a></div>
+    <div class="col-auto"><a href="/genero/r">Listado géneros</a></div>
+    <div class="col-auto"><a href="/precio/c">Nuevo precio</a></div>
+    <div class="col-auto"><a href="/precio/r">Listado precios</a></div>
+    <div class="col-auto"><a href="/imagen/r">Listado imágenes</a></div>
+    <div class="col-auto"><a href="/juego/c">Nuevo juego</a></div>
+  </div>
 </nav>
+
 <br>
+
 <h3 class="game-list-title">Lista de Juegos</h3>
-<div class="game-list">
-    <div class="game-card" th:each="juego : ${juegos}">
+
+<div class="game-list container">
+  <div class="row justify-content-center">
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4" th:each="juego : ${juegos}">
+      <div class="game-card h-100 d-flex flex-column justify-content-center">
         <a th:href="@{/juego/{id}(id=${juego.id})}" target="_self" data-id="@{juego.id}">
-            <h3 th:text="${juego.nombre}">Nombre del juego</h3>
+          <h3 th:text="${juego.nombre}">Nombre del juego</h3>
         </a>
+      </div>
     </div>
+  </div>
 </div>
-<div class="papelera"></div>
+
+<div class="papelera mx-auto"></div>
+
 <form id="delete-card-form" method="post" th:action="@{/juego/d}">
-    <input type="hidden" name="id" id="deleteCardId">
+  <input type="hidden" name="id" id="deleteCardId">
 </form>
