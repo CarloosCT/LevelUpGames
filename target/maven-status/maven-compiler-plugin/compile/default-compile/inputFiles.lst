@@ -20,6 +20,7 @@ C:\Users\catal\Desktop\LevelUpGames\LevelUpGames\src\main\java\com\tfg\levelupga
 C:\Users\catal\Desktop\LevelUpGames\LevelUpGames\src\main\java\com\tfg\levelupgames\services\UsuarioService.java
 C:\Users\catal\Desktop\LevelUpGames\LevelUpGames\src\main\java\com\tfg\levelupgames\controller\web\UsuarioController.java
 C:\Users\catal\Desktop\LevelUpGames\LevelUpGames\src\main\java\com\tfg\levelupgames\services\GeneroService.java
+C:\Users\catal\Desktop\LevelUpGames\LevelUpGames\src\main\java\com\tfg\levelupgames\entities\ReporteComentario.java
 C:\Users\catal\Desktop\LevelUpGames\LevelUpGames\src\main\java\com\tfg\levelupgames\repositories\JuegoRepository.java
 C:\Users\catal\Desktop\LevelUpGames\LevelUpGames\src\main\java\com\tfg\levelupgames\repositories\UsuarioRepository.java
 C:\Users\catal\Desktop\LevelUpGames\LevelUpGames\src\main\java\com\tfg\levelupgames\exception\GlobalExceptionHandler.java
@@ -40,6 +41,7 @@ C:\Users\catal\Desktop\LevelUpGames\LevelUpGames\src\main\java\com\tfg\levelupga
 C:\Users\catal\Desktop\LevelUpGames\LevelUpGames\src\main\java\com\tfg\levelupgames\controller\web\InfoController.java
 C:\Users\catal\Desktop\LevelUpGames\LevelUpGames\src\main\java\com\tfg\levelupgames\controller\web\AdministradorPanelController.java
 C:\Users\catal\Desktop\LevelUpGames\LevelUpGames\src\main\java\com\tfg\levelupgames\entities\Compra.java
+C:\Users\catal\Desktop\LevelUpGames\LevelUpGames\src\main\java\com\tfg\levelupgames\repositories\ReporteComentarioRepository.java
 C:\Users\catal\Desktop\LevelUpGames\LevelUpGames\src\main\java\com\tfg\levelupgames\controller\web\SolicitudDesarrolladorController.java
 C:\Users\catal\Desktop\LevelUpGames\LevelUpGames\src\main\java\com\tfg\levelupgames\entities\Desarrollador.java
 C:\Users\catal\Desktop\LevelUpGames\LevelUpGames\src\main\java\com\tfg\levelupgames\entities\Genero.java
