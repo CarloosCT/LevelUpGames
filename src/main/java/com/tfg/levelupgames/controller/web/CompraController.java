@@ -42,14 +42,7 @@ public class CompraController {
         Usuario usuario = (Usuario) session.getAttribute("user");
         if (usuario == null) {
             PRG.error("Debes iniciar sesión para comprar", "/usuario/login");
-            m.put("mensaje", "Debes iniciar sesión para realizar la compra.");
-            m.put("urlPrincipal", "/");
-            m.put("textoPrincipal", "Volver al inicio");
-            m.put("urlSecundaria", "/usuario/login");
-            m.put("textoSecundario", "Iniciar sesión");
-            m.put("view", "error/error1");
-            m.put("estilos", "/css/compra/errorSaldo.css");
-            return "_t/frame";
+            return null;
         }
 
         Juego juego = juegoService.findById(id);
@@ -72,15 +65,9 @@ public class CompraController {
     Usuario usuario = (Usuario) session.getAttribute("user");
 
     if (usuario == null) {
-        //RG.error("Debes iniciar sesión para realizar la compra", "/usuario/login");
-        m.put("mensaje", "Debes iniciar sesión para realizar la compra.");
-        m.put("urlPrincipal", "/");
-        m.put("textoPrincipal", "Volver al inicio");
-        m.put("urlSecundaria", "/usuario/login");
-        m.put("textoSecundario", "Iniciar sesión");
-        m.put("view", "error/error1");
-        m.put("estilos", "/css/compra/errorSaldo.css");
-            return "_t/frame";
+        m.put("view", "errores/loginError");
+        m.put("estilos", "/css/loginError.css");
+        return "_t/frame";
     }
 
     Juego juego = null;
@@ -90,45 +77,26 @@ public class CompraController {
         juego = juegoService.findById(juegoId);
 
         if (juego == null) {
-            //PRG.error("Juego no encontrado", "/");
-            m.put("mensaje", "Juego no encontrado.");
-            m.put("urlPrincipal", "/");
-            m.put("textoPrincipal", "Volver al inicio");
-            m.put("view", "error/error1");
-            m.put("estilos", "/css/compra/errorSaldo.css");
-            return "_t/frame";
-            
+            PRG.error("Juego no encontrado", "/");
+        } else {
+            Precio precioActual = juego.getPrecioActual();
+            if (precioActual == null) {
+                PRG.error("El juego no tiene precio vigente", "/");
+            } else {
+                precioJuego = precioActual.getCantidad();
+            }
         }
-
-        Precio precioActual = juego.getPrecioActual();
-        if (precioActual == null) {
-            //PRG.error("El juego no tiene precio vigente", "/");
-            m.put("mensaje", "Ya has comprado este juego.");
-            m.put("urlPrincipal", "/");
-            m.put("textoPrincipal", "Volver al inicio");
-            m.put("view", "error/error1");
-            m.put("estilos", "/css/compra/errorSaldo.css");
-            return "_t/frame";
-        }
-
-        precioJuego = precioActual.getCantidad();
 
         if (compraService.existeCompra(usuario, juego)) {
-            //PRG.error("Ya has comprado este juego", "/");
-            m.put("mensaje", "Ya has comprado este juego.");
-            m.put("urlPrincipal", "/");
-            m.put("textoPrincipal", "Volver al inicio");
-            m.put("view", "error/error1");
-            m.put("estilos", "/css/compra/errorSaldo.css");
-            return "_t/frame";
+            PRG.error("Ya has comprado este juego", "/");
         }
 
         BigDecimal saldoActual = usuario.getSaldo();
         if (saldoActual.compareTo(precioJuego) < 0) {
             m.put("mensaje", "No tienes saldo suficiente para comprar este juego.");
-            m.put("urlPrincipal", "/");
-            m.put("textoPrincipal", "Volver al inicio");
-            m.put("view", "error/error1");
+            m.put("homeUrl", "/");
+            m.put("saldoUrl", "/saldo/r");
+            m.put("view", "compra/errorSaldo");
             m.put("estilos", "/css/compra/errorSaldo.css");
             return "_t/frame";
         }

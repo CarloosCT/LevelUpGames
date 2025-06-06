@@ -1,32 +1,25 @@
-<h3 class="solicitudes-title text-center mb-4">Solicitudes de Desarrollador Pendientes</h3>
+<h3 class="solicitudes-title">Solicitudes de Desarrollador Pendientes</h3>
+<div class="solicitudes-list">
+    <div class="solicitud-card" th:each="sol : ${solicitudes}">
+        <p><strong>Usuario:</strong> <span th:text="${sol.usuario.nombre}">Nombre Usuario</span></p>
+        <p><strong>Portfolio URL:</strong> <a th:href="${sol.portfolioUrl}" th:text="${sol.portfolioUrl}"
+                target="_blank">Portfolio</a></p>
+        <p><strong>Biografía:</strong></p>
+        <p th:text="${sol.biografia}">Descripción biográfica...</p>
 
-<div class="solicitudes-container container">
-    <div class="solicitudes-list row gy-4">
-        <div class="col-12" th:each="sol : ${solicitudes}">
-            <div class="solicitud-card">
-                <p class="solicitud-usuario"><strong>Usuario:</strong> <span th:text="${sol.usuario.nombre}">Nombre Usuario</span></p>
-                <p class="solicitud-url"><strong>Portfolio URL:</strong>
-                    <a th:href="${sol.portfolioUrl}" th:text="${sol.portfolioUrl}" target="_blank">Portfolio</a>
-                </p>
-                <p><strong>Biografía:</strong></p>
-                <p class="solicitud-info" th:text="${sol.biografia}">Descripción biográfica...</p>
+        <form th:action="@{/solicitud/aprobar}" method="post">
+            <input type="hidden" name="id" th:value="${sol.id}" />
+            <input type="submit" value="Aprobar"/>
+        </form>
 
-                <div class="solicitud-buttons">
-                    <form th:action="@{/solicitud/aprobar}" method="post">
-                        <input type="hidden" name="id" th:value="${sol.id}" />
-                        <button type="submit" class="btn-aceptar">Aprobar</button>
-                    </form>
+        <form th:action="@{/solicitud/rechazar}" method="post">
+            <input type="hidden" name="id" th:value="${sol.id}" />
+            <input type="submit" value="Rechazar"/>
+        </form>
 
-                    <form th:action="@{/solicitud/rechazar}" method="post">
-                        <input type="hidden" name="id" th:value="${sol.id}" />
-                        <button type="submit" class="btn-rechazar">Rechazar</button>
-                    </form>
-                </div>
-            </div>
-        </div>
+        <hr />
     </div>
 </div>
-
 
 <script th:inline="javascript">
     document.addEventListener('DOMContentLoaded', function () {

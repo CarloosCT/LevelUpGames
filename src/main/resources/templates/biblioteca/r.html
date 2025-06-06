@@ -1,52 +1,41 @@
-<div class="container-fluid py-4">
-  <div class="row g-0 biblioteca-contenedor">
+<div class="biblioteca-contenedor">
+  <aside class="lista-juegos">
+    <ul>
+      <li th:each="compraDTO : ${compras}" class="juego-item"
+          th:onclick="'mostrarDetalles(' + ${compraDTO.compra.juego.id} + ')'">
+        <img class="juego-miniatura"
+             th:src="${compraDTO.compra.juego.portada.ruta != null} ? ${compraDTO.compra.juego.portada.ruta} : @{/img/default-portada.png}" />
 
-    <!-- Lista de juegos -->
-    <aside class="col-12 col-md-4 lista-juegos">
-      <ul>
-        <li th:each="compraDTO : ${compras}" class="juego-item"
-            th:onclick="'mostrarDetalles(' + ${compraDTO.compra.juego.id} + ')'">
-  
-          <img class="juego-miniatura"
-               th:src="${compraDTO.compra.juego.portada != null} ? @{/uploads/} + ${compraDTO.compra.juego.portada.ruta} : @{/img/default-portada.png}" />
-  
-          <span class="juego-nombre" th:text="${compraDTO.compra.juego.nombre}"></span>
-  
-          <div class="juego-detalles"
-               th:id="'detalle-' + ${compraDTO.compra.juego.id}" style="display:none;"
-               th:data-nombre="${compraDTO.compra.juego.nombre}"
-               th:data-descripcion="${compraDTO.compra.juego.descripcion}"
-               th:data-precio="${compraDTO.precioFormateado}"
-               th:data-imagenes="${#strings.listJoin(compraDTO.compra.juego.imagenes.?[ruta != null].![('/uploads/' + ruta)], ',')}"
-               th:data-descargable="${compraDTO.compra.juego.descargable}"
-               th:data-fecha-compra="${compraDTO.fechaCompraFormateada}">
-          </div>
-  
-          <div class="fecha-adquisicion"
-               th:text="'Fecha de adquisición: ' + ${compraDTO.fechaCompraFormateada}">
-          </div>
-        </li>
-      </ul>
-    </aside>
+        <span class="juego-nombre" th:text="${compraDTO.compra.juego.nombre}"></span>
 
-    <!-- Detalle de juego -->
-    <section class="col-12 col-md-8 detalle-juego" id="detalle-juego">
-      <div class="mensaje-inicial" id="mensaje-inicial" th:if="${#lists.isEmpty(compras)}">
-        <p>Cuando compres un juego, aparecerá en la lista de la izquierda.</p>
-      </div>
-      <div class="mensaje-inicial" id="mensaje-inicial" th:if="${!#lists.isEmpty(compras)}">
-        <p>Selecciona un juego para ver los detalles.</p>
-      </div>
-      <div class="contenido-detalle" id="contenido-detalle" style="display:none;"></div>
-    </section>
+        <!-- Datos ocultos para JS -->
+        <div class="juego-detalles"
+             th:id="'detalle-' + ${compraDTO.compra.juego.id}" style="display:none;"
+             th:data-nombre="${compraDTO.compra.juego.nombre}"
+             th:data-descripcion="${compraDTO.compra.juego.descripcion}"
+             th:data-precio="${compraDTO.precioFormateado}"
+             th:data-imagenes="${#strings.listJoin(compraDTO.compra.juego.imagenes.?[ruta != null].![(ruta)], ',')}"
+             th:data-descargable="${compraDTO.compra.juego.descargable}"
+             th:data-fecha-compra="${compraDTO.fechaCompraFormateada}">
+        </div>
+      </li>
+    </ul>
+  </aside>
 
-  </div>
+  <section class="detalle-juego" id="detalle-juego">
+    <div class="mensaje-inicial" id="mensaje-inicial" th:if="${#lists.isEmpty(compras)}">
+      <p>Cuando compres un juego, aparecerá en la lista de la izquierda.</p>
+    </div>
+    <div class="mensaje-inicial" id="mensaje-inicial" th:if="${!#lists.isEmpty(compras)}">
+      <p>Selecciona un juego para ver los detalles.</p>
+    </div>
+    <div class="contenido-detalle" id="contenido-detalle" style="display:none;"></div>
+  </section>
 </div>
 
-
 <script>
-function mostrarDetalles(id) {
-  const detalle = document.getElementById(`detalle-${id}`);
+  function mostrarDetalles(id) {
+    const detalle = document.getElementById(`detalle-${id}`);
 
   const nombre = detalle.getAttribute('data-nombre');
   const descripcion = detalle.getAttribute('data-descripcion');
@@ -56,8 +45,8 @@ function mostrarDetalles(id) {
   const imagenesData = detalle.getAttribute('data-imagenes');
   const imagenes = imagenesData ? imagenesData.split(',') : [];
 
-  const mensaje = document.getElementById('mensaje-inicial');
-  const contenido = document.getElementById('contenido-detalle');
+    const mensaje = document.getElementById('mensaje-inicial');
+    const contenido = document.getElementById('contenido-detalle');
 
   let imagenesHtml = '<div class="imagenes-juego">';
   imagenes.forEach(src => {
@@ -68,19 +57,19 @@ function mostrarDetalles(id) {
   });
   imagenesHtml += '</div>';
 
-  let descargaHtml = '';
-  if (descargable) {
-    descargaHtml = `
+    let descargaHtml = '';
+    if (descargable) {
+      descargaHtml = `
       <div class="descarga-juego">
         <h3>Descargar juego</h3>
-        <a class="boton-descargar" href="/downloadables/${descargable}" download>
+        <a class="boton-descargar" href="/download/${id}">
           Descargar
         </a>
       </div>
     `;
-  }
+    }
 
-  contenido.innerHTML = `
+    contenido.innerHTML = `
     <h2>${nombre}</h2>
     <p><strong>Precio:</strong> ${precio}</p>
     <p><strong>Fecha de adquisición:</strong> ${fechaCompra}</p>
@@ -89,7 +78,7 @@ function mostrarDetalles(id) {
     ${descargaHtml}
   `;
 
-  mensaje.style.display = 'none';
-  contenido.style.display = 'block';
-}
+    mensaje.style.display = 'none';
+    contenido.style.display = 'block';
+  }
 </script>

@@ -1,50 +1,50 @@
-<section class="search-bar bg-dark border-bottom border-danger py-4">
-  <div class="container text-center">
-    <input type="text" id="search" class="form-control w-100 w-sm-75 w-md-50 mx-auto" placeholder="Buscar ...">
-  </div>
+<section class="search-bar">
+  <input type="text" id="search" placeholder="Buscar ...">
 </section>
 
 <!-- Lista horizontal de géneros -->
-<div class="filtro-generos-horizontal bg-dark py-3">
-  <div class="container d-flex flex-wrap justify-content-center gap-2">
-    <a href="#" data-genero="" class="genero-link active btn btn-outline-danger">Todos</a>
-    <a href="#" th:each="genero : ${generos}" 
-       th:attr="data-genero=${genero.nombre}" 
-       th:text="${genero.nombre}" 
-       class="genero-link btn btn-outline-danger">
-    </a>
-  </div>
+<div class="filtro-generos-horizontal">
+  <a href="#" data-genero="" class="genero-link active">Todos</a>
+  <a href="#" th:each="genero : ${generos}" th:attr="data-genero=${genero.nombre}" th:text="${genero.nombre}"
+    class="genero-link"></a>
 </div>
 
-<!-- Sección de juegos -->
-<section class="games container">
-  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 justify-content-center">
-    <th:block th:each="juego : ${juegos}">
-      <div class="col">
-        <div class="game-card bg-dark text-white justify-content-between" 
-             th:attr="data-name=${juego.nombre.toLowerCase()}"
-             th:attrappend=" data-generos=${juego.nombresGeneros}">
-          <a th:href="@{/juego/r/{id}(id=${juego.id})}" target="_self" class="text-decoration-none text-white">
-            <div th:if="${juego.portada != null}">
-              <img th:src="@{'/uploads/' + ${juego.portada.ruta}}" th:alt="${juego.nombre}" class="img-fluid rounded" />
-            </div>
-            <h3 th:text="${juego.nombre}"></h3>
-            <p class="precio" 
-               th:text="${juego.precioActual != null 
-                         ? (juego.precioActual.cantidad.compareTo(T(java.math.BigDecimal).ZERO) == 0 
-                            ? 'Gratis' 
-                            : juego.precioActual.cantidad + ' €') 
-                         : 'Sin precio'}">
-            </p>
-            <div class="categories">
-              <span th:each="genero : ${juego.generos}" class="category badge bg-danger me-1" th:text="${genero.nombre}"></span>
-            </div>
-          </a>
+<section class="games">
+  <th:block th:each="juego : ${juegos}">
+    <div class="game-card" th:attr="data-name=${juego.nombre.toLowerCase()}"
+      th:attrappend=" data-generos=${juego.nombresGeneros}">
+      <a th:href="@{/juego/r/{id}(id=${juego.id})}" target="_self" style="text-decoration: none; color: inherit;">
+        <!-- Imagen portada -->
+        <div th:if="${juego.portada != null}">
+          <img th:src="${juego.portada.ruta}" th:alt="${juego.nombre}" />
         </div>
-      </div>
-    </th:block>
-  </div>
+        <!-- Nombre del juego -->
+        <h3 th:text="${juego.nombre}"></h3>
+        <!-- Precio usando getPrecioActual -->
+        <p class="precio" th:text="${juego.precioActual != null 
+                     ? (juego.precioActual.cantidad.compareTo(T(java.math.BigDecimal).ZERO) == 0 
+                        ? 'Gratis' 
+                        : juego.precioActual.cantidad + ' €') 
+                     : 'Sin precio'}">
+        </p>
+        <!-- Lista de géneros -->
+        <p>
+          <span th:each="genero : ${juego.generos}">
+            <span class="category" th:text="${genero.nombre}"></span>
+          </span>
+        </p>
+      </a>
+    </div>
+  </th:block>
 </section>
+
+<div class="pagination">
+  <a th:if="${currentPage > 0}" th:href="@{/(page=${currentPage - 1})}" class="page-btn">Anterior</a>
+
+  <span th:text="'Página ' + (${currentPage} + 1) + ' de ' + ${totalPages}"></span>
+
+  <a th:if="${currentPage + 1 < totalPages}" th:href="@{/(page=${currentPage + 1})}" class="page-btn">Siguiente</a>
+</div>
 
 <!-- Filtro por texto y género -->
 <script>
