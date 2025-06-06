@@ -613,5 +613,11 @@ div.papelera {
   }
 }
 
+@media (min-width: 769px) {
+  nav {
+    margin-top: 5px;
+  }
+}
+
 
 
