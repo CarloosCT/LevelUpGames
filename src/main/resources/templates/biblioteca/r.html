@@ -1,3 +1,4 @@
+<button class="toggle-juegos-btn" onclick="toggleMenu()">☰ Juegos</button>
 <div class="biblioteca-contenedor">
   <aside class="lista-juegos">
     <ul>
@@ -34,51 +35,61 @@
 </div>
 
 <script>
+  function toggleMenu() {
+  const lista = document.querySelector('.lista-juegos');
+  lista.classList.toggle('abierta');
+  }
+  
   function mostrarDetalles(id) {
     const detalle = document.getElementById(`detalle-${id}`);
 
-  const nombre = detalle.getAttribute('data-nombre');
-  const descripcion = detalle.getAttribute('data-descripcion');
-  const precio = detalle.getAttribute('data-precio');
-  const descargable = detalle.getAttribute('data-descargable');
-  const fechaCompra = detalle.getAttribute('data-fecha-compra');
-  const imagenesData = detalle.getAttribute('data-imagenes');
-  const imagenes = imagenesData ? imagenesData.split(',') : [];
+    const nombre = detalle.getAttribute('data-nombre');
+    const descripcion = detalle.getAttribute('data-descripcion');
+    const precio = detalle.getAttribute('data-precio');
+    const descargable = detalle.getAttribute('data-descargable');
+    const fechaCompra = detalle.getAttribute('data-fecha-compra');
+    const imagenesData = detalle.getAttribute('data-imagenes');
+    const imagenes = imagenesData ? imagenesData.split(',') : [];
 
     const mensaje = document.getElementById('mensaje-inicial');
     const contenido = document.getElementById('contenido-detalle');
 
-  let imagenesHtml = '<div class="imagenes-juego">';
-  imagenes.forEach(src => {
-    const trimmedSrc = src.trim();
-    if (trimmedSrc) {
-      imagenesHtml += `<img src="${trimmedSrc}" alt="Imagen del juego" />`;
-    }
-  });
-  imagenesHtml += '</div>';
+    let imagenesHtml = '<div class="imagenes-juego">';
+    imagenes.forEach(src => {
+      const trimmedSrc = src.trim();
+      if (trimmedSrc) {
+        imagenesHtml += `<img src="${trimmedSrc}" alt="Imagen del juego" />`;
+      }
+    });
+    imagenesHtml += '</div>';
 
     let descargaHtml = '';
     if (descargable) {
       descargaHtml = `
-      <div class="descarga-juego">
-        <h3>Descargar juego</h3>
-        <a class="boton-descargar" href="/download/${id}">
-          Descargar
-        </a>
-      </div>
-    `;
+        <div class="descarga-juego">
+          <h3>Descargar juego</h3>
+          <a class="boton-descargar" href="/download/${id}">
+            Descargar
+          </a>
+        </div>
+      `;
     }
 
     contenido.innerHTML = `
-    <h2>${nombre}</h2>
-    <p><strong>Precio:</strong> ${precio}</p>
-    <p><strong>Fecha de adquisición:</strong> ${fechaCompra}</p>
-    <p><strong>Descripción:</strong><br>${descripcion}</p>
-    ${imagenesHtml}
-    ${descargaHtml}
-  `;
+      <h2>${nombre}</h2>
+      <p><strong>Precio:</strong> ${precio}</p>
+      <p><strong>Fecha de adquisición:</strong> ${fechaCompra}</p>
+      <p><strong>Descripción:</strong><br>${descripcion}</p>
+      ${imagenesHtml}
+      ${descargaHtml}
+    `;
 
     mensaje.style.display = 'none';
     contenido.style.display = 'block';
+
+    // Oculta el menú en móviles después de hacer clic
+    if (window.innerWidth <= 768) {
+      document.querySelector('.lista-juegos').classList.remove('abierta');
+    }
   }
 </script>

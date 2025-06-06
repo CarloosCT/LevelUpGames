@@ -13,6 +13,7 @@
   border-right: 2px solid #333;
   padding: 40px;
   background-color: #2b2b2b;
+  transition: transform 0.3s ease;
 }
 
 .lista-juegos ul {
@@ -50,17 +51,16 @@
 
 .detalle-juego {
   flex-grow: 1;
-  padding: 20px 60px 60px 60px; /* menos padding arriba */
+  padding: 20px 60px 60px 60px;
   background-color: #1e1e1e;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* Para que el contenido empiece arriba */
+  justify-content: flex-start;
   align-items: center;
   text-align: center;
 }
 
-/* Estilo solo para el mensaje inicial centrado */
 .mensaje-inicial {
   width: 100%;
   font-size: 28px;
@@ -68,7 +68,6 @@
   text-align: center;
 }
 
-/* Estilos para el contenido detalle: alineado a la izquierda */
 .contenido-detalle {
   width: 100%;
   max-width: 900px;
@@ -78,7 +77,7 @@
 
 .contenido-detalle h2 {
   font-size: 48px;
-  margin-top: 0;     /* Elimina espacio arriba */
+  margin-top: 0;
   margin-bottom: 30px;
 }
 
@@ -93,7 +92,7 @@
   flex-wrap: wrap;
   gap: 40px;
   margin-top: 40px;
-  justify-content: flex-start; /* Las imágenes alineadas a la izquierda */
+  justify-content: flex-start;
 }
 
 .imagenes-juego img {
@@ -135,4 +134,110 @@
 .boton-descargar:hover {
   background-color: #0056b3;
   transform: translateY(-2px);
+}
+
+/* BOTÓN PARA ABRIR JUEGOS EN MÓVIL */
+.toggle-juegos-btn {
+  display: none;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1001;
+  background-color: #007bff;
+  color: white;
+  padding: 12px 20px;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Responsive para móviles */
+@media screen and (max-width: 768px) {
+  .biblioteca-contenedor {
+    flex-direction: column;
+  }
+
+  .lista-juegos {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 80%;
+    max-width: 320px;
+    background-color: #2b2b2b;
+    z-index: 1000;
+    overflow-y: auto;
+    padding: 20px;
+    transform: translateX(-100%);
+    border-right: 2px solid #333;
+  }
+
+  .lista-juegos.abierta {
+    transform: translateX(0);
+  }
+
+  .toggle-juegos-btn {
+    display: block;
+  }
+
+  .detalle-juego {
+    padding: 20px;
+  }
+
+  .juego-item {
+    flex-direction: row;
+    gap: 15px;
+  }
+
+  .juego-miniatura {
+    width: 80px;
+    height: 80px;
+    margin: 0;
+  }
+
+  .juego-nombre {
+    font-size: 20px;
+  }
+
+  .contenido-detalle h2 {
+    font-size: 32px;
+  }
+
+  .contenido-detalle p {
+    font-size: 20px;
+  }
+
+  .imagenes-juego img {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .descarga-juego h3 {
+    font-size: 28px;
+  }
+
+  .boton-descargar {
+    width: 100%;
+    font-size: 20px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .lista-juegos {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 80%;
+    max-width: 320px;
+    background-color: #2b2b2b;
+    z-index: 1000;
+    overflow-y: auto;
+    padding: 70px 20px 20px 20px; /* padding-top para dejar hueco al botón */
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    border-right: 2px solid #333;
+  }
 }
