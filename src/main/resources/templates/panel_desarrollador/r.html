@@ -7,6 +7,15 @@
 
     <div th:if="${juegos != null and !juegos.isEmpty()}">
         <h3 class="game-list-title">Tus Juegos</h3>
+        <div class="pagination">
+            <a th:if="${currentPage > 0}" th:href="@{/panel_desarrollador/r(page=${currentPage - 1})}"
+                class="page-btn">Anterior</a>
+
+            <span th:text="'Página ' + (${currentPage + 1}) + ' de ' + ${totalPages}"></span>
+
+            <a th:if="${currentPage + 1 < totalPages}" th:href="@{/panel_desarrollador/r(page=${currentPage + 1})}"
+                class="page-btn">Siguiente</a>
+        </div>
         <section class="game-list">
             <div th:each="juego : ${juegos}" class="game-card">
                 <div th:if="${juego.portada != null}">
@@ -42,15 +51,5 @@
 
     <div th:if="${juegos == null or juegos.isEmpty()}" class="no-juegos">
         <p>Cuando hagas tu primer juego, aparecerá aquí!</p>
-    </div>
-
-    <div class="pagination">
-        <a th:if="${currentPage > 0}" th:href="@{/panel_desarrollador/r(page=${currentPage - 1})}"
-            class="page-btn">Anterior</a>
-
-        <span th:text="'Página ' + (${currentPage + 1}) + ' de ' + ${totalPages}"></span>
-
-        <a th:if="${currentPage + 1 < totalPages}" th:href="@{/panel_desarrollador/r(page=${currentPage + 1})}"
-            class="page-btn">Siguiente</a>
     </div>
 </div>

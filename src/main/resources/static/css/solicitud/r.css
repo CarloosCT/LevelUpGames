@@ -298,3 +298,142 @@ input[type="submit"]:hover {
     background-color: #a71d2a;
     box-shadow: 0 0 12px rgba(220, 53, 69, 0.9);
 }
+
+.solicitudes-wrapper {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+.solicitudes-title {
+  font-size: 32px;
+  color: #ff5733;
+  text-align: center;
+  margin-bottom: 40px;
+  position: relative;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.solicitudes-title::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90px;
+  height: 3px;
+  background: linear-gradient(90deg, #ff5733, #ff2e00);
+  border-radius: 4px;
+}
+
+.solicitudes-container {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.solicitud-card {
+  background-color: #1e1e1e;
+  border: 1px solid #ff5733;
+  border-radius: 15px;
+  padding: 25px 30px;
+  box-shadow: 0 10px 25px rgba(255, 87, 51, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.solicitud-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(255, 87, 51, 0.25);
+}
+
+.solicitud-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.solicitud-avatar img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #333;
+  object-fit: cover;
+  border: 2px solid #ff5733;
+}
+
+.solicitud-info-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.solicitud-usuario {
+  font-size: 20px;
+  color: #ff5733;
+  font-weight: 700;
+}
+
+.solicitud-url {
+  color: #ffa07a;
+  font-size: 14px;
+  text-decoration: underline;
+  word-break: break-all;
+}
+
+.solicitud-url:hover {
+  color: #ff2e00;
+}
+
+.solicitud-biografia {
+  color: #ccc;
+  font-size: 16px;
+  line-height: 1.5;
+  text-align: justify;
+}
+
+.solicitud-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+}
+
+.solicitud-buttons form {
+  display: inline;
+}
+
+.solicitud-buttons button {
+  font-size: 15px;
+  font-weight: 700;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(255, 87, 51, 0.3);
+}
+
+.btn-aceptar {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-aceptar:hover {
+  background-color: #1e7e34;
+  box-shadow: 0 0 12px rgba(40, 167, 69, 0.9);
+}
+
+.btn-rechazar {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-rechazar:hover {
+  background-color: #a71d2a;
+  box-shadow: 0 0 12px rgba(220, 53, 69, 0.9);
+}

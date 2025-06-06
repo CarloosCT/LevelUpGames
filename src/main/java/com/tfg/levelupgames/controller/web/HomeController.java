@@ -10,10 +10,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import com.tfg.levelupgames.entities.Juego;
-import com.tfg.levelupgames.entities.Usuario;
 import com.tfg.levelupgames.services.GeneroService;
 import com.tfg.levelupgames.services.JuegoService;
-import com.tfg.levelupgames.services.UsuarioService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -26,13 +24,8 @@ public class HomeController {
     @Autowired
     private GeneroService generoService;
 
-    @Autowired
-    private UsuarioService usuarioService;
-
     @GetMapping("/")
     public String home(
-        @RequestParam(required = false) String success,
-        @RequestParam(required = false) String cancel,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "8") int size,
         @RequestParam(required = false) String search,
@@ -53,20 +46,6 @@ public class HomeController {
 
         m.put("search", search);
         m.put("genero", genero);
-
-        if (success != null) {
-            m.put("success", success);
-        }
-        if (cancel != null) {
-            m.put("cancel", cancel);
-        }
-
-        Usuario usuario = usuarioService.obtenerUsuarioActual(session);
-        if (usuario != null && usuario.isMostrarAlertaRechazo()) {
-            m.put("alertaRechazo", "Tu solicitud como desarrollador ha sido rechazada.");
-            usuario.setMostrarAlertaRechazo(false);
-            usuarioService.save(usuario);
-        }
 
         return "_t/frame";
     }

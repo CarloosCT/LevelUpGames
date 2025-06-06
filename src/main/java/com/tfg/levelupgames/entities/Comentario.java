@@ -1,5 +1,8 @@
 package com.tfg.levelupgames.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,6 +26,9 @@ public class Comentario {
     @ManyToOne
     @JoinColumn(name = "juego_id", nullable = false)
     private Juego juego;
+
+    @OneToMany(mappedBy = "comentario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReporteComentario> reportes = new ArrayList<>();
 
     public Comentario(String contenido, Usuario usuario, Juego juego) {
         this.contenido = contenido;

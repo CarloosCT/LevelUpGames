@@ -1,0 +1,54 @@
+.reporte-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  text-align: left;
+  background-color: #1f1f1f;
+  padding: 25px 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(255, 87, 51, 0.2);
+  max-width: 400px;
+  margin: 40px auto;
+  animation: fadeInUp 0.8s ease-in-out;
+}
+
+.reporte-form label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 6px;
+  color: white;
+}
+
+.reporte-form select {
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  font-size: 16px;
+  background-color: #2a2a2a;
+  color: white;
+  width: 100%;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.reporte-form select:focus {
+  outline: none;
+  background-color: #3a3a3a;
+}
+
+.reporte-form button[type="submit"] {
+  background-color: #ff5733;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 10px;
+}
+
+.reporte-form button[type="submit"]:hover {
+  background-color: #ff2e00;
+}

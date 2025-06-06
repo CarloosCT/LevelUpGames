@@ -10,7 +10,13 @@ import com.tfg.levelupgames.entities.Usuario;
 
 public interface SolicitudDesarrolladorRepository extends JpaRepository<SolicitudDesarrollador, Long> {
     boolean existsByUsuario(Usuario usuario);
+
     List<SolicitudDesarrollador> findByRevisadaFalse();
+
     List<SolicitudDesarrollador> findByUsuarioAndRevisadaFalse(Usuario usuario);
+
     Optional<SolicitudDesarrollador> findByUsuario(Usuario usuario);
+
+    Optional<SolicitudDesarrollador> findByUsuarioAndAprobadaTrue(Usuario usuario);
+
 }

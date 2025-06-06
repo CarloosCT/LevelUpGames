@@ -1,21 +1,28 @@
-<nav class="admin-links">
-    <a href="/genero/c">Nuevo género</a>
-    <a href="/genero/r">Listado géneros</a>
-    <a href="/precio/c">Nuevo precio</a>
-    <a href="/precio/r">Listado precios</a>
-    <a href="/imagen/r">Listado imágenes</a>
-    <a href="/juego/c">Nuevo juego</a>
-</nav>
-<br>
-<h3 class="game-list-title">Lista de Juegos</h3>
-<div class="game-list">
-    <div class="game-card" th:each="juego : ${juegos}">
-        <a th:href="@{/juego/{id}(id=${juego.id})}" target="_self" data-id="@{juego.id}">
-            <h3 th:text="${juego.nombre}">Nombre del juego</h3>
-        </a>
-    </div>
+<h3 class="game-list-title">Panel de Administración</h3>
+
+<div class="admin-cards">
+    <a href="/genero/c" class="admin-card">
+        <h4>➕ Nuevo Género</h4>
+        <p>Agrega un nuevo género al catálogo.</p>
+    </a>
+
+    <a href="/genero/r" class="admin-card">
+        <h4>📚 Listado de Géneros</h4>
+        <p>Gestiona todos los géneros existentes.</p>
+    </a>
+
+    <a href="/solicitud/r" class="admin-card">
+        <h4>📥 Solicitudes Desarrolladores</h4>
+        <p>Aprueba o rechaza solicitudes pendientes.</p>
+    </a>
+
+    <a href="/panel_administrador/desarrolladores" class="admin-card">
+        <h4>👩‍💻 Desarrolladores</h4>
+        <p>Gestiona permisos de los desarrolladores.</p>
+    </a>
+
+    <a href="/comentario/reportes" class="admin-card">
+        <h4>🚨 Reportes de Comentarios</h4>
+        <p>Modera y resuelve reportes recibidos.</p>
+    </a>
 </div>
-<div class="papelera"></div>
-<form id="delete-card-form" method="post" th:action="@{/juego/d}">
-    <input type="hidden" name="id" id="deleteCardId">
-</form>

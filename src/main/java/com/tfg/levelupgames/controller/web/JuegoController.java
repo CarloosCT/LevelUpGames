@@ -203,7 +203,7 @@ public class JuegoController {
         try {
             juegoService.d(id);
         } catch (Exception e) {
-            PRG.error(e.getMessage(), "/juego/r");
+            PRG.error(e.getMessage(), "/panel_desarrollador/r");
         }
         return "redirect:/panel_desarrollador/r";
     }

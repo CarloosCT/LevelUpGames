@@ -188,9 +188,47 @@ h3.game-list-title:hover::after {
   width: 120px;
 }
 
-div.papelera{
-  width: 50px; height: 50px;
+div.papelera {
+  width: 50px;
+  height: 50px;
   background-image: url('/img/icons/papelera.png');
   background-size: 100%;
   margin-top: 100px;
+}
+
+.admin-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.admin-card {
+  background-color: #1f1f1f;
+  border: 1px solid #ff5733;
+  border-radius: 10px;
+  padding: 20px;
+  width: 220px;
+  text-align: center;
+  color: white;
+  text-decoration: none;
+  box-shadow: 0 0 10px rgba(255, 87, 51, 0.4);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.admin-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(255, 87, 51, 0.6);
+}
+
+.admin-card h4 {
+  font-size: 18px;
+  color: #ff5733;
+  margin-bottom: 8px;
+}
+
+.admin-card p {
+  font-size: 14px;
+  color: #ddd;
 }

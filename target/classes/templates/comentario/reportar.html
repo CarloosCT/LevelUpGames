@@ -1,0 +1,15 @@
+<form th:action="@{/comentario/reportar/enviar}" method="post" class="reporte-form">
+    <input type="hidden" name="comentarioId" th:value="${comentarioId}" />
+    <input type="hidden" name="juegoId" th:value="${juegoId}" />
+
+    <label for="motivo">Motivo del reporte:</label>
+    <select name="motivo" id="motivo" required>
+        <option value="" disabled selected>Selecciona un motivo</option>
+        <option value="spam">Spam</option>
+        <option value="ofensivo">Contenido ofensivo</option>
+        <option value="irrelevante">Irrelevante</option>
+        <option value="otro">Otro</option>
+    </select>
+
+    <button type="submit">Enviar reporte</button>
+</form>

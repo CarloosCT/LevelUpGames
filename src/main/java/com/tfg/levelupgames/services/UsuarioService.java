@@ -2,14 +2,17 @@ package com.tfg.levelupgames.services;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.tfg.levelupgames.entities.Rol;
+import com.tfg.levelupgames.entities.SolicitudDesarrollador;
 import com.tfg.levelupgames.entities.Usuario;
 import com.tfg.levelupgames.repositories.RolRepository;
+import com.tfg.levelupgames.repositories.SolicitudDesarrolladorRepository;
 import com.tfg.levelupgames.repositories.UsuarioRepository;
 
 import jakarta.servlet.http.HttpSession;
@@ -21,6 +24,9 @@ public class UsuarioService {
 
     @Autowired
     private RolRepository rolRepository;
+
+    @Autowired
+    private SolicitudDesarrolladorRepository solicitudRepo;
 
     public void save(String loginemail, String nombre, String apellido, String password, String rolNombre) {
         Usuario u = new Usuario(loginemail, nombre, apellido, new BCryptPasswordEncoder().encode(password));
@@ -45,6 +51,11 @@ public class UsuarioService {
 
     public Usuario findById(Long id) {
         return usuarioRepository.findById(id).get();
+    }
+
+    public List<Usuario> getDesarrolladores() {
+        Rol rolDesarrollador = rolRepository.findRolByNombre("developer");
+        return usuarioRepository.findByRol(rolDesarrollador);
     }
 
     public Usuario login(String loginemail, String password) throws Exception {
@@ -74,5 +85,18 @@ public class UsuarioService {
         }
         usuario.setSaldo(usuario.getSaldo().add(cantidad));
         usuarioRepository.save(usuario);
+    }
+
+    public void quitarPrivilegios(Long usuarioId) {
+        Usuario usuario = usuarioRepository.findById(usuarioId).orElseThrow();
+
+        Rol rolUsuario = rolRepository.findRolByNombre("user");
+        usuario.setRol(rolUsuario);
+        usuario.setPrivilegiosRevocados(true);
+
+        usuarioRepository.save(usuario);
+
+        Optional<SolicitudDesarrollador> solicitudAprobada = solicitudRepo.findByUsuarioAndAprobadaTrue(usuario);
+        solicitudAprobada.ifPresent(solicitudRepo::delete);
     }
 }

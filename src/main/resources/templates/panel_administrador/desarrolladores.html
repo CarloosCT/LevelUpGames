@@ -1,0 +1,25 @@
+<div class="container">
+    <h1>Lista de Desarrolladores</h1>
+    
+    <table id="table" class="table table-striped">
+        <thead>
+            <th>Nombre</th>
+            <th>Quitar Privilegios</th>
+        </thead>
+    
+        <tbody>
+            <tr th:each=" desarrollador : ${desarrolladores}">
+                <td th:text="${desarrollador.nombre}"/>
+                <td>
+                    <form action="/panel_administrador/quitar_privilegios" method="post">
+                        <input type="hidden" name="usuarioId" th:value="${desarrollador.id}" />
+                        <button type="submit" >
+                            <img alt="papelera" src="/img/icons/trash.png" width="20" height="20"/>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    
+</div>

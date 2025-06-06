@@ -44,54 +44,21 @@ public class PrecioController {
     }
 
     @PostMapping("c")
-public String cPost(
-        @RequestParam Long juegoId,
-        @RequestParam BigDecimal cantidad) throws DangerException {
-    try {
-        Juego juego = juegoService.findById(juegoId);
-        if (juego == null) {
-            PRG.error("Juego no encontrado", "/precio/r");
-        }
-
-        // Guardar el precio con juego y cantidad
-        precioService.save(cantidad, juego);
-
-    } catch (Exception e) {
-        PRG.error("Error al guardar el precio: " + e.getMessage(), "/precio/r");
-    }
-    return "redirect:/precio/r";
-}
-
-    /*@PostMapping("d")
-    public String d(
-            @RequestParam Long id) throws DangerException {
-        try {
-            precioService.d(id);
-        } catch (Exception e) {
-            PRG.error(e.getMessage(), "/precio/r");
-        }
-        return "redirect:/precio/r";
-    }
-
-    @GetMapping("u")
-    public String u(
-            @RequestParam Long id,
-            ModelMap m) {
-        m.put("precio", precioService.findById(id));
-        m.put("estilos", "/css/precio/c.css");
-        m.put("view", "precio/u");
-        return "_t/frame";
-    }
-
-    @PostMapping("u")
-    public String uPost(
-            @RequestParam Long id,
+    public String cPost(
+            @RequestParam Long juegoId,
             @RequestParam BigDecimal cantidad) throws DangerException {
         try {
-            this.precioService.u(id, cantidad);
+            Juego juego = juegoService.findById(juegoId);
+            if (juego == null) {
+                PRG.error("Juego no encontrado", "/precio/r");
+            }
+
+            // Guardar el precio con juego y cantidad
+            precioService.save(cantidad, juego);
+
         } catch (Exception e) {
-            PRG.error("El precio " + cantidad + " ya existe", "/precio/r");
+            PRG.error("Error al guardar el precio: " + e.getMessage(), "/precio/r");
         }
         return "redirect:/precio/r";
-    }*/
+    }
 }

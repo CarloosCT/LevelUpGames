@@ -1,6 +1,5 @@
 package com.tfg.levelupgames.controller.web;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.tfg.levelupgames.entities.Usuario;
 import com.tfg.levelupgames.exception.DangerException;
 import com.tfg.levelupgames.helper.PRG;
+import com.tfg.levelupgames.repositories.UsuarioRepository;
 import com.tfg.levelupgames.services.UsuarioService;
 
 import jakarta.servlet.http.HttpSession;
@@ -19,8 +19,11 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/usuario")
 public class UsuarioController {
-@Autowired
+    @Autowired
     private UsuarioService usuarioService;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     @GetMapping("c")
     public String c(
@@ -60,6 +63,21 @@ public class UsuarioController {
         try {
             Usuario usuario = usuarioService.login(loginemail, password);
             s.setAttribute("user", usuario);
+            if (usuario.isPrivilegiosRevocados()) {
+                usuario.setPrivilegiosRevocados(false);
+                usuarioRepository.save(usuario);
+                return "redirect:/usuario/privilegios";
+            }
+            if (usuario.isMostrarAlertaRechazo()) {
+                usuario.setMostrarAlertaRechazo(false);
+                usuarioRepository.save(usuario);
+                return "redirect:/usuario/rechazo";
+            }
+            if (usuario.isSolicitudAprobada()) {
+                usuario.setSolicitudAprobada(false);
+                usuarioRepository.save(usuario);
+                return "redirect:/usuario/aprobada";
+            }
         } catch (Exception e) {
             PRG.error("Nombre de usuario o contraseña incorrectas", "/usuario/login");
         }
@@ -70,5 +88,26 @@ public class UsuarioController {
     public String logout(HttpSession s) {
         s.invalidate();
         return "redirect:/";
+    }
+
+    @GetMapping("/privilegios")
+    public String mostrarPrivilegiosRevocados(ModelMap m) {
+        m.put("estilos", "/css/mensajesInfo/privilegios.css");
+        m.put("view", "mensajesInfo/privilegios");
+        return "_t/frame";
+    }
+
+    @GetMapping("/rechazo")
+    public String mostrarRechazo(ModelMap m) {
+        m.put("estilos", "/css/mensajesInfo/rechazoSolicitud.css");
+        m.put("view", "mensajesInfo/rechazoSolicitud");
+        return "_t/frame";
+    }
+
+    @GetMapping("/aprobada")
+    public String mostrarAprobada(ModelMap m) {
+        m.put("estilos", "/css/mensajesInfo/solicitudAprobada.css");
+        m.put("view", "mensajesInfo/solicitudAprobada");
+        return "_t/frame";
     }
 }

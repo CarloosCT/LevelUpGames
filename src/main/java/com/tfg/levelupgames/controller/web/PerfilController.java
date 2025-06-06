@@ -19,7 +19,7 @@ public class PerfilController {
             HttpSession s) throws DangerException {
         Usuario usuario = (Usuario) s.getAttribute("user");
         if (usuario == null) {
-            m.put("view", "errores/loginError");
+            m.put("view", "mensajesInfo/loginError");
             m.put("estilos", "/css/loginError.css");
             return "_t/frame";
         }

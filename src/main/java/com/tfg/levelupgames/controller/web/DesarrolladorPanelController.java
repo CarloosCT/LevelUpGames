@@ -1,7 +1,5 @@
 package com.tfg.levelupgames.controller.web;
 
-import java.util.List;
-
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +31,7 @@ public class DesarrolladorPanelController {
         Usuario desarrollador = (Usuario) session.getAttribute("user");
 
         if (desarrollador == null) {
-            m.put("view", "errores/loginError");
+            m.put("view", "mensajesInfo/loginError");
             m.put("estilos", "/css/loginError.css");
             return "_t/frame";
         }

@@ -36,7 +36,7 @@ public String r(HttpSession session, ModelMap m) throws DangerException {
     Usuario usuario = (Usuario) session.getAttribute("user");
 
     if (usuario == null) {
-        m.put("view", "errores/loginError");
+        m.put("view", "mensajesInfo/loginError");
         m.put("estilos", "/css/loginError.css");
         return "_t/frame";
     }

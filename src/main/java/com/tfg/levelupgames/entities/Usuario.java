@@ -27,6 +27,8 @@ public class Usuario {
     private String apellido;
     private String password;
     private boolean mostrarAlertaRechazo;
+    private boolean privilegiosRevocados = false;
+    private boolean solicitudAprobada = false;
     private BigDecimal saldo;
 
     @OneToMany(mappedBy = "usuario")

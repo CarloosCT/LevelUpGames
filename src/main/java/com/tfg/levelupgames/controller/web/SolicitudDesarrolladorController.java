@@ -79,7 +79,7 @@ public class SolicitudDesarrolladorController {
         nuevaSolicitud.setPortfolioUrl(portfolioUrl);
         solicitudRepo.save(nuevaSolicitud);
 
-        return "redirect:/?success=Solicitud enviada correctamente";
+        return "redirect:/solicitud/solicitudEnviada";
     }
 
     @GetMapping("r")
@@ -115,9 +115,10 @@ public class SolicitudDesarrolladorController {
 
         Usuario usuario = solicitud.getUsuario();
         usuario.setRol(rolService.findByNombre("developer"));
+        usuario.setSolicitudAprobada(true);
         usuarioRepo.save(usuario);
 
-        return "redirect:/solicitud/r?success=Solicitud aprobada";
+        return "redirect:/solicitud/r";
     }
 
     @PostMapping("rechazar")
@@ -133,6 +134,13 @@ public class SolicitudDesarrolladorController {
             usuarioRepo.save(usuario);
             solicitudRepo.save(sol);
         }
-        return "redirect:/solicitud/r?success=Solicitud rechazada";
+        return "redirect:/solicitud/r";
+    }
+
+    @GetMapping("solicitudEnviada")
+    public String solicitudEnviada(ModelMap m) {
+        m.put("view", "mensajesInfo/solicitudEnviada");
+        m.put("estilos", "/css/mensajesInfo/solicitudEnviada.css");
+        return "_t/frame";
     }
 }
