@@ -30,27 +30,29 @@
     <div class="precio-columna">
         <h1 th:text="${juego.nombre}" class="juego-titulo"></h1>
 
-        <div class="valoracion-media">
-            <h4>Valoración media</h4>
-            <div class="valoracion solo-lectura">
-                <span class="estrella" data-valor="1">&#9733;</span>
-                <span class="estrella" data-valor="2">&#9733;</span>
-                <span class="estrella" data-valor="3">&#9733;</span>
-                <span class="estrella" data-valor="4">&#9733;</span>
-                <span class="estrella" data-valor="5">&#9733;</span>
-            </div>
-        </div>
+        <!-- Valoración media - solo visual -->
+<div class="valoracion-media">
+    <h4>Valoración media</h4>
+    <div class="valoracion solo-lectura media">
+        <span class="estrella" data-valor="1">&#9733;</span>
+        <span class="estrella" data-valor="2">&#9733;</span>
+        <span class="estrella" data-valor="3">&#9733;</span>
+        <span class="estrella" data-valor="4">&#9733;</span>
+        <span class="estrella" data-valor="5">&#9733;</span>
+    </div>
+</div>
 
-        <div th:if="${valoracionUsuario != null}" class="valoracion-usuario">
-            <h4>Tu valoración</h4>
-            <div class="valoracion solo-lectura usuario">
-                <span class="estrella" data-valor="1">&#9733;</span>
-                <span class="estrella" data-valor="2">&#9733;</span>
-                <span class="estrella" data-valor="3">&#9733;</span>
-                <span class="estrella" data-valor="4">&#9733;</span>
-                <span class="estrella" data-valor="5">&#9733;</span>
-            </div>
-        </div>
+<!-- Tu valoración - editable si cumple condiciones -->
+<div th:if="${valoracionUsuario != null}" class="valoracion-usuario">
+    <h4>Tu valoración</h4>
+    <div class="valoracion editable-usuario">
+        <span class="estrella" data-valor="1">&#9733;</span>
+        <span class="estrella" data-valor="2">&#9733;</span>
+        <span class="estrella" data-valor="3">&#9733;</span>
+        <span class="estrella" data-valor="4">&#9733;</span>
+        <span class="estrella" data-valor="5">&#9733;</span>
+    </div>
+</div>
 
         <div class="sin-sesion" th:if="${user == null}">
             <small>Inicia sesión para valorar este juego.</small>
@@ -177,18 +179,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Pintar estrellas de valoración media (solo visual)
     pintarEstrellas('.valoracion-media .valoracion', valoracionMedia);
 
+    // Pintar estrellas del usuario si existe valoración
     if (valoracionUsuario !== null) {
         pintarEstrellas('.valoracion-usuario .valoracion', valoracionUsuario);
     }
 
+    // Solo permitir votar si el usuario ha iniciado sesión y tiene el juego
     if (!userLogged || !tieneJuego) return;
 
-    const estrellas = document.querySelectorAll('.valoracion .estrella');
+    // Obtener estrellas solo del bloque "Tu valoración"
+    const estrellasUsuario = document.querySelectorAll('.valoracion-usuario .estrella');
 
-    estrellas.forEach(estrella => {
+    estrellasUsuario.forEach(estrella => {
         estrella.style.cursor = 'pointer';
+
         estrella.addEventListener('click', async () => {
             const valor = parseInt(estrella.getAttribute('data-valor'));
             const formData = new URLSearchParams();
@@ -206,8 +213,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     window.location.href = res.url;
                 } else if (res.ok) {
                     alert('Valoración enviada. ¡Gracias!');
-                    pintarEstrellas('.valoracion-media .valoracion', valor);
-                    pintarEstrellas('.valoracion .estrella', valor);
+                    pintarEstrellas('.valoracion-usuario .valoracion', valor);
+
+                    // Opcional: Actualizar media también
+                    const nuevaMedia = await res.text();
+                    const mediaNum = parseFloat(nuevaMedia);
+                    if (!isNaN(mediaNum)) {
+                        pintarEstrellas('.valoracion-media .valoracion', mediaNum);
+                    }
                 } else {
                     alert('Error enviando valoración.');
                 }
