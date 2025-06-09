@@ -33,6 +33,10 @@ public class Valoracion {
     }
 
     public void setValor(BigDecimal valoracion) {
-    this.nota = valoracion;
+        this.nota = valoracion;
+    }
+
+    public BigDecimal getValor() {
+        return this.nota;
     }
 }

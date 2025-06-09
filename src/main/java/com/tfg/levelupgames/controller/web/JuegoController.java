@@ -21,6 +21,7 @@ import com.tfg.levelupgames.services.ComentarioService;
 import com.tfg.levelupgames.services.CompraService;
 import com.tfg.levelupgames.services.GeneroService;
 import com.tfg.levelupgames.services.JuegoService;
+import com.tfg.levelupgames.services.ValoracionService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -39,6 +40,9 @@ public class JuegoController {
 
     @Autowired
     private ComentarioService comentarioService;
+
+    @Autowired
+    private ValoracionService valoracionService;
 
     @GetMapping("c")
     public String c(ModelMap m) {
@@ -71,7 +75,8 @@ public class JuegoController {
 
         Usuario usuario = (Usuario) session.getAttribute("user");
 
-        float valoracionMedia = juego.getValoracionMedia();
+        Float valoracionMedia = juego.getValoracionMedia();
+        Float valoracionUsuario = valoracionService.obtenerValoracionDeUsuario(usuario, juego);
 
         m.put("juego", juego);
         m.put("user", usuario);
@@ -79,6 +84,7 @@ public class JuegoController {
         m.put("tieneJuego", compraService.existeCompra(usuario, juego));
         m.put("comentarios", comentarioService.getComentariosPorJuegoId(id));
         m.put("developer", juegoService.getDeveloper(id));
+        m.put("valoracionUsuario", valoracionUsuario);
         m.put("view", "juego/r");
         m.put("estilos", "/css/juego/r.css");
 
