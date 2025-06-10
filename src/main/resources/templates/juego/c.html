@@ -178,24 +178,129 @@
   }
 
   function validarFormulario() {
-    const checkboxes = document.querySelectorAll('input[name="generosIds"]:checked');
-    const error = document.getElementById('error-generos');
-    if (checkboxes.length === 0) {
-      error.style.display = 'block';
-      return false;
-    }
-    error.style.display = 'none';
+  let valido = true;
 
-    const portadaDataTransfer = new DataTransfer();
-    if (archivoPortada) {
-      portadaDataTransfer.items.add(archivoPortada);
-      portadaInput.files = portadaDataTransfer.files;
-    }
-
-    const imagenesDataTransfer = new DataTransfer();
-    archivosImagenes.forEach(file => imagenesDataTransfer.items.add(file));
-    imagenesInput.files = imagenesDataTransfer.files;
-
-    return true;
+  // Validar nombre
+  const inputNombre = document.getElementById("idNombre");
+  const nombre = inputNombre.value.trim();
+  const nombreExp = /^[a-zA-ZáéíóúüÁÉÍÓÚÜñÑçÇ0-9 .,'\-]{3,}$/;
+  let errorNombre = document.getElementById("error-nombre");
+  if (!errorNombre) {
+    errorNombre = document.createElement("small");
+    errorNombre.id = "error-nombre";
+    errorNombre.style.color = "red";
+    inputNombre.parentNode.appendChild(errorNombre);
   }
+  if (!nombreExp.test(nombre)) {
+    inputNombre.style.border = "2px solid red";
+    errorNombre.textContent = "El nombre debe tener al menos 3 caracteres válidos.";
+    errorNombre.style.display = "inline";
+    valido = false;
+  } else {
+    inputNombre.style.border = "";
+    errorNombre.style.display = "none";
+  }
+
+  // Validar precio
+  const inputPrecio = document.getElementById("precio");
+  const precio = parseFloat(inputPrecio.value);
+  let errorPrecio = document.getElementById("error-precio");
+  if (!errorPrecio) {
+    errorPrecio = document.createElement("small");
+    errorPrecio.id = "error-precio";
+    errorPrecio.style.color = "red";
+    inputPrecio.parentNode.appendChild(errorPrecio);
+  }
+  if (isNaN(precio) || precio < 0) {
+    inputPrecio.style.border = "2px solid red";
+    errorPrecio.textContent = "Introduce un precio válido mayor o igual a 0.";
+    errorPrecio.style.display = "inline";
+    valido = false;
+  } else {
+    inputPrecio.style.border = "";
+    errorPrecio.style.display = "none";
+  }
+
+  // Validar descripción
+  const inputDesc = document.getElementById("idDesc");
+  const desc = inputDesc.value.trim();
+  let errorDesc = document.getElementById("error-desc");
+  if (!errorDesc) {
+    errorDesc = document.createElement("small");
+    errorDesc.id = "error-desc";
+    errorDesc.style.color = "red";
+    inputDesc.parentNode.appendChild(errorDesc);
+  }
+  if (desc.length < 10) {
+    inputDesc.style.border = "2px solid red";
+    errorDesc.textContent = "La descripción debe tener al menos 10 caracteres.";
+    errorDesc.style.display = "inline";
+    valido = false;
+  } else {
+    inputDesc.style.border = "";
+    errorDesc.style.display = "none";
+  }
+
+  // Validar géneros
+  const checkboxes = document.querySelectorAll('input[name="generosIds"]:checked');
+  const errorGeneros = document.getElementById('error-generos');
+  if (checkboxes.length === 0) {
+    errorGeneros.style.display = "block";
+    valido = false;
+  } else {
+    errorGeneros.style.display = "none";
+  }
+
+  // Validar portada
+  const portadaInput = document.getElementById('portada');
+  let errorPortada = document.getElementById("error-portada");
+  if (!errorPortada) {
+    errorPortada = document.createElement("small");
+    errorPortada.id = "error-portada";
+    errorPortada.style.color = "red";
+    portadaInput.parentNode.appendChild(errorPortada);
+  }
+  if (!archivoPortada) {
+    errorPortada.textContent = "Debes seleccionar una imagen de portada.";
+    errorPortada.style.display = "inline";
+    portadaInput.style.border = "2px solid red";
+    valido = false;
+  } else {
+    errorPortada.style.display = "none";
+    portadaInput.style.border = "";
+  }
+
+  // Validar archivo descargable
+  const descargableInput = document.getElementById("descargable");
+  const archivoDescargable = descargableInput.files[0];
+  let errorDescargable = document.getElementById("error-descargable");
+  if (!errorDescargable) {
+    errorDescargable = document.createElement("small");
+    errorDescargable.id = "error-descargable";
+    errorDescargable.style.color = "red";
+    descargableInput.parentNode.appendChild(errorDescargable);
+  }
+  if (!archivoDescargable) {
+    descargableInput.style.border = "2px solid red";
+    errorDescargable.textContent = "Selecciona un archivo descargable válido.";
+    errorDescargable.style.display = "inline";
+    valido = false;
+  } else {
+    descargableInput.style.border = "";
+    errorDescargable.style.display = "none";
+  }
+
+  // Rellenar campos de imágenes seleccionadas
+  const portadaDataTransfer = new DataTransfer();
+  if (archivoPortada) {
+    portadaDataTransfer.items.add(archivoPortada);
+    portadaInput.files = portadaDataTransfer.files;
+  }
+
+  const imagenesDataTransfer = new DataTransfer();
+  archivosImagenes.forEach(file => imagenesDataTransfer.items.add(file));
+  document.getElementById("imagenes").files = imagenesDataTransfer.files;
+
+  return valido;
+}
 </script>

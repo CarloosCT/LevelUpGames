@@ -3,88 +3,158 @@
 
     <form action="/usuario/c" method="post" onsubmit="return validarUsuario()">
         <label for="idEmail">Correo</label>
-        <input id="idEmail" type="text" name="loginemail" autofocus="autofocus" />
+        <input id="idEmail" type="text" name="loginemail" />
+        <small id="error-email" style="color: red; display: none;"></small>
 
         <label for="idNombre">Nombre</label>
-        <input id="idNombre" type="text" name="nombre" autofocus="autofocus" />
-        <br />
+        <input id="idNombre" type="text" name="nombre" />
+        <small id="error-nombre" style="color: red; display: none;"></small>
 
         <label for="idApe">Apellido</label>
         <input id="idApe" type="text" name="apellido" />
-        <br />
+        <small id="error-apellido" style="color: red; display: none;"></small>
 
         <label for="idPassword">Contraseña</label>
-        <input id="idPassword" type="password" name="password" />
+<input id="idPassword" type="password" name="password" oninput="medirSeguridad()" />
+<small id="error-password" style="color: red; display: none;"></small>
+
+<div id="medidor-container" style="margin-top: 5px;">
+    <div id="barra-seguridad" style="height: 8px; background-color: lightgray; width: 100%; border-radius: 4px;">
+        <div id="nivel-seguridad" style="height: 100%; width: 0%; background-color: red; border-radius: 4px;"></div>
+    </div>
+    <small id="texto-seguridad" style="display: block; margin-top: 4px;"></small>
+</div>
+
+        <label for="idPasswordR">Repetir Contraseña</label>
+        <input id="idPasswordR" type="password" name="passwordR" />
+        <small id="error-passwordR" style="color: red; display: none;"></small>
+
         <br />
-
-        <label for="idPassword">Repetir Contraseña</label>
-        <input id="idPassword" type="password" name="passwordR" />
-        <br />
-
-
         <input type="submit" />
-        <br />
     </form>
-
 </div>
 
 <script>
     function validarUsuario() {
-        var expresion = /^[a-zA-ZáéíóúüÁÉÍÓÚÜñÑçÇ ]{3,}$/;
-        var email = document.getElementsByTagName("form")[0].loginemail.value.trim();
-        var nombre = document.getElementsByTagName("form")[0].nombre.value.trim();
-        var apellido = document.getElementsByTagName("form")[0].apellido.value.trim();
-        var password = document.getElementsByTagName("form")[0].password.value.trim();
-        var passwordR = document.getElementsByTagName("form")[0].passwordR.value.trim();
+        let valido = true;
 
-        var emailCorrecto = false;
-        var nombreCorrecto = false;
-        var apellidoCorrecto = false;
-        var passwordCorrecto = false;
+        // Obtener referencias
+        const email = document.getElementById("idEmail");
+        const nombre = document.getElementById("idNombre");
+        const apellido = document.getElementById("idApe");
+        const password = document.getElementById("idPassword");
+        const passwordR = document.getElementById("idPasswordR");
 
-        if (expresion.test(nombre)) {
-            nombreCorrecto = true;
-        } else {
-            nombre.placeholder = "El nombre no es correcto";
-            alert("El nombre no es correcto");
-            nombreCorrecto = false;
+        // Errores
+        const errorEmail = document.getElementById("error-email");
+        const errorNombre = document.getElementById("error-nombre");
+        const errorApellido = document.getElementById("error-apellido");
+        const errorPassword = document.getElementById("error-password");
+        const errorPasswordR = document.getElementById("error-passwordR");
+
+        // Limpiar estilos anteriores
+        [email, nombre, apellido, password, passwordR].forEach(input => input.style.border = "");
+        [errorEmail, errorNombre, errorApellido, errorPassword, errorPasswordR].forEach(error => error.style.display = "none");
+
+        // Validaciones
+        const regexNombre = /^[a-zA-ZáéíóúüÁÉÍÓÚÜñÑçÇ ]{3,}$/;
+        const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!regexEmail.test(email.value.trim())) {
+            errorEmail.textContent = "Introduce un correo válido.";
+            errorEmail.style.display = "inline";
+            email.style.border = "2px solid red";
+            valido = false;
         }
 
-        if (expresion.test(apellido)) {
-            apellidoCorrecto = true;
-        } else {
-            apellido.placeholder = "El apellido no es correcto";
-            alert("El apellido no es correcto");
-            apellidoCorrecto = false;
+        if (!regexNombre.test(nombre.value.trim())) {
+            errorNombre.textContent = "El nombre debe tener al menos 3 letras y solo contener letras.";
+            errorNombre.style.display = "inline";
+            nombre.style.border = "2px solid red";
+            valido = false;
         }
 
-        if (email.length >= 5 && email.includes("@") && email.includes(".") && email.indexOf("@") < email.indexOf(".")) {
-            emailCorrecto = true;
-        } else {
-            email.placeholder = "El correo no es correcto";
-            alert("El correo no es correcto");
-            emailCorrecto = false;
+        if (!regexNombre.test(apellido.value.trim())) {
+            errorApellido.textContent = "El apellido debe tener al menos 3 letras y solo contener letras.";
+            errorApellido.style.display = "inline";
+            apellido.style.border = "2px solid red";
+            valido = false;
         }
 
-        if (password.length >= 8) {
-            passwordCorrecto = true;
-        } else {
-            password.placeholder = "La contraseña debe tener al menos 8 caracteres";
-            alert("La contraseña debe tener al menos 8 caracteres");
-            passwordCorrecto = false;
+        if (password.value.length < 8) {
+            errorPassword.textContent = "La contraseña debe tener al menos 8 caracteres.";
+            errorPassword.style.display = "inline";
+            password.style.border = "2px solid red";
+            valido = false;
         }
 
-        if(password === passwordR) {
-            passwordCorrecto = true;
-        } else {
-            passwordR.value = "";
-            password.value = "";
-            passwordR.placeholder = "Las contraseñas no coinciden";
-            password.placeholder = "Las contraseñas no coinciden";
-            alert("Las contraseñas no coinciden");
-            passwordCorrecto = false;
+        if (password.value !== passwordR.value) {
+            errorPasswordR.textContent = "Las contraseñas no coinciden.";
+            errorPasswordR.style.display = "inline";
+            passwordR.style.border = "2px solid red";
+            valido = false;
         }
 
-        return nombreCorrecto && apellidoCorrecto && emailCorrecto && passwordCorrecto;
+        return valido;
     }
+</script>
+
+<script>
+    function medirSeguridad() {
+    const password = document.getElementById("idPassword").value;
+    const nivel = document.getElementById("nivel-seguridad");
+    const texto = document.getElementById("texto-seguridad");
+    const contenedor = document.getElementById("medidor-container");
+
+    // Mostrar siempre el contenedor
+    contenedor.style.display = "block";
+
+    if (password.length === 0) {
+        nivel.style.width = "0%";
+        nivel.style.backgroundColor = "red"; // color inicial
+        texto.textContent = "";
+        return;
+    }
+
+    let fuerza = 0;
+
+    if (password.length >= 8) fuerza++;
+    if (/[A-Z]/.test(password)) fuerza++;
+    if (/[a-z]/.test(password)) fuerza++;
+    if (/\d/.test(password)) fuerza++;
+    if (/[^A-Za-z0-9]/.test(password)) fuerza++;
+
+    // Determinar nivel de seguridad
+    let color = "red";
+    let textoSeguridad = "Muy débil";
+    let ancho = "20%";
+
+    if (fuerza >= 2) {
+        color = "orange";
+        textoSeguridad = "Débil";
+        ancho = "40%";
+    }
+    if (fuerza >= 3) {
+        color = "#e0c400"; // amarillo
+        textoSeguridad = "Media";
+        ancho = "60%";
+    }
+    if (fuerza >= 4) {
+        color = "lightgreen";
+        textoSeguridad = "Alta";
+        ancho = "80%";
+    }
+    if (fuerza === 5) {
+        color = "green";
+        textoSeguridad = "Muy segura";
+        ancho = "100%";
+    }
+
+    // Actualizar barra y texto
+    nivel.style.width = ancho;
+    nivel.style.backgroundColor = color;
+    texto.textContent = "Seguridad: " + textoSeguridad;
+    texto.style.color = color;
+}
+
 </script>

@@ -4,28 +4,28 @@
   <form action="/genero/c" method="post" enctype="multipart/form-data" onsubmit="return validarGenero()">
     <label for="idGenero">Nombre</label>
     <input id="idGenero" type="text" name="nombre" required autofocus />
+    <small id="errorNombre" style="color:red; display:none;">El nombre debe tener al menos 3 letras y solo caracteres válidos.</small>
     <br><br>
 
-    
     <input type="submit" value="Crear nuevo género" />
   </form>
 </div>
 
 <script>
+function validarGenero() {
+  var expresion = /^[a-zA-ZáéíóúüÁÉÍÓÚÜñÑçÇ ]{3,}$/;
+  var inputNombre = document.getElementById("idGenero");
+  var errorMensaje = document.getElementById("errorNombre");
+  var nombre = inputNombre.value.trim();
 
-  function validarGenero(){
-            var expresion = /^[a-zA-ZáéíóúüÁÉÍÓÚÜñÑçÇ ]{3,}$/;
-            var nombre = document.getElementsByTagName("form")[0].nombre.value.trim();
-            var nombreCorrecto = false;
-            if(expresion.test(nombre))
-            {
-                nombreCorrecto = true;
-            }
-            else
-            {
-                nombreCorrecto = false;
-            }
-
-            return nombreCorrecto;
-        }
+  if (expresion.test(nombre)) {
+    inputNombre.style.border = "";
+    errorMensaje.style.display = "none";
+    return true;
+  } else {
+    inputNombre.style.border = "2px solid red";
+    errorMensaje.style.display = "inline";
+    return false;
+  }
+}
 </script>

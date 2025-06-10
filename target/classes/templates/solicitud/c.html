@@ -1,24 +1,56 @@
 <body>
     <div class="container">
         <h1>Formulario de Solicitud para Desarrollador</h1>
-        <form action="/solicitud/c" method="post">
+        <form action="/solicitud/c" method="post" onsubmit="return validarFormulario();">
             <label for="biografia">Biografía:</label>
-            <textarea id="biografia" name="biografia" rows="6" placeholder="Cuéntanos sobre ti..." required></textarea>
+            <textarea id="biografia" name="biografia" rows="6" placeholder="Cuéntanos sobre ti..."></textarea>
+            <small id="error-biografia" style="color:red; display:none;"></small>
 
             <label for="portfolioUrl">URL del Portfolio:</label>
-            <input type="url" id="portfolioUrl" name="portfolioUrl" placeholder="https://tuportfolio.com" required />
+            <input type="url" id="portfolioUrl" name="portfolioUrl" placeholder="https://tuportfolio.com" />
+            <small id="error-url" style="color:red; display:none;"></small>
 
             <button type="submit">Enviar Solicitud</button>
-
             <button type="button" onclick="cancelarSolicitud()">Cancelar</button>
-
         </form>
     </div>
 
     <script>
         function cancelarSolicitud() {
-            // Redirige a home con mensaje de cancelación
             window.location.href = '/?cancel=Operación cancelada';
+        }
+
+        function validarFormulario() {
+            let valido = true;
+
+            // Validación de biografía
+            const bio = document.getElementById("biografia");
+            const errorBio = document.getElementById("error-biografia");
+            if (bio.value.trim().length < 10) {
+                errorBio.textContent = "La biografía debe tener al menos 10 caracteres.";
+                errorBio.style.display = "inline";
+                bio.style.border = "2px solid red";
+                valido = false;
+            } else {
+                errorBio.style.display = "none";
+                bio.style.border = "";
+            }
+
+            // Validación de URL del portfolio
+            const url = document.getElementById("portfolioUrl");
+            const errorUrl = document.getElementById("error-url");
+            const urlRegex = /^(https?:\/\/)?([\w\-]+\.)+[a-z]{2,6}(\/[\w\-._~:/?#[\]@!$&'()*+,;=]*)?$/i;
+            if (!urlRegex.test(url.value.trim())) {
+                errorUrl.textContent = "Introduce una URL válida.";
+                errorUrl.style.display = "inline";
+                url.style.border = "2px solid red";
+                valido = false;
+            } else {
+                errorUrl.style.display = "none";
+                url.style.border = "";
+            }
+
+            return valido;
         }
     </script>
 </body>
