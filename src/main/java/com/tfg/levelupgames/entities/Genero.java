@@ -14,8 +14,6 @@ import lombok.Data;
 @Data
 public class Genero {
 
-    //==========================================================================
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,13 +21,8 @@ public class Genero {
     @Column(unique = true)
     private String nombre;
 
-    //Relaciones
-
     @ManyToMany(mappedBy = "generos")
     private List<Juego> juegos = new ArrayList<>();
-
-
-    //==========================================================================
 
     public Genero(String nombre) 
     {
