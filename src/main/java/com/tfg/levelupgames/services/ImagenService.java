@@ -14,10 +14,10 @@ import com.tfg.levelupgames.entities.Juego;
 import com.tfg.levelupgames.exception.DangerException;
 import com.tfg.levelupgames.repositories.ImagenRepository;
 import com.tfg.levelupgames.repositories.JuegoRepository;
-import com.tfg.levelupgames.services.CloudinaryService;
 
 @Service
 public class ImagenService {
+
     @Autowired
     private CloudinaryService cloudinaryService;
 
@@ -45,8 +45,7 @@ public class ImagenService {
 
     public void d(Long id) {
         Imagen imagen = imagenRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Imagen no encontrada"));
-
+            .orElseThrow(() -> new RuntimeException("Imagen no encontrada"));
         try {
             cloudinaryService.delete(imagen.getPublicId(), "image");
             imagenRepository.delete(imagen);
@@ -63,9 +62,8 @@ public class ImagenService {
 
     public void eliminarImagenPorId(Long imgId) {
         Imagen imagen = imagenRepository.findById(imgId)
-                .orElseThrow(() -> new RuntimeException("Imagen no encontrada con id " + imgId));
+            .orElseThrow(() -> new RuntimeException("Imagen no encontrada con id " + imgId));
         try {
-            // Borrar en Cloudinary (solo si tienes publicId)
             if (imagen.getPublicId() != null) {
                 cloudinaryService.delete(imagen.getPublicId(), "image");
             }
@@ -99,9 +97,8 @@ public class ImagenService {
                 portada.setJuego(juego);
                 imagenRepository.save(portada);
 
-                // Asignar portada al juego y guardar juego
                 juego.setPortada(portada);
-                juegoRepository.save(juego); // <-- guardar para actualizar la relación
+                juegoRepository.save(juego);
             }
 
             if (imagenes != null) {

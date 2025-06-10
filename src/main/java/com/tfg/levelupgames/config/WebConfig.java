@@ -9,11 +9,10 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(@org.springframework.lang.NonNull ResourceHandlerRegistry registry) {
-        // Recursos para imágenes de portada y otros
+
         registry.addResourceHandler("/uploads/**")
                 .addResourceLocations("file:uploads/");
 
-        // Recursos para archivos descargables
         registry.addResourceHandler("/downloadables/**")
                 .addResourceLocations("file:downloadables/");
     }
