@@ -28,13 +28,15 @@ public class UsuarioService {
     @Autowired
     private SolicitudDesarrolladorRepository solicitudRepo;
 
-    public void save(String loginemail, String nombre, String apellido, String password, String rolNombre) {
+    public Usuario save(String loginemail, String nombre, String apellido, String password, String rolNombre) {
         Usuario u = new Usuario(loginemail, nombre, apellido, new BCryptPasswordEncoder().encode(password));
 
         Rol rol = rolRepository.findRolByNombre(rolNombre);
         u.setRol(rol);
 
         usuarioRepository.save(u);
+
+        return u;
     }
 
     public void save(Usuario usuario) {

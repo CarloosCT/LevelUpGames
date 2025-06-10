@@ -34,18 +34,20 @@ public class UsuarioController {
     }
 
     @PostMapping("c")
-    public String cPost(
-            @RequestParam String loginemail,
-            @RequestParam String nombre,
-            @RequestParam String apellido,
-            @RequestParam String password) throws DangerException {
-        try {
-            this.usuarioService.save(loginemail, nombre, apellido, password, "user");
-        } catch (Exception e) {
-            PRG.error("Correo " + loginemail + " ya en uso", "/usuario/c");
-        }
-        return "redirect:/";
+public String cPost(
+        @RequestParam String loginemail,
+        @RequestParam String nombre,
+        @RequestParam String apellido,
+        @RequestParam String password,
+        HttpSession s) throws DangerException {
+    try {
+        Usuario usuario = this.usuarioService.save(loginemail, nombre, apellido, password, "user");
+        s.setAttribute("user", usuario); // Iniciar sesión automáticamente
+    } catch (Exception e) {
+        PRG.error("Correo " + loginemail + " ya en uso", "/usuario/c");
     }
+    return "redirect:/";
+}
 
     @GetMapping("login")
     public String login(
