@@ -27,8 +27,7 @@ public class PrecioController {
     private JuegoService juegoService;
 
     @GetMapping("r")
-    public String r(
-            ModelMap m) {
+    public String r(ModelMap m) {
         m.put("precios", precioService.findAll());
         m.put("view", "precio/r");
         m.put("estilos", "/css/precio/c.css");
@@ -36,24 +35,20 @@ public class PrecioController {
     }
 
     @GetMapping("c")
-    public String c(
-            ModelMap m) {
+    public String c(ModelMap m) {
         m.put("view", "precio/c");
         m.put("estilos", "/css/precio/c.css");
         return "_t/frame";
     }
 
     @PostMapping("c")
-    public String cPost(
-            @RequestParam Long juegoId,
-            @RequestParam BigDecimal cantidad) throws DangerException {
+    public String cPost(@RequestParam Long juegoId, @RequestParam BigDecimal cantidad) throws DangerException {
         try {
             Juego juego = juegoService.findById(juegoId);
             if (juego == null) {
                 PRG.error("Juego no encontrado", "/precio/r");
             }
 
-            // Guardar el precio con juego y cantidad
             precioService.save(cantidad, juego);
 
         } catch (Exception e) {

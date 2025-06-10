@@ -31,13 +31,12 @@ public class SolicitudDesarrolladorController {
 
     @Autowired
     private UsuarioService usuarioService;
-   
+
     @Autowired
     private UsuarioRepository usuarioRepo;
-   
+
     @Autowired
     private RolService rolService;
-    
 
     @GetMapping("c")
     public String mostrarFormulario(ModelMap m) {
@@ -54,7 +53,6 @@ public class SolicitudDesarrolladorController {
 
         Usuario usuario = usuarioService.obtenerUsuarioActual(session);
 
-        // Buscar la última solicitud del usuario (asumiendo solo una a la vez)
         Optional<SolicitudDesarrollador> solicitudExistenteOpt = solicitudRepo.findByUsuario(usuario);
 
         if (solicitudExistenteOpt.isPresent()) {
@@ -68,11 +66,9 @@ public class SolicitudDesarrolladorController {
                 PRG.error("Ya has sido aprobado como desarrollador.", "/");
             }
 
-            // Si está revisada y rechazada, eliminamos la anterior
             solicitudRepo.delete(solicitudExistente);
         }
 
-        // Crear nueva solicitud
         SolicitudDesarrollador nuevaSolicitud = new SolicitudDesarrollador();
         nuevaSolicitud.setUsuario(usuario);
         nuevaSolicitud.setBiografia(biografia);
@@ -83,8 +79,10 @@ public class SolicitudDesarrolladorController {
     }
 
     @GetMapping("r")
-    public String r(HttpSession session, ModelMap m, @RequestParam(required = false) String success,
+    public String r(HttpSession session, ModelMap m, 
+            @RequestParam(required = false) String success,
             @RequestParam(required = false) String cancel) {
+
         Usuario u = (Usuario) session.getAttribute("user");
 
         if (u == null || !u.isAdmin()) {

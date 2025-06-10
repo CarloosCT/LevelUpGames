@@ -32,35 +32,33 @@ public class BibliotecaController {
     private PrecioService precioService;
 
     @GetMapping("r")
-public String r(HttpSession session, ModelMap m) throws DangerException {
-    Usuario usuario = (Usuario) session.getAttribute("user");
+    public String r(HttpSession session, ModelMap m) throws DangerException {
+        Usuario usuario = (Usuario) session.getAttribute("user");
 
-    if (usuario == null) {
-        m.put("view", "mensajesInfo/loginError");
-        m.put("estilos", "/css/loginError.css");
+        if (usuario == null) {
+            m.put("view", "mensajesInfo/loginError");
+            m.put("estilos", "/css/loginError.css");
+            return "_t/frame";
+        }
+
+        List<Compra> compras = compraService.findByUsuario(usuario);
+        List<CompraDTO> comprasDTO = new ArrayList<>();
+
+        for (Compra compra : compras) {
+            Juego juego = compra.getJuego();
+            LocalDate fechaCompra = compra.getFecha();
+
+            Precio precioCercano = precioService.findMasCercanoAntesDeFecha(juego, fechaCompra);
+
+            CompraDTO dto = new CompraDTO(compra, precioCercano);
+            comprasDTO.add(dto);
+        }
+
+        m.put("compras", comprasDTO);
+        m.put("view", "biblioteca/r");
+        m.put("estilos", "/css/biblioteca/c.css");
+
         return "_t/frame";
     }
-
-    List<Compra> compras = compraService.findByUsuario(usuario);
-    List<CompraDTO> comprasDTO = new ArrayList<>();
-
-    for (Compra compra : compras) {
-        Juego juego = compra.getJuego();
-        LocalDate fechaCompra = compra.getFecha();
-
-        // Buscar el precio más cercano anterior o igual a la fecha de compra
-        Precio precioCercano = precioService.findMasCercanoAntesDeFecha(juego, fechaCompra);
-
-        // Crear DTO
-        CompraDTO dto = new CompraDTO(compra, precioCercano);
-        comprasDTO.add(dto);
-    }
-
-    m.put("compras", comprasDTO);
-    m.put("view", "biblioteca/r");
-    m.put("estilos", "/css/biblioteca/c.css");
-
-    return "_t/frame";
-}
 
 }

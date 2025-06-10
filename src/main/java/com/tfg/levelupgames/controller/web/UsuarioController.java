@@ -19,6 +19,7 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/usuario")
 public class UsuarioController {
+
     @Autowired
     private UsuarioService usuarioService;
 
@@ -26,32 +27,30 @@ public class UsuarioController {
     private UsuarioRepository usuarioRepository;
 
     @GetMapping("c")
-    public String c(
-            ModelMap m) {
+    public String c(ModelMap m) {
         m.put("view", "usuario/c");
         m.put("estilos", "/css/usuario/c.css");
         return "_t/frame";
     }
 
     @PostMapping("c")
-public String cPost(
-        @RequestParam String loginemail,
-        @RequestParam String nombre,
-        @RequestParam String apellido,
-        @RequestParam String password,
-        HttpSession s) throws DangerException {
-    try {
-        Usuario usuario = this.usuarioService.save(loginemail, nombre, apellido, password, "user");
-        s.setAttribute("user", usuario); // Iniciar sesión automáticamente
-    } catch (Exception e) {
-        PRG.error("Correo " + loginemail + " ya en uso", "/usuario/c");
+    public String cPost(
+            @RequestParam String loginemail,
+            @RequestParam String nombre,
+            @RequestParam String apellido,
+            @RequestParam String password,
+            HttpSession s) throws DangerException {
+        try {
+            Usuario usuario = this.usuarioService.save(loginemail, nombre, apellido, password, "user");
+            s.setAttribute("user", usuario);
+        } catch (Exception e) {
+            PRG.error("Correo " + loginemail + " ya en uso", "/usuario/c");
+        }
+        return "redirect:/";
     }
-    return "redirect:/";
-}
 
     @GetMapping("login")
-    public String login(
-            ModelMap m) {
+    public String login(ModelMap m) {
         m.put("estilos", "/css/usuario/login.css");
         m.put("view", "usuario/login");
         return "_t/frame";
@@ -65,6 +64,7 @@ public String cPost(
         try {
             Usuario usuario = usuarioService.login(loginemail, password);
             s.setAttribute("user", usuario);
+
             if (usuario.isPrivilegiosRevocados()) {
                 usuario.setPrivilegiosRevocados(false);
                 usuarioRepository.save(usuario);

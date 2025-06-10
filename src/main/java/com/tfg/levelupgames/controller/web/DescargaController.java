@@ -25,17 +25,14 @@ public class DescargaController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Resource> descargarJuego(@PathVariable Long id) throws IOException {
-
-
         Juego juego = juegoService.findById(id);
         if (juego == null) {
             return ResponseEntity.notFound().build();
         }
 
-        String urlDescargable = juego.getDescargable(); // URL de Cloudinary
-        String nombreArchivo = juego.getNombreDescargableOriginal(); // o extraer del juego
+        String urlDescargable = juego.getDescargable();
+        String nombreArchivo = juego.getNombreDescargableOriginal();
 
-        // Descargar el archivo desde Cloudinary
         InputStream inputStream = java.net.URI.create(urlDescargable).toURL().openStream();
         ByteArrayResource resource = new ByteArrayResource(inputStream.readAllBytes());
 

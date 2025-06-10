@@ -39,7 +39,7 @@ public class AdministradorPanelController {
 
     @GetMapping("r")
     public String r(HttpSession session, ModelMap m, @RequestParam(required = false) String success,
-            @RequestParam(required = false) String error) {
+                    @RequestParam(required = false) String error) {
         Usuario u = (Usuario) session.getAttribute("user");
 
         if (u == null || !u.isAdmin()) {
@@ -70,11 +70,7 @@ public class AdministradorPanelController {
     }
 
     @PostMapping("/quitar_privilegios")
-    public String quitarPrivilegios(
-            @RequestParam("usuarioId") Long usuarioId,
-            HttpSession session,
-            ModelMap m) throws DangerException {
-
+    public String quitarPrivilegios(@RequestParam("usuarioId") Long usuarioId, HttpSession session, ModelMap m) throws DangerException {
         Usuario u = (Usuario) session.getAttribute("user");
         if (u == null || !u.isAdmin()) {
             return "redirect:/";

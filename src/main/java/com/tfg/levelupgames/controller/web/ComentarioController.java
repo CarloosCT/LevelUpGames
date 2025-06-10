@@ -1,7 +1,6 @@
 package com.tfg.levelupgames.controller.web;
 
 import java.util.List;
-
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,12 +42,7 @@ public class ComentarioController {
     private ReporteComentarioRepository reporteComentarioRepository;
 
     @PostMapping("cpost")
-    public String cPost(
-            @RequestParam("juegoId") Long juegoId,
-            @RequestParam("contenido") String contenido,
-            HttpSession session,
-            ModelMap m) throws DangerException {
-
+    public String cPost(@RequestParam("juegoId") Long juegoId, @RequestParam("contenido") String contenido, HttpSession session, ModelMap m) throws DangerException {
         Object userObj = session.getAttribute("user");
         if (userObj == null) {
             m.put("view", "mensajesInfo/loginError");
@@ -68,12 +62,7 @@ public class ComentarioController {
     }
 
     @PostMapping("/reportar")
-    public String reportarComentario(
-            @RequestParam("comentarioId") Long comentarioId,
-            @RequestParam("motivo") String motivo,
-            HttpSession session,
-            ModelMap m) {
-
+    public String reportarComentario(@RequestParam("comentarioId") Long comentarioId, @RequestParam("motivo") String motivo, HttpSession session, ModelMap m) {
         Object userObj = session.getAttribute("user");
         if (userObj == null) {
             m.put("view", "mensajesInfo/loginError");
@@ -89,18 +78,12 @@ public class ComentarioController {
             m.put("error", e.getMessage());
         }
 
-        // Redirigir a la página del juego o a donde quieras volver
         Long juegoId = comentarioService.getJuegoIdByComentarioId(comentarioId);
         return "redirect:/juego/r/" + juegoId;
     }
 
     @GetMapping("/reportar/form")
-    public String mostrarFormularioReporte(
-            @RequestParam("comentarioId") Long comentarioId,
-            @RequestParam("juegoId") Long juegoId,
-            HttpSession session,
-            ModelMap m) {
-
+    public String mostrarFormularioReporte(@RequestParam("comentarioId") Long comentarioId, @RequestParam("juegoId") Long juegoId, HttpSession session, ModelMap m) {
         Object userObj = session.getAttribute("user");
         if (userObj == null) {
             m.put("view", "mensajesInfo/loginError");
@@ -116,13 +99,7 @@ public class ComentarioController {
     }
 
     @PostMapping("/reportar/enviar")
-    public String enviarReporteComentario(
-            @RequestParam("comentarioId") Long comentarioId,
-            @RequestParam("juegoId") Long juegoId,
-            @RequestParam("motivo") String motivo,
-            HttpSession session,
-            ModelMap m) throws DangerException {
-
+    public String enviarReporteComentario(@RequestParam("comentarioId") Long comentarioId, @RequestParam("juegoId") Long juegoId, @RequestParam("motivo") String motivo, HttpSession session, ModelMap m) throws DangerException {
         Object userObj = session.getAttribute("user");
         if (userObj == null) {
             m.put("view", "mensajesInfo/loginError");
@@ -157,11 +134,7 @@ public class ComentarioController {
     }
 
     @PostMapping("/reportes/eliminar")
-    public String eliminarReporteYComentario(
-            @RequestParam("reporteId") Long reporteId,
-            HttpSession session,
-            ModelMap m) throws DangerException {
-
+    public String eliminarReporteYComentario(@RequestParam("reporteId") Long reporteId, HttpSession session, ModelMap m) throws DangerException {
         Usuario u = (Usuario) session.getAttribute("user");
 
         if (u == null || !u.isAdmin()) {
@@ -169,16 +142,13 @@ public class ComentarioController {
         }
 
         try {
-            // Buscar el reporte primero
             Optional<ReporteComentario> optionalReporte = reporteComentarioRepository.findById(reporteId);
 
             if (optionalReporte.isPresent()) {
                 ReporteComentario reporte = optionalReporte.get();
 
-                // Primero eliminar el comentario asociado
                 comentarioRepository.delete(reporte.getComentario());
 
-                // Luego eliminar el reporte
                 reporteComentarioRepository.delete(reporte);
             } else {
                 PRG.error("El reporte no existe.", "/comentario/reportes");
