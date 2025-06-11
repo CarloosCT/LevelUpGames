@@ -4,68 +4,78 @@
 
         <div id="miniaturas-carrusel" class="miniaturas-carrusel">
             <button id="prevBtn" class="carrusel-btn">&lt;</button>
-
             <div class="miniaturas-wrapper">
-                <img th:src="${juego.portada.ruta}" th:attr="data-ruta-imagen=${juego.portada.ruta}"
-                     class="miniatura-img portada-fija" alt="Miniatura portada de [[${juego.nombre}]]"
-                     onclick="cambiarPortada(this)" />
-
-                <img th:each="imagen : ${juego.imagenes}" th:if="${imagen.ruta != juego.portada.ruta}"
-                     th:src="${imagen.ruta}" th:attr="data-ruta-imagen=${imagen.ruta}" class="miniatura-img"
-                     alt="Imagen miniatura de [[${juego.nombre}]]" onclick="cambiarPortada(this)" />
+                <img
+                    th:src="${juego.portada.ruta}"
+                    th:attr="data-ruta-imagen=${juego.portada.ruta}"
+                    class="miniatura-img portada-fija"
+                    alt="Miniatura portada de [[${juego.nombre}]]"
+                    onclick="cambiarPortada(this)"
+                />
+                <img
+                    th:each="imagen : ${juego.imagenes}"
+                    th:if="${imagen.ruta != juego.portada.ruta}"
+                    th:src="${imagen.ruta}"
+                    th:attr="data-ruta-imagen=${imagen.ruta}"
+                    class="miniatura-img"
+                    alt="Imagen miniatura de [[${juego.nombre}]]"
+                    onclick="cambiarPortada(this)"
+                />
             </div>
-
             <button id="nextBtn" class="carrusel-btn">&gt;</button>
         </div>
 
         <div class="descripcion-desarrollador-container">
             <p class="juego-desarrollador">
                 Desarrollado por
-                <span th:text="${juego.desarrollador.nombre + ' ' + juego.desarrollador.apellido}">Nombre Apellido</span>
+                <span th:text="${juego.desarrollador.nombre + ' ' + juego.desarrollador.apellido}">
+                    Nombre Apellido
+                </span>
             </p>
-            <p class="juego-descripcion" th:text="${juego.descripcion}">Descripción del juego</p>
+            <p th:text="${juego.descripcion}" class="juego-descripcion">Descripción del juego</p>
         </div>
     </div>
 
     <div class="precio-columna">
         <h1 th:text="${juego.nombre}" class="juego-titulo"></h1>
 
-        <!-- Valoración media - solo visual -->
-<div class="valoracion-media">
-    <h4>Valoración media</h4>
-    <div class="valoracion solo-lectura media">
-        <span class="estrella" data-valor="1">&#9733;</span>
-        <span class="estrella" data-valor="2">&#9733;</span>
-        <span class="estrella" data-valor="3">&#9733;</span>
-        <span class="estrella" data-valor="4">&#9733;</span>
-        <span class="estrella" data-valor="5">&#9733;</span>
-    </div>
-</div>
-
-<!-- Tu valoración - editable si cumple condiciones -->
-<div th:if="${valoracionUsuario != null}" class="valoracion-usuario">
-    <h4>Tu valoración</h4>
-    <div class="valoracion editable-usuario">
-        <span class="estrella" data-valor="1">&#9733;</span>
-        <span class="estrella" data-valor="2">&#9733;</span>
-        <span class="estrella" data-valor="3">&#9733;</span>
-        <span class="estrella" data-valor="4">&#9733;</span>
-        <span class="estrella" data-valor="5">&#9733;</span>
-    </div>
-</div>
-
-        <div class="sin-sesion" th:if="${user == null}">
-            <small>Inicia sesión para valorar este juego.</small>
+        <div class="valoracion-media">
+            <h4>Valoración media</h4>
+            <div class="valoracion solo-lectura media">
+                <span class="estrella" data-valor="1">&#9733;</span>
+                <span class="estrella" data-valor="2">&#9733;</span>
+                <span class="estrella" data-valor="3">&#9733;</span>
+                <span class="estrella" data-valor="4">&#9733;</span>
+                <span class="estrella" data-valor="5">&#9733;</span>
+            </div>
         </div>
 
-        <div class="sin-juego" th:if="${user != null and !tieneJuego}">
+        <div th:if="${valoracionUsuario != null}" class="valoracion-usuario">
+            <h4>Tu valoración</h4>
+            <div class="valoracion editable-usuario">
+                <span class="estrella" data-valor="1">&#9733;</span>
+                <span class="estrella" data-valor="2">&#9733;</span>
+                <span class="estrella" data-valor="3">&#9733;</span>
+                <span class="estrella" data-valor="4">&#9733;</span>
+                <span class="estrella" data-valor="5">&#9733;</span>
+            </div>
+        </div>
+
+        <div th:if="${user == null}" class="sin-sesion">
+            <small>Inicia sesión para valorar este juego.</small>
+        </div>
+        <div th:if="${user != null and !tieneJuego}" class="sin-juego">
             <small>No puedes valorar este juego porque no lo has comprado.</small>
         </div>
 
-        <h3 class="juego-precio" th:if="${juego.precioActual != null}"
-            th:text="${juego.precioActual.cantidad.compareTo(T(java.math.BigDecimal).ZERO) == 0 ? 'Gratis' : juego.precioActual.cantidad + ' €'}">
+        <h3 th:if="${juego.precioActual != null}"
+            th:text="${juego.precioActual.cantidad.compareTo(T(java.math.BigDecimal).ZERO) == 0 ?
+                     'Gratis' : juego.precioActual.cantidad + ' €'}"
+            class="juego-precio">
         </h3>
-        <h3 class="juego-precio" th:if="${juego.precioActual == null}">Sin precio</h3>
+        <h3 th:if="${juego.precioActual == null}" class="juego-precio">
+            Sin precio
+        </h3>
 
         <a th:href="@{'/compra/c/' + ${juego.id}}" class="boton-comprar">Comprar</a>
     </div>
@@ -74,37 +84,60 @@
 <div class="seccion-comentarios">
     <h2>Comentarios</h2>
 
-    <form th:action="@{/comentario/cpost}" method="post">
-        <input type="hidden" name="juegoId" th:value="${juego.id}" />
-        <textarea name="contenido" placeholder="Escribe un comentario" required></textarea>
-        <button type="submit">Enviar comentario</button>
-    </form>
+    <div th:if="${user != null and tieneJuego}">
+        <form th:action="@{/comentario/cpost}" method="post">
+            <input type="hidden" name="juegoId" th:value="${juego.id}" />
+            <textarea name="contenido" placeholder="Escribe un comentario" required></textarea>
+            <button type="submit">Enviar comentario</button>
+        </form>
+    </div>
 
     <div th:if="${#lists.isEmpty(comentarios)}">
         <p>Este juego aún no tiene comentarios.</p>
     </div>
 
-    <div th:each="comentario : ${comentarios}" class="comentario d-flex justify-content-between align-items-start" style="position: relative;">
+    <div th:each="comentario : ${comentarios}"
+         class="comentario d-flex justify-content-between align-items-start"
+         style="position: relative;">
         <div>
             <p>
-                <span class="comentario-autor" th:text="${comentario.usuario.nombre + ' ' + comentario.usuario.apellido}">Usuario</span>
+                <span th:text="${comentario.usuario.nombre + ' ' + comentario.usuario.apellido}"
+                      class="comentario-autor">
+                    Usuario
+                </span>
             </p>
-            <p class="comentario-contenido" th:text="${comentario.contenido}">Contenido del comentario</p>
+            <p th:text="${comentario.contenido}" class="comentario-contenido">
+                Contenido del comentario
+            </p>
         </div>
 
         <div class="dropdown" style="margin-left: 1rem;">
-            <button class="btn btn-link text-dark p-0" type="button" id="dropdownMenuButton-${comentario.id}"
-                    data-bs-toggle="dropdown" aria-expanded="false" aria-label="Opciones comentario">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
-                     class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
-                    <path d="M9.5 12.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
+            <button class="btn btn-link text-dark p-0"
+                    type="button"
+                    id="dropdownMenuButton-${comentario.id}"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                    aria-label="Opciones comentario">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     width="24" height="24"
+                     fill="currentColor"
+                     class="bi bi-three-dots-vertical"
+                     viewBox="0 0 16 16">
+                    <path d="M9.5 12.5a1.5 1.5 0 1 1-3 0
+                             1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0
+                             1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0
+                             1 1-3 0 1.5 1.5 0 0 1 3 0z" />
                 </svg>
             </button>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton-${comentario.id}">
+            <ul class="dropdown-menu dropdown-menu-end"
+                aria-labelledby="dropdownMenuButton-${comentario.id}">
                 <li>
-                    <form method="get" th:action="@{/comentario/reportar/form}">
-                        <input type="hidden" name="comentarioId" th:value="${comentario.id}" />
-                        <input type="hidden" name="juegoId" th:value="${juego.id}" />
+                    <form method="get"
+                          th:action="@{/comentario/reportar/form}">
+                        <input type="hidden" name="comentarioId"
+                               th:value="${comentario.id}" />
+                        <input type="hidden" name="juegoId"
+                               th:value="${juego.id}" />
                         <button type="submit" class="dropdown-item">Reportar</button>
                     </form>
                 </li>
@@ -118,7 +151,6 @@
         const wrapper = document.querySelector('.miniaturas-wrapper');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
-
         let scrollAmount = 0;
         const scrollStep = 130;
 
@@ -126,105 +158,86 @@
             scrollAmount = Math.max(scrollAmount - scrollStep, 0);
             wrapper.style.transform = `translateX(-${scrollAmount}px)`;
         });
-
         nextBtn.addEventListener('click', () => {
             const maxScroll = wrapper.scrollWidth - wrapper.clientWidth;
             scrollAmount = Math.min(scrollAmount + scrollStep, maxScroll);
             wrapper.style.transform = `translateX(-${scrollAmount}px)`;
         });
-
-        const miniaturas = wrapper.querySelectorAll('img.miniatura-img');
-        miniaturas.forEach(img => {
+        wrapper.querySelectorAll('img.miniatura-img').forEach(img => {
             img.addEventListener('click', () => {
-                miniaturas.forEach(i => i.classList.remove('selected'));
+                wrapper.querySelectorAll('img.miniatura-img')
+                       .forEach(i => i.classList.remove('selected'));
                 img.classList.add('selected');
             });
         });
     });
 
     function cambiarPortada(img) {
-        const portada = document.getElementById("portada");
-        const nuevaRuta = img.getAttribute("data-ruta-imagen");
+        const portada = document.getElementById('portada');
+        const nuevaRuta = img.getAttribute('data-ruta-imagen');
         portada.src = nuevaRuta;
-        portada.setAttribute("data-ruta-imagen", nuevaRuta);
-
-        const miniaturas = document.querySelectorAll('.miniatura-img');
-        miniaturas.forEach(i => i.classList.remove('selected'));
+        portada.setAttribute('data-ruta-imagen', nuevaRuta);
+        document.querySelectorAll('.miniatura-img')
+                .forEach(i => i.classList.remove('selected'));
         img.classList.add('selected');
     }
 </script>
 
 <script th:inline="javascript">
 /*<![CDATA[*/
-const juegoId = [[${ juego.id }]];
-const userLogged = [[${ user != null }]];
-const tieneJuego = [[${ tieneJuego }]];
-const valoracionMedia = [[${ valoracionMedia != null ? valoracionMedia : 0 }]];
-const valoracionUsuario = [[${ valoracionUsuario != null ? valoracionUsuario : 'null' }]];
+const juegoId = [[${juego.id}]];
+const userLogged = [[${user != null}]];
+const tieneJuego = [[${tieneJuego}]];
+const valoracionMedia = [[${valoracionMedia != null ? valoracionMedia : 0}]];
+const valoracionUsuario = [[${valoracionUsuario != null ? valoracionUsuario : 'null'}]];
 
 document.addEventListener('DOMContentLoaded', () => {
     function pintarEstrellas(selector, valor) {
-        const estrellas = document.querySelectorAll(selector + ' .estrella');
-        estrellas.forEach((estrella, i) => {
+        document.querySelectorAll(`${selector} .estrella`)
+                .forEach((estrella, i) => {
             const starIndex = i + 1;
             let fill = 0;
-
             if (valor >= starIndex) {
                 fill = 100;
             } else if (valor > i && valor < starIndex) {
                 fill = (valor - i) * 100;
             }
-
             estrella.style.setProperty('--fill-percent', `${fill}%`);
         });
     }
 
-    // Pintar estrellas de valoración media (solo visual)
     pintarEstrellas('.valoracion-media .valoracion', valoracionMedia);
-
-    // Pintar estrellas del usuario si existe valoración
     if (valoracionUsuario !== null) {
         pintarEstrellas('.valoracion-usuario .valoracion', valoracionUsuario);
     }
 
-    // Solo permitir votar si el usuario ha iniciado sesión y tiene el juego
     if (!userLogged || !tieneJuego) return;
 
-    // Obtener estrellas solo del bloque "Tu valoración"
-    const estrellasUsuario = document.querySelectorAll('.valoracion-usuario .estrella');
-
-    estrellasUsuario.forEach(estrella => {
+    document.querySelectorAll('.valoracion-usuario .estrella')
+            .forEach(estrella => {
         estrella.style.cursor = 'pointer';
-
         estrella.addEventListener('click', async () => {
             const valor = parseInt(estrella.getAttribute('data-valor'));
-            const formData = new URLSearchParams();
-            formData.append("juegoId", juegoId);
-            formData.append("valoracion", valor);
-
+            const formData = new URLSearchParams({ juegoId, valoracion: valor });
             try {
                 const res = await fetch('/valoracion/cpost', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    headers: {'Content-Type':'application/x-www-form-urlencoded'},
                     body: formData
                 });
-
                 if (res.redirected) {
                     window.location.href = res.url;
                 } else if (res.ok) {
                     alert('Valoración enviada. ¡Gracias!');
                     pintarEstrellas('.valoracion-usuario .valoracion', valor);
-
-                    // Opcional: Actualizar media también
-                    const nuevaMedia = await res.text();
-                    const mediaNum = parseFloat(nuevaMedia);
-                    if (!isNaN(mediaNum)) {
-                        pintarEstrellas('.valoracion-media .valoracion', mediaNum);
+                    const nuevaMedia = parseFloat(await res.text());
+                    if (!isNaN(nuevaMedia)) {
+                        pintarEstrellas('.valoracion-media .valoracion', nuevaMedia);
                     }
                 } else {
                     alert('Error enviando valoración.');
                 }
-            } catch (e) {
+            } catch {
                 alert('Error de red al enviar valoración.');
             }
         });
