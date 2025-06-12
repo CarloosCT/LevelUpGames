@@ -1,0 +1,55 @@
+<button class="toggle-menu-btn" aria-label="Abrir menú">☰ Menú</button>
+
+<ul class="menu-lateral-separado">
+    <li><a href="/perfil/r">Configuración</a></li>
+    <li><a href="/perfil/verHistorialCompras">Historial de compras</a></li>
+    <li><a href="/perfil/seguridad">Seguridad</a></li>
+</ul>
+
+<div class="contenido-con-menu">
+    <div class="container">
+        <h1>Cambiar contraseña</h1>
+        <form th:action="@{/perfil/cambiar-password}" method="post">
+            <div>
+                <label for="passwordActual">Contraseña actual:</label>
+                <input type="password" id="passwordActual" name="passwordActual" required />
+            </div>
+            <div>
+                <label for="passwordNueva">Nueva contraseña:</label>
+                <input type="password" id="passwordNueva" name="passwordNueva" required />
+            </div>
+            <div>
+                <label for="passwordConfirmacion">Confirmar nueva contraseña:</label>
+                <input type="password" id="passwordConfirmacion" name="passwordConfirmacion" required />
+            </div>
+            <button type="submit">Actualizar contraseña</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggleBtn = document.querySelector(".toggle-menu-btn");
+        const menu = document.querySelector(".menu-lateral-separado");
+
+        toggleBtn.addEventListener("click", function () {
+            menu.classList.toggle("abierto");
+        });
+
+        menu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (menu.classList.contains('abierto')) {
+                    menu.classList.remove('abierto');
+                }
+            });
+        });
+
+        document.querySelectorAll('.compra-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if (menu.classList.contains('abierto')) {
+                    menu.classList.remove('abierto');
+                }
+            });
+        });
+    });
+</script>

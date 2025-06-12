@@ -1,0 +1,64 @@
+<button class="toggle-menu-btn">☰ Menú</button>
+
+<ul class="menu-lateral-separado">
+  <li><a href="/perfil/r">Configuración</a></li>
+  <li><a href="/perfil/verHistorialCompras">Historial de compras</a></li>
+  <li><a href="/perfil/seguridad">Seguridad</a></li>
+</ul>
+
+<div class="container">
+  <h1>Configuración de Usuario</h1>
+  <form method="POST" action="/perfil/actualizarDatosPersonales" id="configForm">
+    <label for="loginemail">Email:</label>
+    <input type="email" id="loginemail" name="loginemail" disabled th:placeholder="${usuario.loginemail}">
+
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre" name="nombre" required th:value="${usuario.nombre}">
+
+    <label for="apellido">Apellido:</label>
+    <input type="text" id="apellido" name="apellido" required th:value="${usuario.apellido}">
+
+    <button type="submit" id="guardarBtn" disabled>Guardar cambios</button>
+  </form>
+</div>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const toggleBtn = document.querySelector(".toggle-menu-btn");
+    const menu = document.querySelector(".menu-lateral-separado");
+
+    toggleBtn.addEventListener("click", function () {
+      menu.classList.toggle("abierto");
+    });
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const nombreInput = document.getElementById('nombre');
+    const apellidoInput = document.getElementById('apellido');
+    const guardarBtn = document.getElementById('guardarBtn');
+
+    // Guardamos los valores iniciales
+    const nombreInicial = nombreInput.value;
+    const apellidoInicial = apellidoInput.value;
+
+    function validarCambios() {
+      const nombreActual = nombreInput.value;
+      const apellidoActual = apellidoInput.value;
+
+      // Activar botón solo si alguno es distinto al inicial
+      if (nombreActual !== nombreInicial || apellidoActual !== apellidoInicial) {
+        guardarBtn.disabled = false;
+      } else {
+        guardarBtn.disabled = true;
+      }
+    }
+
+    // Escuchar cambios en ambos inputs
+    nombreInput.addEventListener('input', validarCambios);
+    apellidoInput.addEventListener('input', validarCambios);
+
+    // Inicializar estado al cargar la página
+    validarCambios();
+  });
+</script>

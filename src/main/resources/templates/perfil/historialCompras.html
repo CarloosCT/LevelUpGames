@@ -1,0 +1,68 @@
+<div class="contenido-con-menu">
+    <button class="toggle-menu-btn" aria-label="Abrir menú">☰ Menú</button>
+
+    <ul class="menu-lateral-separado">
+        <li><a href="/perfil/r">Configuración</a></li>
+        <li><a href="/perfil/verHistorialCompras">Historial de compras</a></li>
+        <li><a href="/perfil/seguridad">Seguridad</a></li>
+    </ul>
+
+    <div class="contenido-principal">
+        <div class="paginacion">
+            <a th:if="${currentPage > 0}" th:href="@{/perfil/verHistorialCompras(page=${currentPage - 1})}">Anterior</a>
+
+            <span>Página <span th:text="${currentPage + 1}"></span> de <span th:text="${totalPages}"></span></span>
+
+            <a th:if="${currentPage + 1 < totalPages}"
+                th:href="@{/perfil/verHistorialCompras(page=${currentPage + 1})}">Siguiente</a>
+        </div>
+
+        <h2>Historial de compras</h2>
+
+        <div th:if="${comprasPage.content.empty}">
+            <p>Aún no has realizado ninguna compra.</p>
+        </div>
+
+        <div th:each="compra : ${comprasPage.content}" class="compra-item">
+            <a th:href="@{/biblioteca/r}" class="compra-link">
+                <div class="compra-detalle">
+                    <img th:src="${compra.juego.portada.ruta}" alt="Portada de [[${compra.juego.nombre}]]"
+                        class="portada-miniatura" />
+
+                    <div class="info-juego">
+                        <p><strong th:text="${compra.juego.nombre}"></strong></p>
+                    </div>
+
+                    <div class="fecha-compra" th:text="${#temporals.format(compra.fecha, 'dd/MM/yyyy')}"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggleBtn = document.querySelector(".toggle-menu-btn");
+        const menu = document.querySelector(".menu-lateral-separado");
+
+        toggleBtn.addEventListener("click", function () {
+            menu.classList.toggle("abierto");
+        });
+
+        menu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                if(menu.classList.contains('abierto')) {
+                    menu.classList.remove('abierto');
+                }
+            });
+        });
+
+        document.querySelectorAll('.compra-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if(menu.classList.contains('abierto')) {
+                    menu.classList.remove('abierto');
+                }
+            });
+        });
+    });
+</script>

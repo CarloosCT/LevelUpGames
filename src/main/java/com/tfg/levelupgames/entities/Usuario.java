@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -44,6 +45,9 @@ public class Usuario {
     @OneToMany(mappedBy = "desarrollador")
     private List<Juego> juegosCreados = new ArrayList<>();
 
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Compra> compras = new ArrayList<>();
+
     public Usuario(String loginemail, String nombre, String apellido, String password) {
         this.loginemail = loginemail;
         this.nombre = nombre;
@@ -60,13 +64,11 @@ public class Usuario {
         return rol != null && "admin".equalsIgnoreCase(rol.getNombre());
     }
 
-    public BigDecimal getSaldo() 
-    {
+    public BigDecimal getSaldo() {
         return this.saldo;
     }
 
-    public void setSaldo(BigDecimal saldo) 
-    {
+    public void setSaldo(BigDecimal saldo) {
         this.saldo = saldo;
     }
 }

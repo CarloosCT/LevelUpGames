@@ -9,13 +9,10 @@
     box-shadow: 2px 0 8px rgba(0, 0, 0, 0.5);
     position: fixed;
     top: 86px;
-    /* justo debajo del nav principal */
     left: 15px;
-    /* pegado a la izquierda */
     height: calc(100vh - 70px);
     overflow-y: auto;
     z-index: 1100;
-    /* mayor que el nav, para que esté encima */
     list-style: none;
 }
 
@@ -109,6 +106,19 @@ form button[type="submit"]:hover {
     background-color: #ff2e00;
 }
 
+form button[type="submit"]:disabled {
+    background-color: #555555;    
+    color: #bbbbbb;               
+    cursor: not-allowed;         
+    box-shadow: none;           
+    opacity: 0.6;                 
+    transition: none;            
+}
+
+form button[type="submit"]:disabled:hover {
+    background-color: #555555;  
+}
+
 .toggle-menu-btn {
     display: none;
     position: fixed;
@@ -140,7 +150,7 @@ form button[type="submit"]:hover {
         transform: translateX(-100%);
         transition: transform 0.3s ease;
         border-radius: 0 12px 12px 0;
-        padding-top: 80px; /* espacio debajo del botón */
+        padding-top: 80px;
     }
 
     .menu-lateral-separado.abierto {
