@@ -157,7 +157,14 @@ public class JuegoController {
 
     @GetMapping("u")
     public String u(ModelMap m,
-            @RequestParam Long id) {
+            @RequestParam Long id,
+            HttpSession session) throws DangerException {
+
+        Usuario desarrollador = (Usuario) session.getAttribute("user");
+
+        if (desarrollador == null) {
+            PRG.error("Debes iniciar sesión para Modificar el juego.", "/usuario/login");
+        }
 
         m.put("juego", juegoService.findById(id));
         m.put("generos", generoService.findAll());
