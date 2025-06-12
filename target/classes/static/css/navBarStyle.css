@@ -104,3 +104,13 @@ nav ul li a {
   font-weight: 600;
   text-shadow: 1px 1px 2px black;
 }
+
+.menu-right .rol {
+  color: #ffcc00;        
+  font-weight: 600;
+  font-style: italic;
+  font-size: 1rem;
+  margin-right: 15px;     
+  white-space: nowrap;    
+  align-self: center;  
+}

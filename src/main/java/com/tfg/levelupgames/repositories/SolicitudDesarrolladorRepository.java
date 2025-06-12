@@ -19,4 +19,5 @@ public interface SolicitudDesarrolladorRepository extends JpaRepository<Solicitu
 
     Optional<SolicitudDesarrollador> findByUsuarioAndAprobadaTrue(Usuario usuario);
 
+    Long countByAprobadaFalseAndRevisadaFalse();
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.tfg.levelupgames.entities.Usuario;
 import com.tfg.levelupgames.exception.DangerException;
 import com.tfg.levelupgames.helper.PRG;
+import com.tfg.levelupgames.repositories.SolicitudDesarrolladorRepository;
 import com.tfg.levelupgames.services.GeneroService;
 import com.tfg.levelupgames.services.ImagenService;
 import com.tfg.levelupgames.services.JuegoService;
@@ -22,6 +23,9 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/panel_administrador")
 public class AdministradorPanelController {
+    @Autowired
+    private SolicitudDesarrolladorRepository solicitudRepo;
+
     @Autowired
     private UsuarioService usuarioService;
 
@@ -39,13 +43,16 @@ public class AdministradorPanelController {
 
     @GetMapping("r")
     public String r(HttpSession session, ModelMap m, @RequestParam(required = false) String success,
-                    @RequestParam(required = false) String error) {
+            @RequestParam(required = false) String error) {
         Usuario u = (Usuario) session.getAttribute("user");
 
         if (u == null || !u.isAdmin()) {
             return "redirect:/";
         }
 
+        long solicitudesPendientes = solicitudRepo.countByAprobadaFalseAndRevisadaFalse();
+
+        m.put("solicitudesPendientes", solicitudesPendientes);
         m.put("generos", generoService.findAll());
         m.put("precios", precioService.findAll());
         m.put("imagenes", imagenService.findAll());
@@ -70,7 +77,8 @@ public class AdministradorPanelController {
     }
 
     @PostMapping("/quitar_privilegios")
-    public String quitarPrivilegios(@RequestParam("usuarioId") Long usuarioId, HttpSession session, ModelMap m) throws DangerException {
+    public String quitarPrivilegios(@RequestParam("usuarioId") Long usuarioId, HttpSession session, ModelMap m)
+            throws DangerException {
         Usuario u = (Usuario) session.getAttribute("user");
         if (u == null || !u.isAdmin()) {
             return "redirect:/";
