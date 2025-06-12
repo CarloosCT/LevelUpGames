@@ -68,7 +68,7 @@ public class JuegoController {
             ModelMap m) {
 
         Juego juego = juegoService.findById(id);
-        
+
         if (juego == null) {
             return "redirect:/juego";
         }
@@ -204,12 +204,12 @@ public class JuegoController {
         return "_t/frame";
     }
 
-    @PostMapping("d")
-    public String d(@RequestParam Long id) throws DangerException {
-        try {
-            juegoService.d(id);
-        } catch (Exception e) {
-            PRG.error(e.getMessage(), "/panel_desarrollador/r");
+    @PostMapping("/visibilidad")
+    public String cambiarVisibilidad(@RequestParam Long id, @RequestParam boolean visible) throws DangerException {
+        if (visible) {
+            juegoService.ocultarJuego(id);
+        } else {
+            juegoService.mostrarJuego(id);
         }
         return "redirect:/panel_desarrollador/r";
     }

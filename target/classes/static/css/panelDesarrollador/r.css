@@ -144,14 +144,16 @@ body {
 
 .card-actions {
   display: flex;
-  justify-content: flex-end; /* Alinea a la derecha */
+  justify-content: flex-end;
+  /* Alinea a la derecha */
   gap: 16px;
   margin-top: 16px;
 }
 
 /* Formulario en línea para que los botones estén juntos */
 .card-actions form {
-  margin: 0; /* Elimina margen por defecto */
+  margin: 0;
+  /* Elimina margen por defecto */
 }
 
 /* Botones sin estilo nativo para que sólo se vea el icono */
@@ -163,20 +165,7 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.2s ease, filter 0.3s ease;
-}
-
-/* Iconos dentro de los botones */
-.card-actions form button img {
-  width: 36px;   /* Tamaño mayor */
-  height: 36px;
-  filter: brightness(0) invert(1); /* Blanco en fondo oscuro */
-}
-
-/* Hover efecto */
-.card-actions form button:hover img {
-  transform: scale(1.2);
-  filter: brightness(0) invert(70%) sepia(100%) saturate(500%) hue-rotate(-10deg);
+  transition: transform 0.2s ease, color 0.3s ease;
 }
 
 .pagination {
@@ -201,14 +190,15 @@ body {
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.page-btn:hover, .page-btn:focus {
+.page-btn:hover,
+.page-btn:focus {
   background-color: #0056b3;
   box-shadow: 0 4px 12px rgba(0, 86, 179, 0.6);
   outline: none;
 }
 
-.page-btn:disabled, 
-.page-btn[disabled], 
+.page-btn:disabled,
+.page-btn[disabled],
 .page-btn[aria-disabled="true"] {
   background-color: #cccccc;
   box-shadow: none;
@@ -221,4 +211,21 @@ body {
   font-size: 1rem;
   color: white;
   user-select: none;
+}
+
+.card-actions form button svg {
+  width: 36px;
+  height: 36px;
+  color: white;
+  transition: transform 0.2s ease, color 0.3s ease;
+}
+
+
+.card-actions form button:hover svg {
+  transform: scale(1.2);
+  color: #ff5733;
+}
+
+.card-actions form button img {
+  display: none; 
 }

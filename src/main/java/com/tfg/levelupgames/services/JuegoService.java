@@ -16,6 +16,7 @@ import com.tfg.levelupgames.entities.Imagen;
 import com.tfg.levelupgames.entities.Juego;
 import com.tfg.levelupgames.entities.Precio;
 import com.tfg.levelupgames.entities.Usuario;
+import com.tfg.levelupgames.exception.DangerException;
 import com.tfg.levelupgames.repositories.JuegoRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -94,52 +95,15 @@ public class JuegoService {
     }
 
     public Page<Juego> buscarJuegosFiltrados(String search, String genero, Pageable pageable) {
-        if ((search == null || search.isBlank()) && (genero == null || genero.isBlank())) {
-            return juegoRepository.findAll(pageable);
-        } else if (search != null && !search.isBlank() && (genero == null || genero.isBlank())) {
-            return juegoRepository.findByNombreContainingIgnoreCase(search, pageable);
-        } else if ((search == null || search.isBlank()) && genero != null && !genero.isBlank()) {
-            return juegoRepository.findByGenerosNombreIgnoreCase(genero, pageable);
-        } else {
-            return juegoRepository.findByNombreContainingIgnoreCaseAndGenerosNombreIgnoreCase(search, genero, pageable);
+        if (search == null) {
+            search = "";
         }
-    }
 
-    public void d(Long id) throws Exception {
-        Juego juegoABorrar = juegoRepository.findById(id)
-                .orElseThrow(() -> new Exception("Juego no encontrado con id: " + id));
-
-        try {
-            Precio precioActual = juegoABorrar.getPrecioActual();
-            if (precioActual != null) {
-                precioActual.setFechaFin(LocalDate.now());
-            }
-
-            if (juegoABorrar.getPortada() != null) {
-                imagenService.d(juegoABorrar.getPortada().getId());
-                juegoABorrar.setPortada(null);
-            }
-
-            for (Imagen imagen : new ArrayList<>(juegoABorrar.getImagenes())) {
-                imagenService.d(imagen.getId());
-            }
-            juegoABorrar.getImagenes().clear();
-
-            if (juegoABorrar.getDescargablePublicId() != null && !juegoABorrar.getDescargablePublicId().isEmpty()) {
-                try {
-                    cloudinaryService.delete(juegoABorrar.getDescargablePublicId(), "raw");
-                    juegoABorrar.setDescargable(null);
-                    juegoABorrar.setDescargablePublicId(null);
-                } catch (IOException e) {
-                    System.err.println("Error eliminando descargable en Cloudinary: " + e.getMessage());
-                }
-            }
-
-            juegoRepository.save(juegoABorrar);
-            juegoRepository.delete(juegoABorrar);
-
-        } catch (Exception e) {
-            throw new Exception("No se pudo eliminar el juego " + juegoABorrar.getNombre(), e);
+        if (genero == null || genero.isEmpty()) {
+            return juegoRepository.findByVisibleTrueAndNombreContainingIgnoreCase(search, pageable);
+        } else {
+            return juegoRepository.findByVisibleTrueAndNombreContainingIgnoreCaseAndGenerosNombreIgnoreCase(search,
+                    genero, pageable);
         }
     }
 
@@ -284,4 +248,23 @@ public class JuegoService {
 
         juegoRepository.save(juego);
     }
+
+    public void ocultarJuego(Long id) throws DangerException {
+        Juego juego = juegoRepository.findById(id)
+                .orElseThrow(() -> new DangerException("Juego no encontrado"));
+        juego.setVisible(false);
+        juegoRepository.save(juego);
+    }
+
+    public void mostrarJuego(Long id) throws DangerException {
+        Juego juego = juegoRepository.findById(id)
+                .orElseThrow(() -> new DangerException("Juego no encontrado"));
+        juego.setVisible(true);
+        juegoRepository.save(juego);
+    }
+
+    public List<Juego> findAllVisibles() {
+        return juegoRepository.findByVisibleTrue();
+    }
+
 }

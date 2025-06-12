@@ -60,6 +60,9 @@ public class Juego {
     @OneToMany(mappedBy = "juego")
     private List<Compra> compras = new ArrayList<>();
 
+    @Column(nullable = false)
+    private boolean visible = true;
+
     public Juego(String nombre, String descripcion, List<Genero> generos, List<Precio> precios, List<Imagen> imagenes,
             String descargable) {
         this.nombre = nombre;
