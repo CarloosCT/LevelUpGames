@@ -142,10 +142,11 @@ nav h1 {
 
 .miniaturas-wrapper {
     display: flex;
-    transition: transform 0.3s ease;
-    overflow: hidden;
+    overflow-x: auto;
     gap: 8px;
     flex: 1;
+    scroll-behavior: smooth;
+    padding-bottom: 4px;
 }
 
 .miniaturas-wrapper img {
