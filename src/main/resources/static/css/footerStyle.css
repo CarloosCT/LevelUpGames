@@ -1,0 +1,77 @@
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+.wrapper {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+/* Footer estilos */
+.footer {
+  width: 100%;
+  background-color: #1f1f1f;
+  color: white;
+  border-top: 2px solid #e24b1a;
+  padding: 15px 0;
+  font-size: 0.9rem;
+}
+
+.footer-contenido {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.footer-contenido p {
+  margin: 5px 0;
+  font-weight: bold;
+}
+
+.footer-repos {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.footer-repos span {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #ffcc00;
+  font-style: italic;
+  text-shadow: 1px 1px 2px black;
+}
+
+.repos-lista {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.repos-lista li {
+  margin: 0;
+}
+
+.repos-lista li a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.repos-lista li a:hover {
+  color: #ffcc00;
+  text-decoration: underline;
+}
