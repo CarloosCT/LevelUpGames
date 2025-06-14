@@ -15,9 +15,15 @@
                 <input type="password" id="passwordActual" name="passwordActual" required />
             </div>
             <div>
-                <label for="passwordNueva">Nueva contraseña:</label>
-                <input type="password" id="passwordNueva" name="passwordNueva" required />
-            </div>
+    <label for="passwordNueva">Nueva contraseña:</label>
+    <input type="password" id="passwordNueva" name="passwordNueva" required oninput="medirSeguridad()" />
+    <div id="medidor-container" style="margin-top: 10px;">
+        <div id="barra-seguridad" style="height: 8px; background-color: lightgray; width: 100%; border-radius: 4px;">
+            <div id="nivel-seguridad" style="height: 100%; width: 0%; background-color: red; border-radius: 4px;"></div>
+        </div>
+        <small id="texto-seguridad" style="display: block; margin-top: 4px;"></small>
+    </div>
+</div>
             <div>
                 <label for="passwordConfirmacion">Confirmar nueva contraseña:</label>
                 <input type="password" id="passwordConfirmacion" name="passwordConfirmacion" required />
@@ -52,4 +58,56 @@
             });
         });
     });
+</script>
+
+<script>
+    function medirSeguridad() {
+        const password = document.getElementById("passwordNueva").value;
+        const nivel = document.getElementById("nivel-seguridad");
+        const texto = document.getElementById("texto-seguridad");
+
+        if (password.length === 0) {
+            nivel.style.width = "0%";
+            nivel.style.backgroundColor = "red";
+            texto.textContent = "";
+            return;
+        }
+
+        let fuerza = 0;
+        if (password.length >= 8) fuerza++;
+        if (/[A-Z]/.test(password)) fuerza++;
+        if (/[a-z]/.test(password)) fuerza++;
+        if (/\d/.test(password)) fuerza++;
+        if (/[^A-Za-z0-9]/.test(password)) fuerza++;
+
+        let color = "red";
+        let textoSeguridad = "Muy débil";
+        let ancho = "20%";
+
+        if (fuerza >= 2) {
+            color = "orange";
+            textoSeguridad = "Débil";
+            ancho = "40%";
+        }
+        if (fuerza >= 3) {
+            color = "#e0c400";
+            textoSeguridad = "Media";
+            ancho = "60%";
+        }
+        if (fuerza >= 4) {
+            color = "lightgreen";
+            textoSeguridad = "Alta";
+            ancho = "80%";
+        }
+        if (fuerza === 5) {
+            color = "green";
+            textoSeguridad = "Muy segura";
+            ancho = "100%";
+        }
+
+        nivel.style.width = ancho;
+        nivel.style.backgroundColor = color;
+        texto.textContent = "Seguridad: " + textoSeguridad;
+        texto.style.color = color;
+    }
 </script>

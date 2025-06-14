@@ -55,10 +55,10 @@
     </div>
 </div>
 
-        <div th:if="${user == null}" class="sin-sesion">
+        <div th:if="${user == null}" class="sin-sesion mensaje-valoracion">
             <small>Inicia sesión para valorar este juego.</small>
         </div>
-        <div th:if="${user != null and !tieneJuego}" class="sin-juego">
+        <div th:if="${user != null and !tieneJuego}" class="sin-juego mensaje-valoracion">
             <small>No puedes valorar este juego porque no lo has comprado.</small>
         </div>
 
