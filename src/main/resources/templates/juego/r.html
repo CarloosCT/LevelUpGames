@@ -44,16 +44,16 @@
             </div>
         </div>
 
-        <div th:if="${valoracionUsuario != null}" class="valoracion-usuario">
-            <h4>Tu valoración</h4>
-            <div class="valoracion editable-usuario">
-                <span class="estrella" data-valor="1">&#9733;</span>
-                <span class="estrella" data-valor="2">&#9733;</span>
-                <span class="estrella" data-valor="3">&#9733;</span>
-                <span class="estrella" data-valor="4">&#9733;</span>
-                <span class="estrella" data-valor="5">&#9733;</span>
-            </div>
-        </div>
+        <div th:if="${user != null and tieneJuego}" class="valoracion-usuario">
+    <h4>Tu valoración</h4>
+    <div class="valoracion editable-usuario" th:attr="data-valoracion-usuario=${valoracionUsuario != null ? valoracionUsuario : 0}">
+        <span class="estrella" data-valor="1">&#9733;</span>
+        <span class="estrella" data-valor="2">&#9733;</span>
+        <span class="estrella" data-valor="3">&#9733;</span>
+        <span class="estrella" data-valor="4">&#9733;</span>
+        <span class="estrella" data-valor="5">&#9733;</span>
+    </div>
+</div>
 
         <div th:if="${user == null}" class="sin-sesion">
             <small>Inicia sesión para valorar este juego.</small>
