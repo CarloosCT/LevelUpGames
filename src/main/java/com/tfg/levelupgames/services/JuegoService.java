@@ -152,25 +152,26 @@ public class JuegoService {
             String descripcion,
             List<Long> generosIds,
             BigDecimal nuevoPrecio,
-            MultipartFile portadaFile,
+            MultipartFile portadaFile, // Lo ignoramos porque usas multipartFiles + ids
             List<MultipartFile> imagenesFiles,
             MultipartFile descargableFile,
-            List<Long> imagenesExistentesIds) throws Exception {
+            List<Long> imagenesExistentesIds,
+            Long portadaIndex,
+            List<Long> imagenesAEliminarIds) throws Exception {
 
         Juego juego = juegoRepository.findById(id)
                 .orElseThrow(() -> new Exception("Juego no encontrado con id: " + id));
 
+        // Actualizar datos básicos
         juego.setNombre(nombre);
         juego.setDescripcion(descripcion);
+        juego.setGeneros(generoService.findByIds(generosIds));
 
-        List<Genero> generos = generoService.findByIds(generosIds);
-        juego.setGeneros(generos);
-
+        // Actualizar precio: finalizar si cambia, y crear nuevo
         Precio precioActual = juego.getPrecioActual();
         if (precioActual != null && precioActual.getCantidad().compareTo(nuevoPrecio) != 0) {
             precioActual.setFechaFin(LocalDate.now());
         }
-
         Precio nuevoPrecioEntidad = new Precio();
         nuevoPrecioEntidad.setCantidad(nuevoPrecio);
         nuevoPrecioEntidad.setFechaInicio(LocalDate.now());
@@ -178,43 +179,31 @@ public class JuegoService {
         nuevoPrecioEntidad.setJuego(juego);
         juego.setPrecio(nuevoPrecioEntidad);
 
-        if (portadaFile != null && !portadaFile.isEmpty()) {
-            if (juego.getPortada() != null) {
-                imagenService.eliminarImagenPorId(juego.getPortada().getId());
-                juego.setPortada(null);
-                juego.getImagenes().removeIf(Imagen::isPortada);
+        // --- ELIMINAR IMÁGENES MARCADAS ---
+        if (imagenesAEliminarIds != null) {
+            for (Long idImg : imagenesAEliminarIds) {
+                Imagen img = imagenService.findById(idImg);
+                if (img != null) {
+                    cloudinaryService.delete(img.getPublicId(), "image");
+                    juego.getImagenes().remove(img);
+                    imagenService.eliminarImagenPorId(idImg);
+                }
             }
-
-            Map<String, Object> uploadResult = cloudinaryService.upload(portadaFile);
-            String url = (String) uploadResult.get("secure_url");
-            String publicId = (String) uploadResult.get("public_id");
-
-            Imagen portada = new Imagen(url, publicId, true);
-            portada.setJuego(juego);
-            juego.setPortada(portada);
-            juego.getImagenes().add(portada);
         }
 
-        if (juego.getImagenes() != null && !juego.getImagenes().isEmpty()) {
-            List<Imagen> imagenesAEliminar = new ArrayList<>();
+        // --- FILTRAR IMÁGENES EXISTENTES (las que no se eliminaron y están
+        // seleccionadas) ---
+        List<Imagen> imagenesFiltradas = new ArrayList<>();
+        if (imagenesExistentesIds != null && !imagenesExistentesIds.isEmpty()) {
             for (Imagen imagen : juego.getImagenes()) {
-                if (!imagen.isPortada()) {
-                    if (imagenesExistentesIds == null || !imagenesExistentesIds.contains(imagen.getId())) {
-                        imagenesAEliminar.add(imagen);
-                    }
-                }
-            }
-            for (Imagen eliminar : imagenesAEliminar) {
-                try {
-                    cloudinaryService.delete(eliminar.getPublicId(), "image");
-                    juego.getImagenes().remove(eliminar);
-                    imagenService.eliminarImagenPorId(eliminar.getId());
-                } catch (IOException e) {
-                    System.err.println("No se pudo borrar imagen antigua: " + e.getMessage());
+                if (imagenesExistentesIds.contains(imagen.getId())) {
+                    imagenesFiltradas.add(imagen);
                 }
             }
         }
 
+        // --- SUBIR NUEVAS IMÁGENES ---
+        List<Imagen> nuevasImagenes = new ArrayList<>();
         if (imagenesFiles != null && !imagenesFiles.isEmpty()) {
             for (MultipartFile file : imagenesFiles) {
                 if (file != null && !file.isEmpty()) {
@@ -224,11 +213,68 @@ public class JuegoService {
 
                     Imagen imagen = new Imagen(url, publicId, false);
                     imagen.setJuego(juego);
-                    juego.getImagenes().add(imagen);
+                    nuevasImagenes.add(imagen);
                 }
             }
         }
 
+        // --- LISTA FINAL DE IMÁGENES ---
+        List<Imagen> todasLasImagenes = new ArrayList<>();
+        todasLasImagenes.addAll(imagenesFiltradas);
+        todasLasImagenes.addAll(nuevasImagenes);
+
+        // --- ASIGNAR PORTADA ---
+        if (portadaIndex != null) {
+            Imagen nuevaPortada = null;
+
+            // Si portadaIndex es índice dentro de nuevasImagenes (portada a imagen nueva)
+            if (portadaIndex >= 0 && portadaIndex < nuevasImagenes.size()) {
+                nuevaPortada = nuevasImagenes.get(portadaIndex.intValue());
+            } else {
+                // Si portadaIndex es id de imagen existente, buscar en todasLasImagenes
+                for (Imagen img : todasLasImagenes) {
+                    if (img.getId() != null && img.getId().equals(portadaIndex)) {
+                        nuevaPortada = img;
+                        break;
+                    }
+                }
+            }
+
+            if (nuevaPortada == null) {
+                throw new Exception("No se encontró la imagen seleccionada como portada.");
+            }
+
+            // ELIMINAR PORTADA ANTERIOR SI ES DISTINTA Y YA NO ESTÁ EN LA LISTA
+            Imagen portadaAnterior = juego.getPortada();
+            if (portadaAnterior != null && !portadaAnterior.equals(nuevaPortada)) {
+                // Si la portada anterior no está en la lista final, eliminarla de Cloudinary y
+                // BD
+                boolean portadaAnteriorEnLista = todasLasImagenes.stream()
+                        .anyMatch(img -> img.equals(portadaAnterior));
+                if (!portadaAnteriorEnLista) {
+                    cloudinaryService.delete(portadaAnterior.getPublicId(), "image");
+                    imagenService.eliminarImagenPorId(portadaAnterior.getId());
+                }
+                portadaAnterior.setPortada(false);
+            }
+
+            // Marcar nueva portada
+            nuevaPortada.setPortada(true);
+            juego.setPortada(nuevaPortada);
+        }
+
+        // --- LIMPIAR FLAG PORTADA EN LAS DEMÁS ---
+        for (Imagen img : todasLasImagenes) {
+            if (juego.getPortada() == null || !img.equals(juego.getPortada())) {
+                img.setPortada(false);
+            }
+        }
+
+        // --- ASIGNAR LAS IMÁGENES AL JUEGO ---
+        juego.getImagenes().clear();
+        juego.getImagenes().addAll(todasLasImagenes);
+
+        // --- ACTUALIZAR ARCHIVO DESCARGABLE ---
         if (descargableFile != null && !descargableFile.isEmpty()) {
             if (juego.getDescargablePublicId() != null) {
                 try {
@@ -237,15 +283,13 @@ public class JuegoService {
                     System.err.println("No se pudo borrar el descargable previo: " + e.getMessage());
                 }
             }
-
             Map<?, ?> uploadResult = cloudinaryService.upload(descargableFile, Map.of("resource_type", "raw"));
-            String url = (String) uploadResult.get("secure_url");
-            String publicId = (String) uploadResult.get("public_id");
-            juego.setDescargable(url);
-            juego.setDescargablePublicId(publicId);
+            juego.setDescargable((String) uploadResult.get("secure_url"));
+            juego.setDescargablePublicId((String) uploadResult.get("public_id"));
             juego.setNombreDescargableOriginal(descargableFile.getOriginalFilename());
         }
 
+        // Guardar cambios en BD
         juegoRepository.save(juego);
     }
 

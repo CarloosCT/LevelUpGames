@@ -163,9 +163,6 @@ public class JuegoController {
             PRG.error("Debes subir un archivo descargable del juego.", "/juego/c");
         }
 
-        // Aquí pasas:
-        // - portadaFile: solo la portada
-        // - otrasImagenes.toArray(new MultipartFile[0]): sin duplicados
         juegoService.saveJuegoConRelaciones(
                 nombre, descripcion, generosIds, precio,
                 portadaFile, otrasImagenes.toArray(new MultipartFile[0]), descargable,
@@ -203,9 +200,14 @@ public class JuegoController {
             @RequestParam(required = false) MultipartFile portadaFile,
             @RequestParam(required = false) List<MultipartFile> imagenes,
             @RequestParam(required = false) MultipartFile descargable,
+            @RequestParam(required = false) Long portadaIndex,
+            @RequestParam(required = false) List<Long> imagenesAEliminar,
             @RequestParam(required = false) List<Long> imagenesExistentes) throws DangerException {
 
         try {
+            if (portadaIndex != null && imagenesAEliminar != null && imagenesAEliminar.contains(portadaIndex)) {
+                PRG.error("No puedes eliminar la portada del juego.", "/juego/u?id=" + id);
+            }
             juegoService.actualizarJuego(
                     id,
                     nombre,
@@ -214,7 +216,10 @@ public class JuegoController {
                     precio,
                     portadaFile,
                     imagenes,
-                    descargable, imagenesExistentes);
+                    descargable,
+                    imagenesExistentes,
+                    portadaIndex,
+                    imagenesAEliminar);
         } catch (Exception e) {
             PRG.error(e.getMessage(), "/juego/u?id=" + id);
         }
