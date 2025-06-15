@@ -1,14 +1,25 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 
-<div th:replace="~{_t/head.html}"></div>
-<div th:replace="~{_t/bootstrap.html}"></div>
+<head th:replace="~{_t/head.html}"></head>
+<head th:replace="~{_t/bootstrap.html}"></head>
 
 <link rel="stylesheet" href="/css/home/home.css">
 <link rel="stylesheet" th:href="@{${estilos}}">
+<head th:replace="~{_t/head_cierre.html}"></head>
 
-<div th:replace="~{_t/head_cierre.html}"></div>
-<div th:replace="~{_t/nav.html}"></div>
-<div th:replace="~{${view}}"></div>
-<!--<footer th:replace="~{_t/footer.html}"></footer> -->
-<div th:replace="~{_t/end.html}"></div>
+<body>
+  <div class="wrapper">
+    <div th:replace="~{_t/nav.html}"></div>
+
+    <main>
+      <div th:replace="~{${view}}"></div>
+    </main>
+
+    <footer th:replace="~{_t/footer.html}"></footer>
+  </div>
+
+  <div th:replace="~{_t/end.html}"></div>
+</body>
+
+</html>
