@@ -24,7 +24,7 @@ LevelUpGames es una aplicación web para la gestión y visualización de juegos,
 1. Clona el repositorio:
 
    ```bash
-   git clone https://github.com/alinnnn02/LevelUpGames.git
+   git clone https://github.com/CarloosCT/LevelUpGames.git
    cd LevelUpGames
    ```
 
