@@ -30,7 +30,7 @@ public class GeneroController {
 
     @GetMapping("c")
     public String c(
-            ModelMap m) {
+            ModelMap m) {       
         m.put("view", "genero/c");
         m.put("estilos", "/css/genero/c.css");
         return "_t/frame";

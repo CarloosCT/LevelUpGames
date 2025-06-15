@@ -8,7 +8,7 @@
                     <img src="/img/icons/user.jpg" alt="Avatar" />
                 </div>
                 <div class="solicitud-info-group">
-                    <p class="solicitud-usuario" th:text="${sol.usuario.nombre}">Nombre Usuario</p>
+                    <p class="solicitud-usuario" th:text="${sol.usuario.nombre + ' ' + sol.usuario.apellido}">Nombre Usuario</p>
                     <a class="solicitud-url" th:href="${sol.portfolioUrl}" target="_blank"
                         th:text="${sol.portfolioUrl}">Portfolio</a>
                 </div>
