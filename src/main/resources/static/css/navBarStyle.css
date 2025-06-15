@@ -114,3 +114,71 @@ nav ul li a {
   white-space: nowrap;    
   align-self: center;  
 }
+
+@media (max-width: 768px) {
+  nav {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px;
+  }
+
+  .menu-left,
+  .menu-right {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .menu-left {
+    align-items: flex-start;
+    margin-left: 0;
+  }
+
+  .menu-right {
+    align-items: flex-end; /* Alinea a la derecha */
+    margin-left: 0;
+    margin-top: 10px;
+  }
+
+  .menu-right .rol {
+    margin-right: 0;
+    text-align: right;
+  }
+
+  nav ul {
+    flex-direction: column;
+    gap: 10px;
+    padding: 0;
+    width: 100%;
+  }
+
+  nav ul li {
+    display: block;
+    width: 100%;
+  }
+
+  nav ul li a {
+    display: block;
+    width: 100%;
+  }
+
+  .logo {
+    margin-left: 0;
+    margin-bottom: 10px;
+  }
+
+  .menu-right {
+    align-items: flex-end;
+  }
+
+  .rol-logo-container {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .menu-right .rol {
+    text-align: right;
+    margin-right: 0;
+  }
+}
+

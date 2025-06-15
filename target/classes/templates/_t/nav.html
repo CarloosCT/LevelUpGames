@@ -20,22 +20,26 @@
   </div>
 
   <div class="menu-right">
-    <div class="rol"
-      th:if="${session.user != null and (session.user.rol.nombre == 'admin' or session.user.rol.nombre == 'developer')}">
-      <span th:text="'Rol: ' + ${session.user.rol.nombre}"></span>
+    <div class="rol-logo-container">
+      <div class="rol"
+        th:if="${session.user != null and (session.user.rol.nombre == 'admin' or session.user.rol.nombre == 'developer')}">
+        <span th:text="'Rol: ' + ${session.user.rol.nombre}"></span>
+      </div>
+
+      <div class="dropdown-avatar">
+        <img th:src="${session.user == null} ? '/img/icons/anonimo.jpg' : |/img/icons/${session.user.rol.nombre}.jpg|"
+          alt="Avatar" class="avatar-img" />
+        <div class="dropdown-content-avatar">
+          <a th:if="${session.user == null}" href="/usuario/login">Iniciar sesión</a>
+          <a th:if="${session.user == null}" href="/usuario/c">Registrarse</a>
+          <a th:if="${session.user != null}" href="/perfil/r">Perfil</a>
+          <a th:if="${session.user != null}" href="/usuario/logout">Cerrar sesión</a>
+        </div>
+      </div>
     </div>
+
     <div class="saldo" th:if="${session.user != null and session.user.rol.nombre != 'admin'}">
       <a href="/saldo/r" th:text="'Saldo: ' + ${session.user.saldo} + ' €'"></a>
-    </div>
-    <div class="dropdown-avatar">
-      <img th:src="${session.user == null} ? '/img/icons/anonimo.jpg' : |/img/icons/${session.user.rol.nombre}.jpg|"
-        alt="Avatar" class="avatar-img" />
-      <div class="dropdown-content-avatar">
-        <a th:if="${session.user == null}" href="/usuario/login">Iniciar sesión</a>
-        <a th:if="${session.user == null}" href="/usuario/c">Registrarse</a>
-        <a th:if="${session.user != null}" href="/perfil/r">Perfil</a>
-        <a th:if="${session.user != null}" href="/usuario/logout">Cerrar sesión</a>
-      </div>
     </div>
   </div>
 </nav>
