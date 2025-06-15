@@ -42,6 +42,10 @@ LevelUpGames es una aplicación web para la gestión y visualización de juegos,
 
 4. Accede a `http://localhost:8080` en tu navegador.
 
+## Manual de usuario
+
+Enlace a drive del manual de usuario: https://docs.google.com/document/d/1WE6h3vh5wrXtl8BccbNXiG2WCjmzfAq_pTHsSKKxII4/edit?usp=sharing
+
 ## 👥 Colaboradores
 
 - [@alinnnn02](https://github.com/alinnnn02)
