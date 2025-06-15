@@ -1,15 +1,17 @@
 <div class="container">
-    <h1>Nuevo género</h1>
+  <h1>Editar género</h1>
 
-    <form action="/genero/u" method="post">
+  <form action="/genero/u" method="post" onsubmit="return validarGenero()">
+    <label for="idGenero">Nombre</label>
+    <input id="idGenero" type="text" name="nombre" th:value="${genero.nombre}" required autofocus />
+    <small id="errorNombre" style="color:red; display:none;">
+      El nombre debe tener al menos 3 letras y solo caracteres válidos.
+    </small>
 
-        <label for="idGenero">Nombre</label>
-        <input id="idGenero" type="text" name="nombre" th:value="${genero.nombre}" autofocus="autofocus" />
-        <br />
+    <input type="hidden" name="id" th:value="${genero.id}" />
 
-        <input type="hidden" name="id" th:value="${genero.id}" />
-
-        <input type="submit" />
-        <br />
-    </form>
+    <input type="submit" value="Guardar cambios" />
+  </form>
 </div>
+
+<script src="/js/genero/c.js"></script>
