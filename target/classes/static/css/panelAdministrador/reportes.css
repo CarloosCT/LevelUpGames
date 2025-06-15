@@ -18,7 +18,6 @@ body {
         opacity: 0;
         transform: translateY(15px);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);
@@ -41,7 +40,6 @@ body {
         opacity: 0;
         transform: translateY(30px);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);
@@ -86,8 +84,8 @@ body {
     background-color: #2e2e2e;
 }
 
-/* BOTONES DE ACCIÓN EN LA TABLA */
-#table button {
+/* BOTONES DE ACCIÓN EN LA TABLA (EXCLUYENDO ELIMINAR) */
+#table button:not(.btn-eliminar) {
     background-color: transparent;
     border: none;
     cursor: pointer;
@@ -96,8 +94,32 @@ body {
     transition: background-color 0.2s;
 }
 
-#table button:hover {
+#table button:not(.btn-eliminar):hover {
     background-color: rgba(255, 87, 51, 0.15);
+}
+
+/* BOTÓN DE ELIMINAR */
+.btn-eliminar {
+    color: white !important;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s, transform 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap; /* evita saltos de línea */
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    gap: 6px; /* espacio entre X y Eliminar */
+}
+
+.btn-eliminar:hover {
+    background-color: #cc0000 !important;
+    transform: scale(1.05);
 }
 
 /* BOTÓN VOLVER */
@@ -138,5 +160,4 @@ th {
 .table-responsive {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    /* para mejor scroll en móviles */
 }
