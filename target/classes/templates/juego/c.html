@@ -1,7 +1,8 @@
 <div class="container">
   <h1>Nuevo juego</h1>
 
-  <form action="/juego/c" method="post" enctype="multipart/form-data" onsubmit="return validarFormulario()" class="form-grid">
+  <form action="/juego/c" method="post" enctype="multipart/form-data" onsubmit="return validarFormulario()"
+    class="form-grid">
 
     <!-- Nombre -->
     <div class="form-group">
@@ -33,25 +34,25 @@
       <div id="error-generos" style="color:red; display:none;">Selecciona al menos un género.</div>
     </div>
 
-    <!-- Portada -->
-    <div class="form-group full-width">
-      <label for="portada">Selecciona una imagen de portada:</label>
-      <input id="portada" type="file" name="portadaFile" accept="image/*" required />
-      <div id="portadaPreview"></div>
-    </div>
-
-    <!-- Imágenes -->
     <div class="form-group full-width">
       <label for="imagenes">Selecciona hasta 5 imágenes:</label>
-      <input id="imagenes" type="file" name="imagenes" multiple accept="image/*" />
-      <div id="imagenesPreview"></div>
+      <input id="imagenes" type="file" name="imagenes" multiple accept="image/*" required />
+      <div id="imagenesPreview" class="preview-container"></div>
+
+      <!-- Mensaje de ayuda -->
+      <small id="mensaje-portada" style="color: #ffcc00; display: block; margin-top: 8px;">
+        Haz clic en una imagen para seleccionarla como portada.
+      </small>
+
+      <!-- Campo oculto para índice de portada -->
+      <input type="hidden" name="portadaIndex" id="portadaIndex" value="" />
     </div>
 
-   <!-- Descargable -->
-  <div class="form-group full-width">
-    <label for="descargable">Archivo descargable (.exe, .setup, .iso, .zip):</label>
-    <input type="file" id="descargable" name="descargable" accept=".zip,.rar,.exe,.iso,.setup" required>
-  </div>
+    <!-- Descargable -->
+    <div class="form-group full-width">
+      <label for="descargable">Archivo descargable (.exe, .setup, .iso, .zip):</label>
+      <input type="file" id="descargable" name="descargable" accept=".zip,.rar,.exe,.iso,.setup" required>
+    </div>
 
     <!-- Botón -->
     <div class="form-group full-width">

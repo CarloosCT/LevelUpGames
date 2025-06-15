@@ -1,6 +1,7 @@
 package com.tfg.levelupgames.controller.web;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,7 +99,7 @@ public class JuegoController {
             @RequestParam List<Long> generosIds,
             @RequestParam BigDecimal precio,
             @RequestParam("imagenes") MultipartFile[] imagenes,
-            @RequestParam("portadaFile") MultipartFile portadaFile,
+            @RequestParam("portadaIndex") int portadaIndex,
             @RequestParam("descargable") MultipartFile descargable,
             HttpSession session) throws DangerException {
 
@@ -116,24 +117,39 @@ public class JuegoController {
             PRG.error("El precio no puede ser negativo.", "/juego/c");
         }
 
-        if (portadaFile == null || portadaFile.isEmpty()) {
-            PRG.error("Debes subir una imagen de portada.", "/juego/c");
+        if (imagenes == null || imagenes.length == 0) {
+            PRG.error("Debes seleccionar al menos una imagen.", "/juego/c");
         }
 
-        if (portadaFile == null || portadaFile.isEmpty() || portadaFile.getContentType() == null
-                || !portadaFile.getContentType().startsWith("image/")) {
+        if (portadaIndex < 0 || portadaIndex >= imagenes.length) {
+            PRG.error("Selecciona una imagen válida como portada.", "/juego/c");
+        }
+
+        // Extraer la portada
+        MultipartFile portadaFile = imagenes[portadaIndex];
+
+        // Validaciones de portada
+        if (portadaFile == null || portadaFile.isEmpty()) {
+            PRG.error("La imagen de portada no es válida.", "/juego/c");
+        }
+
+        if (!portadaFile.getContentType().startsWith("image/")) {
             PRG.error("La portada debe ser un archivo de imagen válido.", "/juego/c");
         }
 
-        int imagenesValidas = 0;
-        for (MultipartFile imagen : imagenes) {
-            if (imagen != null && !imagen.isEmpty()) {
+        // Filtrar las imágenes para excluir la portada
+        List<MultipartFile> otrasImagenes = new ArrayList<>();
+        for (int i = 0; i < imagenes.length; i++) {
+            MultipartFile imagen = imagenes[i];
+            if (i != portadaIndex && imagen != null && !imagen.isEmpty()) {
                 if (imagen.getContentType() == null || !imagen.getContentType().startsWith("image/")) {
                     PRG.error("Todas las imágenes deben ser archivos de imagen válidos.", "/juego/c");
                 }
-                imagenesValidas++;
+                otrasImagenes.add(imagen);
             }
         }
+
+        int imagenesValidas = otrasImagenes.size();
 
         if (imagenesValidas == 0) {
             PRG.error("Debes subir al menos una imagen adicional del juego.", "/juego/c");
@@ -147,9 +163,12 @@ public class JuegoController {
             PRG.error("Debes subir un archivo descargable del juego.", "/juego/c");
         }
 
+        // Aquí pasas:
+        // - portadaFile: solo la portada
+        // - otrasImagenes.toArray(new MultipartFile[0]): sin duplicados
         juegoService.saveJuegoConRelaciones(
                 nombre, descripcion, generosIds, precio,
-                portadaFile, imagenes, descargable,
+                portadaFile, otrasImagenes.toArray(new MultipartFile[0]), descargable,
                 desarrollador);
 
         return "redirect:/panel_desarrollador/r";

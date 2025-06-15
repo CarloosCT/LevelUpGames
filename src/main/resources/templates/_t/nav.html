@@ -31,6 +31,10 @@
           <span th:text="'Rol: ' + ${session.user.rol.nombre}"></span>
         </div>
 
+        <div class="saldo" th:if="${session.user != null and session.user.rol.nombre != 'admin'}">
+          <a href="/saldo/r" th:text="'Saldo: ' + ${session.user.saldo} + ' €'"></a>
+        </div>
+
         <div class="dropdown-avatar">
           <img th:src="${session.user == null} ? '/img/icons/anonimo.jpg' : |/img/icons/${session.user.rol.nombre}.jpg|"
             alt="Avatar" class="avatar-img" />
@@ -43,9 +47,7 @@
         </div>
       </div>
 
-      <div class="saldo" th:if="${session.user != null and session.user.rol.nombre != 'admin'}">
-        <a href="/saldo/r" th:text="'Saldo: ' + ${session.user.saldo} + ' €'"></a>
-      </div>
+
     </div>
   </div>
 </nav>
